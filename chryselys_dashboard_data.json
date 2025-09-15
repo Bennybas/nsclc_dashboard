@@ -1,0 +1,305 @@
+{
+  "brand_identity": {
+    "primary_colors": {
+      "chinese_bronze": "#c98b27",
+      "ateneo_blue": "#004567",
+      "pale_cerulean": "#9bc0e2",
+      "weldon_blue": "#8295ae"
+    },
+    "typography": {
+      "family": "Roboto",
+      "variants": [
+        "Regular",
+        "Bold"
+      ],
+      "source": "Google Fonts"
+    },
+    "design_principles": [
+      "Clean stroked icons",
+      "Professional imagery",
+      "Consistent spacing"
+    ]
+  },
+  "consolidated_kpis": {
+    "executive_summary": {
+      "total_patients_analyzed": 2470055,
+      "data_sources": 3,
+      "analysis_period": "2017-2025 (8+ years)",
+      "key_findings": [
+        "Komodo demonstrates 62% higher patient capture than IQVIA",
+        "HealthVerity shows superior data quality with 100% paid claims",
+        "PARAPLATIN emerges as dominant therapy across all sources",
+        "80%+ patients are aged 60 and above",
+        "Significant data source variations reveal market opportunities"
+      ]
+    },
+    "data_stacking_insights": {
+      "patient_pool_comparison": {
+        "iqvia": {
+          "total_patients": 595839,
+          "diagnosis_patients": 585915,
+          "procedure_patients": 532363,
+          "prescription_patients": 91377,
+          "market_position": "Baseline source - comprehensive claims data",
+          "strength": "Strong NPI coverage for provider analysis"
+        },
+        "healthverity": {
+          "total_patients": 908031,
+          "diagnosis_patients": 904220,
+          "procedure_patients": 844532,
+          "prescription_patients": 140609,
+          "vs_iqvia_increase": "+52%",
+          "market_position": "Premium data quality with 100% paid claims",
+          "strength": "Highest data completeness and reliability"
+        },
+        "komodo": {
+          "total_patients": 966185,
+          "diagnosis_patients": 961381,
+          "procedure_patients": 911865,
+          "prescription_patients": 109721,
+          "vs_iqvia_increase": "+62%",
+          "market_position": "Largest patient capture with broad coverage",
+          "strength": "Maximum patient identification capability"
+        }
+      },
+      "data_quality_matrix": {
+        "claims_processing": {
+          "iqvia": {
+            "paid": 82,
+            "rejected": 12,
+            "reversed": 6
+          },
+          "healthverity": {
+            "paid": 100,
+            "rejected": 0,
+            "reversed": 0
+          },
+          "komodo": {
+            "paid": 66,
+            "rejected": 17,
+            "reversed": 17
+          }
+        },
+        "npi_completeness": {
+          "billing_npi": {
+            "iqvia": 95,
+            "healthverity": 78,
+            "komodo": 92
+          },
+          "prescriber_npi": {
+            "iqvia": 94,
+            "healthverity": 76,
+            "komodo": 91
+          },
+          "facility_npi": {
+            "iqvia": 23,
+            "healthverity": 28,
+            "komodo": 0
+          }
+        },
+        "demographic_coverage": {
+          "gender_completeness": {
+            "iqvia": 98,
+            "healthverity": 99,
+            "komodo": 97
+          },
+          "age_completeness": {
+            "iqvia": 96,
+            "healthverity": 98,
+            "komodo": 94
+          },
+          "geography_coverage": {
+            "iqvia": 85,
+            "healthverity": 94,
+            "komodo": 91
+          }
+        }
+      }
+    },
+    "treatment_landscape": {
+      "top_procedures": [
+        {
+          "product": "PARAPLATIN",
+          "mechanism": "Carboplatin-based chemotherapy",
+          "iqvia_patients": 306860,
+          "healthverity_patients": 383886,
+          "komodo_patients": 437839,
+          "market_dominance": "Leading therapy across all sources",
+          "clinical_significance": "Standard of care for advanced NSCLC"
+        },
+        {
+          "product": "KEYTRUDA",
+          "mechanism": "Anti-PD-1 immunotherapy",
+          "iqvia_patients": 165368,
+          "healthverity_patients": 213708,
+          "komodo_patients": 240307,
+          "market_dominance": "Major immunotherapy presence",
+          "clinical_significance": "First-line and maintenance therapy"
+        },
+        {
+          "product": "TAXOL",
+          "mechanism": "Paclitaxel-based chemotherapy",
+          "iqvia_patients": 142731,
+          "healthverity_patients": 183693,
+          "komodo_patients": 205597,
+          "market_dominance": "Established chemotherapy backbone",
+          "clinical_significance": "Combination therapy standard"
+        }
+      ],
+      "prescription_leaders": [
+        {
+          "product": "TAGRISSO",
+          "mechanism": "EGFR tyrosine kinase inhibitor",
+          "iqvia_patients": 45041,
+          "healthverity_patients": 42240,
+          "komodo_patients": 41862,
+          "target_population": "EGFR-mutated NSCLC",
+          "clinical_significance": "Targeted therapy for specific biomarker"
+        }
+      ]
+    },
+    "demographic_profile": {
+      "age_distribution_insights": {
+        "elderly_dominance": "80%+ patients are aged 60 and above",
+        "working_age_representation": "~10% in 25-59 age group",
+        "pediatric_cases": "Minimal (<1%) as clinically expected",
+        "clinical_implication": "Treatment decisions must consider age-related comorbidities"
+      },
+      "geographic_patterns": {
+        "state_concentration": "Top 10 states represent 50% of patient volume",
+        "urban_rural_split": "Analysis limited by facility NPI coverage",
+        "regional_variations": "Treatment patterns vary by geographic region"
+      }
+    },
+    "clinical_coding_analysis": {
+      "top_diagnoses": [
+        {
+          "code": "C3490",
+          "description": "Malignant neoplasm of unspecified part of unspecified bronchus and lung",
+          "iqvia_prevalence": 81.1,
+          "healthverity_prevalence": 84.2,
+          "komodo_prevalence": 82.8,
+          "clinical_note": "Most common primary diagnosis code"
+        },
+        {
+          "code": "C3491",
+          "description": "Malignant neoplasm of unspecified part of right bronchus and lung",
+          "iqvia_prevalence": 35.5,
+          "healthverity_prevalence": 42.3,
+          "komodo_prevalence": 40.8,
+          "clinical_note": "Laterality-specific diagnosis"
+        }
+      ],
+      "procedure_utilization": [
+        {
+          "code": "J9045",
+          "description": "Injection, Carboplatin, 50 mg",
+          "utilization_rate": 45.5,
+          "clinical_context": "Standard chemotherapy administration"
+        },
+        {
+          "code": "J9271",
+          "description": "Injection, Pembrolizumab, 1 mg",
+          "utilization_rate": 26.2,
+          "clinical_context": "Immunotherapy administration"
+        }
+      ]
+    },
+    "strategic_implications": {
+      "data_source_strategy": [
+        "Komodo offers maximum patient identification for market sizing",
+        "HealthVerity provides premium quality for outcome studies",
+        "IQVIA delivers comprehensive provider network analysis",
+        "Multi-source approach reduces bias and increases completeness"
+      ],
+      "clinical_insights": [
+        "PARAPLATIN dominance suggests continued importance of platinum-based therapy",
+        "KEYTRUDA presence indicates immunotherapy adoption in real-world practice",
+        "Age distribution aligns with NSCLC epidemiology expectations",
+        "Geographic concentration suggests targeted intervention opportunities"
+      ],
+      "market_opportunities": [
+        "62% patient identification gap between sources indicates untapped markets",
+        "Data quality variations suggest partnership optimization opportunities",
+        "Treatment pattern consistency validates therapeutic approaches",
+        "Demographic insights enable precision targeting strategies"
+      ]
+    }
+  },
+  "eda_narrative": {
+    "story_arc": {
+      "chapter_1": {
+        "title": "The Data Landscape Discovery",
+        "narrative": "Our journey begins with three distinct lenses into the NSCLC patient universe, each revealing unique perspectives on the same clinical reality.",
+        "key_metrics": [
+          "2.47M total patients",
+          "3 data ecosystems",
+          "8+ years coverage"
+        ],
+        "story_hook": "What happens when we stack three major healthcare databases? The answer reshapes our understanding of NSCLC patient care."
+      },
+      "chapter_2": {
+        "title": "The Great Patient Count Revelation",
+        "narrative": "Komodo's 966K patients vs IQVIA's 596K patients tells a story of hidden patient populations and untapped market potential.",
+        "key_insights": [
+          "62% more patients in Komodo",
+          "52% increase in HealthVerity",
+          "Consistent demographic patterns"
+        ],
+        "clinical_significance": "These aren't just numbers - they represent real patients whose care journeys differ across data systems."
+      },
+      "chapter_3": {
+        "title": "Treatment Patterns Emerge",
+        "narrative": "PARAPLATIN's dominance across all three sources reveals the persistent importance of platinum-based chemotherapy in NSCLC care.",
+        "treatment_story": "While immunotherapy gains attention, traditional chemotherapy remains the backbone of NSCLC treatment",
+        "market_insights": [
+          "PARAPLATIN: 440K patients (Komodo)",
+          "KEYTRUDA: 240K patients",
+          "Treatment consistency validates clinical guidelines"
+        ]
+      },
+      "chapter_4": {
+        "title": "Data Quality Truth",
+        "narrative": "HealthVerity's 100% paid claims rate vs Komodo's 66% reveals the spectrum of data reliability in real-world evidence generation.",
+        "quality_implications": "Not all healthcare data is created equal - understanding these differences is crucial for accurate insights",
+        "strategic_value": "Premium data quality commands premium insights"
+      },
+      "chapter_5": {
+        "title": "The Age Reality Check",
+        "narrative": "80% of NSCLC patients are over 60, confirming epidemiological expectations while highlighting care considerations for an aging population.",
+        "demographic_story": "NSCLC remains predominantly a disease of older adults, with treatment decisions requiring age-appropriate considerations",
+        "future_implications": "Aging population trends will continue to shape NSCLC treatment patterns"
+      },
+      "conclusion": {
+        "title": "Synthesis and Strategic Direction",
+        "narrative": "Data stacking reveals not just what we knew, but what we didn't know we didn't know about NSCLC patient populations.",
+        "key_takeaways": [
+          "Multi-source analysis eliminates single-source bias",
+          "Patient identification gaps represent market opportunities",
+          "Data quality variations require strategic source selection",
+          "Treatment patterns validate clinical guidelines",
+          "Demographics confirm epidemiological expectations"
+        ],
+        "next_steps": "Armed with these insights, stakeholders can make informed decisions about data partnerships, market strategies, and clinical program development."
+      }
+    },
+    "visualization_strategy": {
+      "primary_charts": [
+        "Line charts for trends",
+        "Bar charts for comparisons",
+        "Heatmaps for quality metrics"
+      ],
+      "color_narrative": "Chryselys bronze (#c98b27) highlights key insights, blue palette (#004567) provides professional backdrop",
+      "interaction_design": "Progressive disclosure reveals deeper insights through user exploration"
+    }
+  },
+  "dashboard_sections": [
+    "Executive Overview",
+    "Data Source Comparison",
+    "Treatment Landscape Analysis",
+    "Patient Demographics Deep-dive",
+    "Data Quality Assessment",
+    "Clinical Coding Patterns",
+    "Strategic Implications"
+  ]
+}

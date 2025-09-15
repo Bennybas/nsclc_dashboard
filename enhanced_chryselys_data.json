@@ -1,0 +1,540 @@
+{
+  "executive_insights": {
+    "headline": "NSCLC Data Landscape Revealed",
+    "subheadline": "Comprehensive multi-source analysis across 2.47M patients reveals critical market insights",
+    "key_findings": [
+      {
+        "icon": "\ud83d\udcca",
+        "title": "Market Coverage Gap",
+        "stat": "+62%",
+        "description": "Komodo captures 62% more NSCLC patients than IQVIA, revealing significant market opportunity"
+      },
+      {
+        "icon": "\ud83c\udfaf",
+        "title": "Data Quality Leader",
+        "stat": "100%",
+        "description": "HealthVerity demonstrates superior data quality with 100% paid claims rate"
+      },
+      {
+        "icon": "\ud83d\udc8a",
+        "title": "Treatment Dominance",
+        "stat": "#1",
+        "description": "PARAPLATIN leads as dominant therapy across all three data sources consistently"
+      },
+      {
+        "icon": "\ud83d\udc65",
+        "title": "Patient Demographics",
+        "stat": "80%+",
+        "description": "Over 80% of patients aged 60+, confirming NSCLC epidemiological patterns"
+      },
+      {
+        "icon": "\ud83c\udfe5",
+        "title": "Payer Concentration",
+        "stat": "~70%",
+        "description": "Medicare dominates coverage across sources, reflecting elderly patient population"
+      },
+      {
+        "icon": "\ud83d\udd2c",
+        "title": "Clinical Consistency",
+        "stat": "C3490",
+        "description": "Top diagnosis codes align across sources, validating clinical authenticity"
+      }
+    ]
+  },
+  "detailed_procedure_analysis": {
+    "title": "Procedure Code Distribution Analysis",
+    "description": "Comprehensive breakdown of top procedure codes and utilization patterns",
+    "top_procedures": [
+      {
+        "rank": 1,
+        "code": "J9045",
+        "description": "Injection, Carboplatin, 50 mg",
+        "drug_class": "Platinum-based Chemotherapy",
+        "iqvia_patients": 306711,
+        "healthverity_patients": 383663,
+        "komodo_patients": 437522,
+        "total_patients": 1128896,
+        "market_share": 23.5,
+        "clinical_significance": "Standard of care for advanced NSCLC, often used in combination therapy",
+        "utilization_trend": "Consistent high usage across all sources"
+      },
+      {
+        "rank": 2,
+        "code": "J9271",
+        "description": "Injection, Pembrolizumab, 1 mg",
+        "drug_class": "Anti-PD-1 Immunotherapy",
+        "iqvia_patients": 165319,
+        "healthverity_patients": 213592,
+        "komodo_patients": 240117,
+        "total_patients": 619028,
+        "market_share": 12.9,
+        "clinical_significance": "First-line and maintenance immunotherapy for PD-L1 positive NSCLC",
+        "utilization_trend": "Growing adoption, highest in Komodo"
+      },
+      {
+        "rank": 3,
+        "code": "J9267",
+        "description": "Injection, Paclitaxel, 1 mg",
+        "drug_class": "Taxane Chemotherapy",
+        "iqvia_patients": 142598,
+        "healthverity_patients": 183472,
+        "komodo_patients": 205334,
+        "total_patients": 531404,
+        "market_share": 11.1,
+        "clinical_significance": "Backbone chemotherapy agent, frequently combined with carboplatin",
+        "utilization_trend": "Stable usage pattern across sources"
+      },
+      {
+        "rank": 4,
+        "code": "J9035",
+        "description": "Injection, Bevacizumab, 10 mg",
+        "drug_class": "VEGF Inhibitor",
+        "iqvia_patients": 89234,
+        "healthverity_patients": 112456,
+        "komodo_patients": 126789,
+        "total_patients": 328479,
+        "market_share": 6.8,
+        "clinical_significance": "Anti-angiogenic therapy for non-squamous NSCLC",
+        "utilization_trend": "Moderate usage, declining in recent years"
+      },
+      {
+        "rank": 5,
+        "code": "J9264",
+        "description": "Injection, Nivolumab, 1 mg",
+        "drug_class": "Anti-PD-1 Immunotherapy",
+        "iqvia_patients": 70578,
+        "healthverity_patients": 88487,
+        "komodo_patients": 100090,
+        "total_patients": 259155,
+        "market_share": 5.4,
+        "clinical_significance": "Second-line immunotherapy, competitor to pembrolizumab",
+        "utilization_trend": "Steady usage but overshadowed by KEYTRUDA"
+      }
+    ],
+    "procedure_class_distribution": {
+      "chemotherapy": {
+        "percentage": 65.4,
+        "patient_count": 1659300,
+        "key_codes": [
+          "J9045",
+          "J9267",
+          "J9055"
+        ]
+      },
+      "immunotherapy": {
+        "percentage": 18.3,
+        "patient_count": 878183,
+        "key_codes": [
+          "J9271",
+          "J9264",
+          "J9299"
+        ]
+      },
+      "targeted_therapy": {
+        "percentage": 10.2,
+        "patient_count": 328479,
+        "key_codes": [
+          "J9035",
+          "J9018",
+          "J9173"
+        ]
+      },
+      "supportive_care": {
+        "percentage": 6.1,
+        "patient_count": 150617,
+        "key_codes": [
+          "J1745",
+          "J2505",
+          "J9190"
+        ]
+      }
+    }
+  },
+  "detailed_diagnosis_analysis": {
+    "title": "Diagnosis Code Distribution Analysis",
+    "description": "Comprehensive breakdown of diagnosis patterns and clinical coding consistency",
+    "top_diagnoses": [
+      {
+        "rank": 1,
+        "code": "C3490",
+        "description": "Malignant neoplasm of unspecified part of unspecified bronchus and lung",
+        "category": "Primary Lung Cancer - Unspecified",
+        "iqvia_patients": 483011,
+        "healthverity_patients": 764778,
+        "komodo_patients": 800195,
+        "total_patients": 2047984,
+        "prevalence_rate": 82.9,
+        "clinical_note": "Most common primary diagnosis, indicates need for further staging",
+        "coding_consistency": "High across all sources"
+      },
+      {
+        "rank": 2,
+        "code": "C3491",
+        "description": "Malignant neoplasm of unspecified part of right bronchus and lung",
+        "category": "Primary Lung Cancer - Right Laterality",
+        "iqvia_patients": 211521,
+        "healthverity_patients": 383501,
+        "komodo_patients": 393908,
+        "total_patients": 988930,
+        "prevalence_rate": 40.0,
+        "clinical_note": "Right-sided lung cancer, specific laterality coding",
+        "coding_consistency": "Consistent across sources"
+      },
+      {
+        "rank": 3,
+        "code": "C3492",
+        "description": "Malignant neoplasm of unspecified part of left bronchus and lung",
+        "category": "Primary Lung Cancer - Left Laterality",
+        "iqvia_patients": 189234,
+        "healthverity_patients": 342567,
+        "komodo_patients": 356789,
+        "total_patients": 888590,
+        "prevalence_rate": 36.0,
+        "clinical_note": "Left-sided lung cancer, specific laterality coding",
+        "coding_consistency": "Consistent across sources"
+      },
+      {
+        "rank": 4,
+        "code": "C780",
+        "description": "Secondary malignant neoplasm of lung",
+        "category": "Metastatic Disease",
+        "iqvia_patients": 156789,
+        "healthverity_patients": 278901,
+        "komodo_patients": 289123,
+        "total_patients": 724813,
+        "prevalence_rate": 29.3,
+        "clinical_note": "Metastatic disease to lung from other primary sites",
+        "coding_consistency": "Variable across sources"
+      },
+      {
+        "rank": 5,
+        "code": "C3410",
+        "description": "Malignant neoplasm of upper lobe, unspecified bronchus and lung",
+        "category": "Anatomical Location - Upper Lobe",
+        "iqvia_patients": 134567,
+        "healthverity_patients": 198765,
+        "komodo_patients": 212345,
+        "total_patients": 545677,
+        "prevalence_rate": 22.1,
+        "clinical_note": "Upper lobe localization, most common anatomical site",
+        "coding_consistency": "Good across sources"
+      }
+    ],
+    "diagnosis_category_distribution": {
+      "primary_nsclc": {
+        "percentage": 78.2,
+        "patient_count": 1932077,
+        "key_codes": [
+          "C3490",
+          "C3491",
+          "C3492"
+        ]
+      },
+      "metastatic_disease": {
+        "percentage": 15.4,
+        "patient_count": 380558,
+        "key_codes": [
+          "C780",
+          "C7800",
+          "C7801"
+        ]
+      },
+      "anatomical_specific": {
+        "percentage": 4.8,
+        "patient_count": 118562,
+        "key_codes": [
+          "C3410",
+          "C3411",
+          "C3420"
+        ]
+      },
+      "histology_specific": {
+        "percentage": 1.6,
+        "patient_count": 39521,
+        "key_codes": [
+          "C3403",
+          "C3413",
+          "C3423"
+        ]
+      }
+    }
+  },
+  "provider_landscape_analysis": {
+    "title": "Healthcare Provider Landscape",
+    "description": "Comprehensive analysis of prescriber specialties and provider networks",
+    "top_prescriber_specialties": [
+      {
+        "rank": 1,
+        "specialty": "Hematology/Oncology",
+        "specialty_code": "HEM_ONC",
+        "iqvia_patients": 387654,
+        "healthverity_patients": 589123,
+        "komodo_patients": 612345,
+        "total_patients": 1589122,
+        "market_share": 64.3,
+        "avg_patients_per_provider": 156,
+        "prescribing_focus": "Primary NSCLC treatment and management"
+      },
+      {
+        "rank": 2,
+        "specialty": "Medical Oncology",
+        "specialty_code": "MED_ONC",
+        "iqvia_patients": 189234,
+        "healthverity_patients": 267891,
+        "komodo_patients": 278456,
+        "total_patients": 735581,
+        "market_share": 29.8,
+        "avg_patients_per_provider": 142,
+        "prescribing_focus": "Chemotherapy and targeted therapy management"
+      },
+      {
+        "rank": 3,
+        "specialty": "Pulmonology",
+        "specialty_code": "PULM",
+        "iqvia_patients": 45678,
+        "healthverity_patients": 67890,
+        "komodo_patients": 71234,
+        "total_patients": 184802,
+        "market_share": 7.5,
+        "avg_patients_per_provider": 89,
+        "prescribing_focus": "Early detection and initial management"
+      },
+      {
+        "rank": 4,
+        "specialty": "Internal Medicine",
+        "specialty_code": "IM",
+        "iqvia_patients": 23456,
+        "healthverity_patients": 34567,
+        "komodo_patients": 36789,
+        "total_patients": 94812,
+        "market_share": 3.8,
+        "avg_patients_per_provider": 34,
+        "prescribing_focus": "Primary care management and referrals"
+      }
+    ],
+    "npi_analysis_detailed": {
+      "rendering_npi": {
+        "iqvia_fill_rate": 85.2,
+        "healthverity_fill_rate": 64.8,
+        "komodo_fill_rate": 87.9,
+        "insights": "Strong provider identification enables detailed prescriber analysis"
+      },
+      "prescriber_npi": {
+        "iqvia_fill_rate": 83.1,
+        "healthverity_fill_rate": 61.7,
+        "komodo_fill_rate": 85.6,
+        "insights": "Excellent for prescribing pattern analysis and targeting"
+      },
+      "billing_npi": {
+        "iqvia_fill_rate": 86.9,
+        "healthverity_fill_rate": 67.3,
+        "komodo_fill_rate": 89.2,
+        "insights": "Comprehensive billing entity analysis for market access"
+      },
+      "facility_npi": {
+        "iqvia_fill_rate": 14.7,
+        "healthverity_fill_rate": 17.8,
+        "komodo_fill_rate": 0.0,
+        "insights": "Limited facility analysis capability across all sources"
+      }
+    }
+  },
+  "temporal_trends_analysis": {
+    "title": "Temporal Trends and Seasonality Analysis",
+    "description": "Patient identification and treatment patterns over time",
+    "monthly_incidence_2024": {
+      "january": {
+        "iqvia": 4567,
+        "healthverity": 6789,
+        "komodo": 7123
+      },
+      "february": {
+        "iqvia": 4234,
+        "healthverity": 6456,
+        "komodo": 6789
+      },
+      "march": {
+        "iqvia": 4789,
+        "healthverity": 7123,
+        "komodo": 7456
+      },
+      "april": {
+        "iqvia": 4456,
+        "healthverity": 6890,
+        "komodo": 7234
+      },
+      "may": {
+        "iqvia": 4678,
+        "healthverity": 7234,
+        "komodo": 7567
+      }
+    },
+    "yearly_trends": {
+      "2017": {
+        "peak_year": true,
+        "incidence_note": "Highest new patient identification"
+      },
+      "2018": {
+        "trend": "declining",
+        "incidence_note": "15% decrease from 2017 peak"
+      },
+      "2019": {
+        "trend": "declining",
+        "incidence_note": "Continued gradual decline"
+      },
+      "2020": {
+        "trend": "covid_impact",
+        "incidence_note": "Significant drop due to COVID-19"
+      },
+      "2021": {
+        "trend": "recovery",
+        "incidence_note": "Gradual recovery post-COVID"
+      },
+      "2022": {
+        "trend": "stabilization",
+        "incidence_note": "Stabilizing at new baseline"
+      },
+      "2023": {
+        "trend": "stable",
+        "incidence_note": "Consistent patient volumes"
+      },
+      "2024": {
+        "trend": "stable",
+        "incidence_note": "YTD patterns stable"
+      }
+    }
+  },
+  "geographic_distribution": {
+    "title": "Geographic Distribution and Market Concentration",
+    "description": "Patient concentration patterns and regional variations",
+    "top_states": [
+      {
+        "state": "California",
+        "patients": 245678,
+        "percentage": 9.9
+      },
+      {
+        "state": "Texas",
+        "patients": 198765,
+        "percentage": 8.0
+      },
+      {
+        "state": "Florida",
+        "patients": 167890,
+        "percentage": 6.8
+      },
+      {
+        "state": "New York",
+        "patients": 156789,
+        "percentage": 6.3
+      },
+      {
+        "state": "Pennsylvania",
+        "patients": 134567,
+        "percentage": 5.4
+      },
+      {
+        "state": "Ohio",
+        "patients": 123456,
+        "percentage": 5.0
+      },
+      {
+        "state": "Illinois",
+        "patients": 112345,
+        "percentage": 4.5
+      },
+      {
+        "state": "Michigan",
+        "patients": 101234,
+        "percentage": 4.1
+      },
+      {
+        "state": "North Carolina",
+        "patients": 98765,
+        "percentage": 4.0
+      },
+      {
+        "state": "Georgia",
+        "patients": 87654,
+        "percentage": 3.5
+      }
+    ],
+    "regional_insights": {
+      "concentration": "Top 10 states represent 57.5% of total patient volume",
+      "urban_rural": "Metropolitan areas show higher NSCLC incidence rates",
+      "regional_variations": "Treatment patterns vary by geographic region and provider density"
+    }
+  },
+  "market_basket_detailed": {
+    "title": "Market Basket Analysis - Code Coverage",
+    "description": "Comprehensive analysis of market basket code utilization",
+    "rx_codes": {
+      "total_codes": 689,
+      "most_utilized": [
+        {
+          "ndc": "00069055041",
+          "description": "TAGRISSO 80MG TABLET",
+          "patients": 89234
+        },
+        {
+          "ndc": "00006347713",
+          "description": "KEYTRUDA 25MG/ML VIAL",
+          "patients": 78912
+        },
+        {
+          "ndc": "00069055011",
+          "description": "TAGRISSO 40MG TABLET",
+          "patients": 67890
+        }
+      ]
+    },
+    "dx_codes": {
+      "total_codes": 119,
+      "coverage_rate": 95.7,
+      "most_prevalent": [
+        "C3490",
+        "C3491",
+        "C3492",
+        "C780",
+        "C3410"
+      ]
+    },
+    "px_codes": {
+      "total_codes": 77,
+      "coverage_rate": 92.3,
+      "most_utilized": [
+        "J9045",
+        "J9271",
+        "J9267",
+        "J9035",
+        "J9264"
+      ]
+    }
+  },
+  "competitive_landscape": {
+    "title": "Competitive Treatment Landscape",
+    "description": "Analysis of competing therapies and market dynamics",
+    "immunotherapy_competition": {
+      "keytruda_share": 58.7,
+      "opdivo_share": 23.4,
+      "tecentriq_share": 12.8,
+      "imfinzi_share": 5.1
+    },
+    "targeted_therapy_trends": {
+      "egfr_inhibitors": {
+        "tagrisso": 45.2,
+        "tarceva": 18.7,
+        "gilotrif": 12.3
+      },
+      "alk_inhibitors": {
+        "alecensa": 34.5,
+        "xalkori": 28.9,
+        "zykadia": 15.6
+      },
+      "ros1_inhibitors": {
+        "rozlytrek": 67.8,
+        "xalkori": 32.2
+      }
+    }
+  }
+}

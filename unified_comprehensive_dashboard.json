@@ -1,0 +1,485 @@
+{
+  "brand_identity": {
+    "primary_colors": {
+      "chinese_bronze": "#c98b27",
+      "ateneo_blue": "#004567",
+      "pale_cerulean": "#9bc0e2",
+      "weldon_blue": "#8295ae"
+    },
+    "logo_treatment": "Chryselys brand logo in top-left with proper clear space",
+    "typography": {
+      "family": "Roboto",
+      "weights": [
+        "400",
+        "500",
+        "700"
+      ]
+    },
+    "design_principles": [
+      "Clean lines",
+      "Professional imagery",
+      "Generous whitespace",
+      "Subtle gradients"
+    ]
+  },
+  "unified_kpis": {
+    "executive_summary": {
+      "title": "NSCLC Superstack - Comprehensive EDA Dashboard",
+      "subtitle": "Multi-source data stacking analysis revealing comprehensive patient insights",
+      "analysis_period": "2017-02 to 2025-05",
+      "total_patients_analyzed": 2470055,
+      "data_sources": 3,
+      "market_basket_codes": {
+        "rx_codes": 689,
+        "dx_codes": 119,
+        "px_codes": 77
+      },
+      "key_executive_insights": [
+        "Komodo demonstrates 62% higher patient capture than IQVIA (966K vs 596K)",
+        "HealthVerity shows 52% increase over IQVIA with superior data quality",
+        "PARAPLATIN emerges as dominant therapy across all data sources",
+        "Over 80% of patients are aged 60+, confirming NSCLC epidemiology",
+        "Nearly equal gender split across all sources",
+        "50% of patients concentrated in top 10 states",
+        "Medicare dominates with ~70% coverage across sources"
+      ]
+    },
+    "patient_metrics_comprehensive": {
+      "patient_pool_by_source": {
+        "iqvia": {
+          "total_patients": 595839,
+          "dx_patients": 585915,
+          "px_patients": 532363,
+          "rx_patients": 91377,
+          "dx_claims": 47490854,
+          "px_claims": 8659323,
+          "rx_claims": 1224052,
+          "market_position": "Baseline comprehensive claims data",
+          "data_strength": "Strong NPI coverage for provider analytics"
+        },
+        "healthverity": {
+          "total_patients": 908031,
+          "dx_patients": 904220,
+          "px_patients": 844532,
+          "rx_patients": 140609,
+          "dx_claims": 66499023,
+          "px_claims": 11480361,
+          "rx_claims": 1735189,
+          "vs_iqvia_increase": 52,
+          "market_position": "Premium data quality with 100% paid claims",
+          "data_strength": "Highest data completeness and reliability"
+        },
+        "komodo": {
+          "total_patients": 966185,
+          "dx_patients": 961381,
+          "px_patients": 911865,
+          "rx_patients": 109721,
+          "dx_claims": 90432525,
+          "px_claims": 13011942,
+          "rx_claims": 1603917,
+          "vs_iqvia_increase": 62,
+          "market_position": "Maximum patient capture with broad coverage",
+          "data_strength": "Largest patient identification capability"
+        }
+      },
+      "demographic_deep_dive": {
+        "age_distribution": {
+          "iqvia": {
+            "0-17": {
+              "patients": 651,
+              "percentage": 0.1
+            },
+            "18-24": {
+              "patients": 646,
+              "percentage": 0.1
+            },
+            "25-59": {
+              "patients": 57394,
+              "percentage": 9.6
+            },
+            "60-74": {
+              "patients": 254634,
+              "percentage": 42.7
+            },
+            "75+": {
+              "patients": 194635,
+              "percentage": 32.7
+            }
+          },
+          "healthverity": {
+            "0-17": {
+              "patients": 1027,
+              "percentage": 0.1
+            },
+            "18-24": {
+              "patients": 1005,
+              "percentage": 0.1
+            },
+            "25-59": {
+              "patients": 99940,
+              "percentage": 11.0
+            },
+            "60-74": {
+              "patients": 417587,
+              "percentage": 46.0
+            },
+            "75+": {
+              "patients": 388454,
+              "percentage": 42.8
+            }
+          },
+          "komodo": {
+            "0-17": {
+              "patients": 884,
+              "percentage": 0.1
+            },
+            "18-24": {
+              "patients": 861,
+              "percentage": 0.1
+            },
+            "25-59": {
+              "patients": 93232,
+              "percentage": 9.6
+            },
+            "60-74": {
+              "patients": 422789,
+              "percentage": 43.8
+            },
+            "75+": {
+              "patients": 446744,
+              "percentage": 46.2
+            }
+          }
+        },
+        "gender_distribution": {
+          "finding": "Nearly equal gender split across all sources",
+          "clinical_significance": "Aligns with NSCLC epidemiological expectations"
+        },
+        "geographic_insights": {
+          "concentration": "50% of patients from top 10 states",
+          "limitation": "IQVIA patient companion file missing",
+          "implication": "Geographic targeting opportunities identified"
+        }
+      },
+      "temporal_trends": {
+        "incidence_patterns": {
+          "2017": "Peak year for new patient identification",
+          "2018_2020": "Gradual decline in new patient starts",
+          "2021_2025": "Stabilization with steady volumes",
+          "methodology": "New patients via procedure, paid prescription, or diagnosis MB claims"
+        },
+        "prevalence_patterns": {
+          "definition": "Patients alive and living with disease during specified period",
+          "trend": "Steady patient population with seasonal variations"
+        },
+        "monthly_insights": {
+          "2024_incidence": "YTD patterns available",
+          "2024_prevalence": "YTD patterns available",
+          "data_availability": "Complete through 2025-05"
+        }
+      }
+    },
+    "treatment_landscape_comprehensive": {
+      "top_procedure_products": [
+        {
+          "rank": 1,
+          "product": "PARAPLATIN",
+          "mechanism": "Carboplatin 50mg injection",
+          "iqvia_patients": 306860,
+          "healthverity_patients": 383886,
+          "komodo_patients": 437839,
+          "clinical_significance": "Leading platinum-based chemotherapy",
+          "market_dominance": "Consistent #1 across all sources"
+        },
+        {
+          "rank": 2,
+          "product": "KEYTRUDA",
+          "mechanism": "Pembrolizumab 1mg injection",
+          "iqvia_patients": 165368,
+          "healthverity_patients": 213708,
+          "komodo_patients": 240307,
+          "clinical_significance": "Leading anti-PD-1 immunotherapy",
+          "market_dominance": "Major presence across all sources"
+        },
+        {
+          "rank": 3,
+          "product": "TAXOL",
+          "mechanism": "Paclitaxel 1mg injection",
+          "iqvia_patients": 142731,
+          "healthverity_patients": 183693,
+          "komodo_patients": 205597,
+          "clinical_significance": "Standard paclitaxel-based chemotherapy",
+          "market_dominance": "Established combination therapy backbone"
+        }
+      ],
+      "prescription_products": [
+        {
+          "rank": 1,
+          "product": "TAGRISSO",
+          "mechanism": "EGFR tyrosine kinase inhibitor",
+          "iqvia_patients": 45041,
+          "healthverity_patients": 42240,
+          "komodo_patients": 41862,
+          "target_population": "EGFR-mutated NSCLC",
+          "clinical_significance": "Leading oral targeted therapy"
+        }
+      ],
+      "treatment_insights": [
+        "PARAPLATIN dominance indicates continued platinum-based therapy importance",
+        "KEYTRUDA presence confirms immunotherapy real-world adoption",
+        "Treatment consistency validates clinical guidelines",
+        "Key competitor product ranks 13th in combined analysis"
+      ]
+    },
+    "data_quality_comprehensive": {
+      "claims_processing_quality": {
+        "iqvia": {
+          "paid": 82,
+          "rejected": 12,
+          "reversed": 6,
+          "total_unpaid_claims": 273293,
+          "quality_score": "Good"
+        },
+        "healthverity": {
+          "paid": 100,
+          "rejected": 0,
+          "reversed": 0,
+          "total_unpaid_claims": 0,
+          "quality_score": "Excellent"
+        },
+        "komodo": {
+          "paid": 66,
+          "rejected": 17,
+          "reversed": 17,
+          "total_unpaid_claims": 812358,
+          "quality_score": "Moderate"
+        }
+      },
+      "npi_completeness": {
+        "referring_npi": {
+          "iqvia": "Very low",
+          "healthverity": "Very low",
+          "komodo": "Very low",
+          "insight": "Limited referring provider analysis capability"
+        },
+        "rendering_npi": {
+          "iqvia": "Strong",
+          "healthverity": "Moderate",
+          "komodo": "Strong",
+          "insight": "Good provider identification for IQVIA and Komodo"
+        },
+        "prescriber_npi": {
+          "iqvia": "Strong",
+          "healthverity": "Moderate",
+          "komodo": "Strong",
+          "insight": "Reliable prescriber analytics for IQVIA and Komodo"
+        },
+        "billing_npi": {
+          "iqvia": "Strong",
+          "healthverity": "Moderate",
+          "komodo": "Strong",
+          "insight": "Comprehensive billing analytics capability"
+        },
+        "facility_npi": {
+          "iqvia": "Very low",
+          "healthverity": "Very low",
+          "komodo": "Not available",
+          "insight": "Limited facility-level analysis across all sources"
+        }
+      },
+      "demographic_completeness": {
+        "gender": {
+          "iqvia": 98,
+          "healthverity": 99,
+          "komodo": 97,
+          "overall": "High fill rate"
+        },
+        "age_yob": {
+          "iqvia": 96,
+          "healthverity": 98,
+          "komodo": 94,
+          "overall": "Strong coverage"
+        },
+        "geography": {
+          "iqvia": "Not available - companion file missing",
+          "healthverity": 94,
+          "komodo": 91,
+          "limitation": "IQVIA geographic analysis limited"
+        }
+      }
+    },
+    "clinical_coding_comprehensive": {
+      "top_diagnoses": [
+        {
+          "rank": 1,
+          "code": "C3490",
+          "description": "Malignant neoplasm of unspecified part of unspecified bronchus and lung",
+          "iqvia_patients": 483011,
+          "healthverity_patients": 764778,
+          "komodo_patients": 800195,
+          "clinical_note": "Most common primary NSCLC diagnosis"
+        },
+        {
+          "rank": 2,
+          "code": "C3491",
+          "description": "Malignant neoplasm of unspecified part of right bronchus and lung",
+          "iqvia_patients": 211521,
+          "healthverity_patients": 383501,
+          "komodo_patients": 393908,
+          "clinical_note": "Right-sided laterality specification"
+        }
+      ],
+      "top_procedures": [
+        {
+          "rank": 1,
+          "code": "J9045",
+          "description": "Injection, Carboplatin, 50 mg",
+          "iqvia_patients": 306711,
+          "healthverity_patients": 383663,
+          "komodo_patients": 437522,
+          "clinical_context": "Standard carboplatin administration"
+        },
+        {
+          "rank": 2,
+          "code": "J9271",
+          "description": "Injection, Pembrolizumab, 1 mg",
+          "iqvia_patients": 165319,
+          "healthverity_patients": 213592,
+          "komodo_patients": 240117,
+          "clinical_context": "Anti-PD-1 immunotherapy administration"
+        }
+      ]
+    },
+    "hcp_hco_analytics": {
+      "prescriber_specialties": {
+        "insight": "Top 10 prescriber specialties by patient count available",
+        "data_coverage": "Strong for IQVIA and Komodo, moderate for HealthVerity"
+      },
+      "provider_networks": {
+        "rendering_providers": "Top 10 by patient count identified",
+        "referring_providers": "Top 10 by patient count identified",
+        "billing_entities": "Top 10 NPIs by patient count",
+        "facility_analysis": "Limited due to low NPI fill rates"
+      }
+    },
+    "payer_landscape": {
+      "medicare_dominance": {
+        "coverage": "~70% of patients across all sources",
+        "age_correlation": "Reflects ~75% patients aged 65+",
+        "clinical_implication": "Age-appropriate treatment considerations required"
+      },
+      "payer_mix": {
+        "note": "Patients with multiple coverage appear in each category",
+        "methodology": "High-level categories, subtypes combined",
+        "other_category": "Includes Cash, Assistance, VA, Workers Comp, etc."
+      }
+    },
+    "strategic_implications_unified": {
+      "data_source_selection": [
+        "Komodo: Maximum patient identification for comprehensive market sizing",
+        "HealthVerity: Premium quality for rigorous outcome studies",
+        "IQVIA: Comprehensive provider network analysis",
+        "Multi-source approach eliminates single-source bias"
+      ],
+      "market_opportunities": [
+        "62% patient gap between Komodo and IQVIA indicates untapped markets",
+        "Data quality variations suggest partnership optimization opportunities",
+        "Geographic concentration enables targeted intervention strategies",
+        "Provider network differences reveal channel optimization potential"
+      ],
+      "clinical_insights": [
+        "Treatment patterns validate standard-of-care guidelines",
+        "Age demographics align with NSCLC epidemiological expectations",
+        "Gender balance confirms unbiased patient capture",
+        "Diagnosis coding consistency supports clinical validity"
+      ],
+      "operational_recommendations": [
+        "Leverage Komodo for maximum patient identification",
+        "Use HealthVerity for high-quality outcomes research",
+        "Utilize IQVIA for detailed provider analytics",
+        "Implement multi-source validation for critical insights"
+      ]
+    },
+    "methodology_transparency": {
+      "analysis_scope": "Limited to identified patient pool & common overlapping period 2017-02 to 2025-05",
+      "market_basket_definition": "Includes only Market Basket Dx, Px claims, and PAID prescription claims",
+      "filtering_rules": "Patients with \u22651 Dx MB and either a Px or Rx MB claim",
+      "claim_definitions": {
+        "dx_claims": "Patient ID, service date, and diagnosis code",
+        "px_claims": "Patient ID, service date, and product name/procedure code",
+        "rx_claims": "Patient ID, service date, and product name (PAID only)"
+      },
+      "limitations": [
+        "IQVIA patient companion file not available (no geographic data)",
+        "Facility NPI analysis limited across all sources",
+        "Referring NPI fill rates very low across sources",
+        "Open vs Closed claims analysis subject to flag availability"
+      ]
+    }
+  },
+  "comprehensive_narrative": {
+    "story_chapters": {
+      "chapter_1_landscape": {
+        "title": "The NSCLC Data Universe",
+        "narrative": "Three major healthcare data ecosystems reveal different facets of the NSCLC patient journey, each offering unique insights into this complex therapeutic area.",
+        "key_revelation": "Komodo captures 966K patients vs IQVIA's 596K - a 62% difference that reshapes our market understanding.",
+        "visual_focus": "Patient volume comparison across sources with trend lines"
+      },
+      "chapter_2_demographics": {
+        "title": "Patient Population Reality Check",
+        "narrative": "The demographics tell a clear story: NSCLC remains predominantly a disease of older adults, with treatment implications extending far beyond simple patient counts.",
+        "key_insights": [
+          "80%+ patients aged 60+",
+          "Nearly equal gender split",
+          "Geographic concentration patterns"
+        ],
+        "visual_focus": "Age distribution curves by source, demographic heatmaps"
+      },
+      "chapter_3_treatment": {
+        "title": "Treatment Landscape Dominance",
+        "narrative": "PARAPLATIN's consistent leadership across all three sources validates the continued importance of platinum-based chemotherapy, while KEYTRUDA's presence confirms real-world immunotherapy adoption.",
+        "treatment_story": "Traditional chemotherapy maintains backbone status while targeted therapies gain ground",
+        "visual_focus": "Treatment trend lines, market share evolution"
+      },
+      "chapter_4_quality": {
+        "title": "Data Quality Spectrum",
+        "narrative": "Not all healthcare data is created equal. HealthVerity's 100% paid claims rate versus Komodo's 66% reveals the critical importance of understanding data provenance.",
+        "quality_implications": "Premium data quality enables premium insights - but comes with coverage trade-offs",
+        "visual_focus": "Quality metrics dashboard, NPI completeness charts"
+      },
+      "chapter_5_clinical": {
+        "title": "Clinical Coding Consistency",
+        "narrative": "The alignment of diagnosis and procedure patterns across sources validates the clinical authenticity of our findings and supports evidence-based decision making.",
+        "coding_insights": "Consistent patterns across disparate sources strengthen analytical confidence",
+        "visual_focus": "Clinical code frequency trends, diagnostic pattern analysis"
+      },
+      "chapter_6_strategic": {
+        "title": "Strategic Synthesis",
+        "narrative": "Data stacking reveals not just what we knew, but what we didn't know we didn't know about NSCLC patient populations and care patterns.",
+        "strategic_value": "Multi-source analysis eliminates blind spots and enables confident strategic decisions",
+        "visual_focus": "Strategic implications summary, opportunity sizing"
+      }
+    },
+    "visualization_strategy": {
+      "primary_chart_types": [
+        "Line charts for trends",
+        "Stacked bars for comparisons",
+        "Heatmaps for quality"
+      ],
+      "color_strategy": "Chryselys brand colors with strategic accent usage",
+      "interaction_design": "Progressive disclosure with narrative-driven exploration"
+    },
+    "user_journey": {
+      "entry_point": "Executive dashboard with compelling hook",
+      "exploration_path": "Guided narrative with freedom to drill-down",
+      "insight_delivery": "Contextual revelations at each step",
+      "action_orientation": "Strategic implications clearly articulated"
+    }
+  },
+  "dashboard_architecture": {
+    "navigation_style": "First version design with sidebar navigation",
+    "visualization_focus": "Line charts as primary storytelling vehicle",
+    "content_depth": "Complete coverage from deck and excel sources",
+    "interaction_model": "Progressive disclosure with guided exploration"
+  }
+}

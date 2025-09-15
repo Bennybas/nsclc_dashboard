@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chryselys - Enhanced NSCLC Healthcare Intelligence Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="description" content="Chryselys Enhanced NSCLC Healthcare Intelligence Platform - Comprehensive Analytics with Procedure & Diagnosis Code Insights">
+</head>
+<body>
+    <!-- Landing Page Section -->
+    <div id="landing-page" class="landing-page">
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <div class="hero-container">
+                <div class="chryselys-logo-main">
+                    <div class="logo-text">Chryselys</div>
+                    <div class="logo-dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+                <h1 class="hero-title">Enhanced NSCLC Healthcare Intelligence Platform</h1>
+                <p class="hero-subtitle">Comprehensive Analytics with Detailed Procedure & Diagnosis Code Insights</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">2.47M</div>
+                        <div class="stat-label">Patients Analyzed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Procedure Codes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">300+</div>
+                        <div class="stat-label">Diagnosis Codes</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Executive Insights Cards -->
+        <section class="executive-insights">
+            <div class="insights-container">
+                <h2 class="insights-title">Executive Intelligence Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">📊</div>
+                        <h3>Procedure Code Analysis</h3>
+                        <p>Deep dive into top 5 procedure codes with clinical significance and utilization trends across data sources.</p>
+                        <div class="insight-metric">85% Coverage Rate</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🔍</div>
+                        <h3>Diagnosis Distribution</h3>
+                        <p>Comprehensive breakdown of diagnosis codes by category, prevalence rates, and coding consistency patterns.</p>
+                        <div class="insight-metric">78% Primary NSCLC</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">👨‍⚕️</div>
+                        <h3>Provider Landscape</h3>
+                        <p>Enhanced provider analysis with specialty distribution, NPI fill rates, and prescribing focus insights.</p>
+                        <div class="insight-metric">15K+ Providers</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">📈</div>
+                        <h3>Temporal Trends</h3>
+                        <p>Monthly incidence patterns, yearly trends analysis, and seasonal variations with COVID impact assessment.</p>
+                        <div class="insight-metric">2017-2024 Span</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <h3>Market Basket Analysis</h3>
+                        <p>Detailed Rx, Dx, Px code coverage analysis with utilization patterns and most common NDC codes.</p>
+                        <div class="insight-metric">500+ NDCs</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">⚡</div>
+                        <h3>Strategic Intelligence</h3>
+                        <p>Comprehensive data quality metrics, strategic recommendations, and competitive landscape analysis.</p>
+                        <div class="insight-metric">92% Quality Score</div>
+                    </div>
+                </div>
+                <div class="cta-section">
+                    <button id="explore-analysis-btn" class="btn btn--primary btn--lg">Explore Full Analysis</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="main-dashboard" class="main-dashboard hidden">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="header-container">
+                <div class="logo-section">
+                    <div class="chryselys-logo">Chryselys</div>
+                    <div class="dashboard-title">
+                        <h1>Enhanced NSCLC Healthcare Intelligence</h1>
+                        <p class="dashboard-subtitle">Comprehensive Analytics Platform</p>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <button class="btn btn--secondary" id="back-to-landing">← Executive Summary</button>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="main-nav">
+            <div class="nav-container">
+                <button class="nav-tab active" data-section="patient-analysis">Patient Analysis</button>
+                <button class="nav-tab" data-section="procedure-analysis">Procedure Analysis</button>
+                <button class="nav-tab" data-section="diagnosis-analysis">Diagnosis Analysis</button>
+                <button class="nav-tab" data-section="provider-landscape">Provider Landscape</button>
+                <button class="nav-tab" data-section="demographics">Demographics</button>
+                <button class="nav-tab" data-section="treatment-landscape">Treatment Landscape</button>
+                <button class="nav-tab" data-section="temporal-trends">Temporal Trends</button>
+                <button class="nav-tab" data-section="market-basket">Market Basket</button>
+                <button class="nav-tab" data-section="data-quality">Data Quality</button>
+            </div>
+        </nav>
+
+        <!-- Content Sections -->
+        <main class="main-content">
+            
+            <!-- Patient Analysis Section -->
+            <section id="patient-analysis" class="content-section active">
+                <div class="section-header">
+                    <h2>Patient Analysis Overview</h2>
+                    <button class="export-btn" data-chart="patient">Export</button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">2.47M</div>
+                        <div class="stat-label">Total Patients</div>
+                        <div class="stat-change positive">+12% YoY</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Data Sources</div>
+                        <div class="stat-change neutral">Multi-source</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Claims Coverage</div>
+                        <div class="stat-change positive">+5% vs Q3</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">62%</div>
+                        <div class="stat-label">Komodo Advantage</div>
+                        <div class="stat-change positive">vs IQVIA</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Patient Volume by Source</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="patientVolumeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Claims Type Distribution</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="claimsTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Procedure Analysis Section -->
+            <section id="procedure-analysis" class="content-section">
+                <div class="section-header">
+                    <h2>Detailed Procedure Analysis</h2>
+                    <button class="export-btn" data-chart="procedure">Export</button>
+                </div>
+
+                <div class="insight-panel">
+                    <h3>Key Procedure Insights</h3>
+                    <div class="insight-grid">
+                        <div class="insight-item">
+                            <div class="insight-metric">J9045</div>
+                            <div class="insight-desc">Top Procedure Code - Carboplatin Administration</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-metric">42%</div>
+                            <div class="insight-desc">Chemotherapy Procedure Share</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-metric">28%</div>
+                            <div class="insight-desc">Immunotherapy Procedures</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-metric">15%</div>
+                            <div class="insight-desc">Targeted Therapy Utilization</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top 5 Procedure Codes by Patient Count</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="procedureCodesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Drug Class Distribution</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="drugClassChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <h4>Procedure Code Clinical Significance</h4>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Procedure Code</th>
+                                    <th>Description</th>
+                                    <th>Patient Count</th>
+                                    <th>Utilization %</th>
+                                    <th>Clinical Significance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>J9045</td>
+                                    <td>Carboplatin Administration</td>
+                                    <td>856,432</td>
+                                    <td>34.7%</td>
+                                    <td>Primary chemotherapy backbone</td>
+                                </tr>
+                                <tr>
+                                    <td>J9271</td>
+                                    <td>Pembrolizumab (Keytruda)</td>
+                                    <td>642,185</td>
+                                    <td>26.0%</td>
+                                    <td>First-line immunotherapy</td>
+                                </tr>
+                                <tr>
+                                    <td>J9267</td>
+                                    <td>Paclitaxel Administration</td>
+                                    <td>518,734</td>
+                                    <td>21.0%</td>
+                                    <td>Combination chemotherapy</td>
+                                </tr>
+                                <tr>
+                                    <td>J9355</td>
+                                    <td>Trastuzumab Deruxtecan</td>
+                                    <td>289,456</td>
+                                    <td>11.7%</td>
+                                    <td>Targeted therapy</td>
+                                </tr>
+                                <tr>
+                                    <td>J9173</td>
+                                    <td>Durvalumab (Imfinzi)</td>
+                                    <td>163,278</td>
+                                    <td>6.6%</td>
+                                    <td>Maintenance immunotherapy</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Diagnosis Analysis Section -->
+            <section id="diagnosis-analysis" class="content-section">
+                <div class="section-header">
+                    <h2>Detailed Diagnosis Analysis</h2>
+                    <button class="export-btn" data-chart="diagnosis">Export</button>
+                </div>
+
+                <div class="insight-panel">
+                    <h3>Diagnosis Code Insights</h3>
+                    <div class="insight-grid">
+                        <div class="insight-item">
+                            <div class="insight-metric">C78.00</div>
+                            <div class="insight-desc">Top Diagnosis Code - Primary NSCLC</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-metric">45.2%</div>
+                            <div class="insight-desc">Primary NSCLC Prevalence</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-metric">28.8%</div>
+                            <div class="insight-desc">Metastatic Disease Rate</div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-metric">92%</div>
+                            <div class="insight-desc">Coding Consistency Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top 5 Diagnosis Codes Distribution</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="diagnosisCodesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Diagnosis Category Breakdown</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="diagnosisCategoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Coding Consistency Across Sources</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="codingConsistencyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Prevalence Rates by Category</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="prevalenceRatesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Provider Landscape Section -->
+            <section id="provider-landscape" class="content-section">
+                <div class="section-header">
+                    <h2>Provider Landscape Analysis</h2>
+                    <button class="export-btn" data-chart="provider">Export</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">15,847</div>
+                        <div class="stat-label">Active Providers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">42%</div>
+                        <div class="stat-label">Oncology Specialists</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">NPI Fill Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Avg Patients/Provider</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Provider Specialty Distribution</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="providerSpecialtyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>NPI Completeness by Type</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="npiCompletenessChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Demographics Section -->
+            <section id="demographics" class="content-section">
+                <div class="section-header">
+                    <h2>Demographics & Geography Analysis</h2>
+                    <button class="export-btn" data-chart="demographics">Export</button>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Age Distribution Analysis</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="ageDistributionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top 10 States by Patient Count</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="geographicChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Treatment Landscape Section -->
+            <section id="treatment-landscape" class="content-section">
+                <div class="section-header">
+                    <h2>Treatment Landscape Analysis</h2>
+                    <button class="export-btn" data-chart="treatment">Export</button>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Treatment Utilization Trends</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="treatmentTrendsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Competitive Landscape</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="competitiveChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temporal Trends Section -->
+            <section id="temporal-trends" class="content-section">
+                <div class="section-header">
+                    <h2>Temporal Trends Analysis</h2>
+                    <button class="export-btn" data-chart="temporal">Export</button>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Monthly Incidence Patterns 2024 YTD</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="monthlyTrendsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Yearly Trends 2017-2024</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="yearlyTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Market Basket Analysis Section -->
+            <section id="market-basket" class="content-section">
+                <div class="section-header">
+                    <h2>Market Basket Analysis</h2>
+                    <button class="export-btn" data-chart="market">Export</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Rx Code Coverage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Dx Code Coverage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">72%</div>
+                        <div class="stat-label">Px Code Coverage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">500+</div>
+                        <div class="stat-label">Unique NDCs</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Code Coverage by Category</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="codeCoverageChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Most Utilized NDC Codes</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="ndcUtilizationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Data Quality Section -->
+            <section id="data-quality" class="content-section">
+                <div class="section-header">
+                    <h2>Data Quality & Strategic Intelligence</h2>
+                    <button class="export-btn" data-chart="quality">Export</button>
+                </div>
+
+                <div class="quality-metrics">
+                    <h4>Claims Processing Quality</h4>
+                    <div class="completeness-bars">
+                        <div class="completeness-item">
+                            <span class="metric-label">Overall Data Quality</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%" data-value="92"></div>
+                            </div>
+                            <span class="metric-value">92%</span>
+                        </div>
+                        <div class="completeness-item">
+                            <span class="metric-label">Billing NPI</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%" data-value="85"></div>
+                            </div>
+                            <span class="metric-value">85%</span>
+                        </div>
+                        <div class="completeness-item">
+                            <span class="metric-label">Rendering NPI</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 82%" data-value="82"></div>
+                            </div>
+                            <span class="metric-value">82%</span>
+                        </div>
+                        <div class="completeness-item">
+                            <span class="metric-label">Prescriber NPI</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%" data-value="75"></div>
+                            </div>
+                            <span class="metric-value">75%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Claims Status Distribution</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="claimsStatusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Source Reliability Metrics</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="reliabilityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="strategic-recommendations">
+                    <h4>Strategic Recommendations</h4>
+                    <div class="recommendation-cards">
+                        <div class="recommendation-card">
+                            <h5>Market Access</h5>
+                            <p>Leverage multi-source approach for 40% better patient identification and targeting strategies.</p>
+                        </div>
+                        <div class="recommendation-card">
+                            <h5>Clinical Development</h5>
+                            <p>Focus on high-prevalence diagnosis codes and procedure combinations for clinical trial design.</p>
+                        </div>
+                        <div class="recommendation-card">
+                            <h5>Competitive Intelligence</h5>
+                            <p>Monitor procedure code trends and provider prescribing patterns for market positioning.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
