@@ -171,7 +171,89 @@ class EnhancedChryselsysDashboard {
           medical: 65,
           pharmacy: 35
         }
-      }
+      },
+      
+      new_patients_trends: {
+        yoy: {
+          years: ['2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+          iqvia:     [163511, 79328, 73855, 63308, 60090, 55971, 50906, 38690, 10180],
+          komodo:    [248515,126997,120305,103958,102271, 95916, 87963, 65177, 15083],
+          healthverity:[225554,120580,112695, 94359, 95559, 90556, 86920, 67095, 14713]
+        },
+        mom: {
+          2021: {
+            months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            iqvia:     [5080,4732,5711,5373,4971,5318,4988,4990,4824,4834,4702,4567],
+            komodo:    [8747,8020,9646,9406,8733,8943,8617,8411,8086,8257,7875,7530],
+            healthverity:[8259,7399,9048,8746,7935,8394,7950,7871,7750,7757,7401,7049]
+          },
+          2022: {
+            months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            iqvia:     [4779,4483,5343,4787,4853,4677,4345,5117,4488,4600,4364,4135],
+            komodo:    [8176,7715,9047,8165,8358,8127,7445,8593,7794,7907,7478,7111],
+            healthverity:[7691,7376,8560,7702,7860,7765,7008,8159,7299,7435,7046,6655]
+          },
+          2023: {
+            months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            iqvia:     [4684,4268,4952,4165,4437,4484,3905,4636,3936,4192,3847,3400],
+            komodo:    [8099,7543,8481,7489,7943,7701,6786,7789,6841,7058,6497,5736],
+            healthverity:[8046,7190,8193,7119,8174,7622,6654,7625,6713,7126,6516,5942]
+          },
+          2024: {
+            months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            iqvia:     [3815,3257,3196,3458,3385,3155,3282,3380,3161,3299,2641,2661],
+            komodo:    [6379,5822,5583,5925,5805,5244,5548,5473,5120,5609,4430,4239],
+            healthverity:[6897,5950,5827,6149,5823,5415,5793,5697,5061,5524,4537,4422]
+          },
+          2025: {
+            months: ['Jan','Feb','Mar','Apr','May'],
+            iqvia:     [3080,2463,2304,1746,587],
+            komodo:    [4683,3755,3427,2454,764],
+            healthverity:[4980,3769,3228,2077,659]
+          }
+        }
+      },
+      
+      prevalence_patients_trends: {
+        yoy: {
+          years: ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+          komodo: [248515, 313293, 351269, 364532, 377453, 383024, 383571, 337040],
+          healthverity: [225554, 291073, 327033, 332459, 346595, 356477, 363674, 340549],
+          iqvia: [163511, 200494, 216536, 219452, 218917, 217220, 209682, 190861]
+        },
+        mom: {
+          2025: {
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            komodo: [143190, 134301, 133815, 127096, 114461],
+            healthverity: [148247, 141524, 140720, 131197, 106511],
+            iqvia: [88420, 84923, 85464, 84741, 79936]
+          },
+          2024: {
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            komodo: [168107, 155743, 145760, 151869, 151368, 146188, 149581, 148685, 146259, 152918, 144866, 142654],
+            healthverity: [171850, 161074, 150474, 153331, 152601, 147540, 151977, 152678, 150284, 155215, 146418, 146825],
+            iqvia: [103386, 93886, 84125, 89115, 89396, 86709, 89033, 88806, 87547, 90439, 85898, 86429]
+          },
+          2023: {
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            komodo: [185697, 180556, 188240, 182862, 187663, 185311, 179393, 184851, 179526, 183280, 179220, 168791],
+            healthverity: [172760, 168067, 176337, 170816, 175865, 173493, 168852, 174941, 170055, 173814, 169892, 163903],
+            iqvia: [105796, 103385, 107929, 104664, 107015, 105880, 103174, 107296, 104098, 106250, 104799, 101441]
+          },
+          2022: {
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            komodo: [179540, 175882, 185643, 181657, 182815, 184577, 178878, 186429, 183681, 183901, 182777, 180045],
+            healthverity: [165758, 162127, 171294, 167131, 168896, 171447, 165918, 172797, 169916, 169683, 168766, 166408],
+            iqvia: [108148, 105510, 110637, 107522, 108096, 109204, 106010, 110096, 107822, 108156, 108011, 104834]
+          },
+          2021: {
+            months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            komodo: [178826, 175321, 186886, 183796, 180774, 186393, 183079, 183610, 183964, 182173, 181263, 179524],
+            healthverity: [160288, 156578, 168574, 165333, 162870, 168247, 165874, 166300, 166919, 166346, 165461, 164297],
+            iqvia: [108149, 105455, 112302, 110089, 107876, 111007, 109294, 109749, 109892, 108987, 108199, 108063]
+          }
+        }
+      }      
     };
   }
 
@@ -214,6 +296,36 @@ class EnhancedChryselsysDashboard {
     window.addEventListener('resize', () => {
       this.handleResize();
     });
+
+    // New Patients Trends Toggle Listeners
+    const newPatientsYoY = document.getElementById('newPatientsYoY');
+    const newPatientsMoM = document.getElementById('newPatientsMoM');
+    const newPatientsYearFilter = document.getElementById('newPatientsYearFilter');
+    const newPatientsYearSelect = document.getElementById('newPatientsYearSelect');
+
+    if (newPatientsYoY && newPatientsMoM) {
+      newPatientsYoY.addEventListener('click', () => this.toggleNewPatientsView('yoy'));
+      newPatientsMoM.addEventListener('click', () => this.toggleNewPatientsView('mom'));
+    }
+
+    if (newPatientsYearSelect) {
+      newPatientsYearSelect.addEventListener('change', () => this.updateNewPatientsChart());
+    }
+
+    // Prevalence Patients Trends Toggle Listeners
+    const prevalenceYoY = document.getElementById('prevalenceYoY');
+    const prevalenceMoM = document.getElementById('prevalenceMoM');
+    const prevalenceYearFilter = document.getElementById('prevalenceYearFilter');
+    const prevalenceYearSelect = document.getElementById('prevalenceYearSelect');
+
+    if (prevalenceYoY && prevalenceMoM) {
+      prevalenceYoY.addEventListener('click', () => this.togglePrevalenceView('yoy'));
+      prevalenceMoM.addEventListener('click', () => this.togglePrevalenceView('mom'));
+    }
+
+    if (prevalenceYearSelect) {
+      prevalenceYearSelect.addEventListener('change', () => this.updatePrevalenceChart());
+    }
 
     console.log('✅ Enhanced event listeners setup complete');
   }
@@ -319,6 +431,8 @@ class EnhancedChryselsysDashboard {
       // Patient Analysis Charts
       this.createPatientVolumeChart();
       this.createClaimsTypeChart();
+      this.createNewPatientsTrendsChart();
+      this.createPrevalencePatientsTrendsChart();
       
       // Procedure Analysis Charts
       this.createProcedureCodesChart();
@@ -416,6 +530,258 @@ class EnhancedChryselsysDashboard {
       },
       options: this.getDoughnutChartOptions('Claims Type Distribution')
     });
+  }
+
+  // New Patients Trends Chart
+  createNewPatientsTrendsChart() {
+    const ctx = document.getElementById('newPatientsTrendsChart');
+    if (!ctx) return;
+
+    // Initialize with YoY data
+    this.newPatientsViewMode = 'yoy';
+    this.updateNewPatientsChart();
+  }
+
+  updateNewPatientsChart() {
+    const ctx = document.getElementById('newPatientsTrendsChart');
+    if (!ctx) return;
+
+    const data = this.dashboardData?.new_patients_trends || {};
+    
+    if (this.charts.newPatientsTrends) {
+      this.charts.newPatientsTrends.destroy();
+    }
+
+    let chartData, labels, title;
+
+    if (this.newPatientsViewMode === 'yoy') {
+      const yoyData = data.yoy || {};
+      labels = yoyData.years || [];
+      title = 'New Patients Trends - Year over Year';
+      chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Komodo',
+            data: yoyData.komodo || [],
+            borderColor: this.colors.bronze,
+            backgroundColor: this.colors.bronze + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'HealthVerity',
+            data: yoyData.healthverity || [],
+            borderColor: this.colors.ateneoBlue,
+            backgroundColor: this.colors.ateneoBlue + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'IQVIA',
+            data: yoyData.iqvia || [],
+            borderColor: this.colors.paleCerulean,
+            backgroundColor: this.colors.paleCerulean + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      };
+    } else {
+      const yearSelect = document.getElementById('newPatientsYearSelect');
+      const selectedYear = yearSelect ? yearSelect.value : '2025';
+      const momData = data.mom?.[selectedYear] || {};
+      labels = momData.months || [];
+      title = `New Patients Trends - Month over Month (${selectedYear})`;
+      chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Komodo',
+            data: momData.komodo || [],
+            borderColor: this.colors.bronze,
+            backgroundColor: this.colors.bronze + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'HealthVerity',
+            data: momData.healthverity || [],
+            borderColor: this.colors.ateneoBlue,
+            backgroundColor: this.colors.ateneoBlue + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'IQVIA',
+            data: momData.iqvia || [],
+            borderColor: this.colors.paleCerulean,
+            backgroundColor: this.colors.paleCerulean + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      };
+    }
+
+    this.charts.newPatientsTrends = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: this.getLineChartOptions(title, 'Patient Count')
+    });
+  }
+
+  toggleNewPatientsView(mode) {
+    this.newPatientsViewMode = mode;
+    
+    // Update toggle buttons
+    const yoyBtn = document.getElementById('newPatientsYoY');
+    const momBtn = document.getElementById('newPatientsMoM');
+    const yearFilter = document.getElementById('newPatientsYearFilter');
+    
+    if (yoyBtn && momBtn) {
+      yoyBtn.classList.toggle('active', mode === 'yoy');
+      momBtn.classList.toggle('active', mode === 'mom');
+    }
+    
+    if (yearFilter) {
+      yearFilter.style.display = mode === 'mom' ? 'block' : 'none';
+    }
+    
+    // Update chart
+    this.updateNewPatientsChart();
+  }
+
+  // Prevalence Patients Trends Chart
+  createPrevalencePatientsTrendsChart() {
+    const ctx = document.getElementById('prevalencePatientsTrendsChart');
+    if (!ctx) return;
+
+    // Initialize with YoY data
+    this.prevalenceViewMode = 'yoy';
+    this.updatePrevalenceChart();
+  }
+
+  updatePrevalenceChart() {
+    const ctx = document.getElementById('prevalencePatientsTrendsChart');
+    if (!ctx) return;
+
+    const data = this.dashboardData?.prevalence_patients_trends || {};
+    
+    if (this.charts.prevalencePatientsTrends) {
+      this.charts.prevalencePatientsTrends.destroy();
+    }
+
+    let chartData, labels, title;
+
+    if (this.prevalenceViewMode === 'yoy') {
+      const yoyData = data.yoy || {};
+      labels = yoyData.years || [];
+      title = 'Prevalence Patients Trends - Year over Year';
+      chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Komodo',
+            data: yoyData.komodo || [],
+            borderColor: this.colors.bronze,
+            backgroundColor: this.colors.bronze + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'HealthVerity',
+            data: yoyData.healthverity || [],
+            borderColor: this.colors.ateneoBlue,
+            backgroundColor: this.colors.ateneoBlue + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'IQVIA',
+            data: yoyData.iqvia || [],
+            borderColor: this.colors.paleCerulean,
+            backgroundColor: this.colors.paleCerulean + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      };
+    } else {
+      const yearSelect = document.getElementById('prevalenceYearSelect');
+      const selectedYear = yearSelect ? yearSelect.value : '2025';
+      const momData = data.mom?.[selectedYear] || {};
+      labels = momData.months || [];
+      title = `Prevalence Patients Trends - Month over Month (${selectedYear})`;
+      chartData = {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Komodo',
+            data: momData.komodo || [],
+            borderColor: this.colors.bronze,
+            backgroundColor: this.colors.bronze + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'HealthVerity',
+            data: momData.healthverity || [],
+            borderColor: this.colors.ateneoBlue,
+            backgroundColor: this.colors.ateneoBlue + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'IQVIA',
+            data: momData.iqvia || [],
+            borderColor: this.colors.paleCerulean,
+            backgroundColor: this.colors.paleCerulean + '20',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      };
+    }
+
+    this.charts.prevalencePatientsTrends = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: this.getLineChartOptions(title, 'Patient Count')
+    });
+  }
+
+  togglePrevalenceView(mode) {
+    this.prevalenceViewMode = mode;
+    
+    // Update toggle buttons
+    const yoyBtn = document.getElementById('prevalenceYoY');
+    const momBtn = document.getElementById('prevalenceMoM');
+    const yearFilter = document.getElementById('prevalenceYearFilter');
+    
+    if (yoyBtn && momBtn) {
+      yoyBtn.classList.toggle('active', mode === 'yoy');
+      momBtn.classList.toggle('active', mode === 'mom');
+    }
+    
+    if (yearFilter) {
+      yearFilter.style.display = mode === 'mom' ? 'block' : 'none';
+    }
+    
+    // Update chart
+    this.updatePrevalenceChart();
   }
 
   // Procedure Analysis Charts

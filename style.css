@@ -1730,3 +1730,178 @@ button:focus-visible,
               border-color var(--transition-fast),
               box-shadow var(--transition-fast);
 }
+
+/* New Insight Sections */
+.insight-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.insight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.insight-header h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.insight-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Toggle Button Group */
+.toggle-group {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.toggle-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 60px;
+}
+
+.toggle-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+
+.toggle-btn.active {
+  background: var(--chryselys-bronze);
+  color: var(--color-white);
+  box-shadow: 0 2px 4px rgba(201, 139, 39, 0.2);
+}
+
+.toggle-btn.active:hover {
+  background: var(--chryselys-bronze);
+  color: var(--color-white);
+}
+
+/* Year Filter */
+.year-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.year-filter label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.year-filter select {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.year-filter select:focus {
+  outline: none;
+  border-color: var(--chryselys-bronze);
+  box-shadow: 0 0 0 2px rgba(201, 139, 39, 0.1);
+}
+
+/* Full Width Chart Container */
+.chart-container.full-width {
+  width: 100%;
+  margin: 0;
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .insight-section {
+  background: var(--bg-surface-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .insight-header h3 {
+  color: var(--text-primary-dark);
+}
+
+[data-theme="dark"] .toggle-group {
+  background: var(--bg-secondary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .toggle-btn {
+  color: var(--text-secondary-dark);
+}
+
+[data-theme="dark"] .toggle-btn:hover {
+  color: var(--text-primary-dark);
+  background: var(--bg-surface-dark);
+}
+
+[data-theme="dark"] .year-filter {
+  background: var(--bg-surface-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .year-filter label {
+  color: var(--text-secondary-dark);
+}
+
+[data-theme="dark"] .year-filter select {
+  background: var(--bg-primary-dark);
+  color: var(--text-primary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .year-filter select:focus {
+  border-color: var(--chryselys-bronze);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .insight-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .insight-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .toggle-group {
+    order: 1;
+  }
+  
+  .year-filter {
+    order: 2;
+  }
+}

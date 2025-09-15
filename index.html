@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chryselys - Enhanced NSCLC Healthcare Intelligence Platform</title>
+    <title>Chryselys -  NSCLC Healthcare Intelligence Platform</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <meta name="description" content="Chryselys Enhanced NSCLC Healthcare Intelligence Platform - Comprehensive Analytics with Procedure & Diagnosis Code Insights">
+    <meta name="description" content="Chryselys  NSCLC Healthcare Intelligence Platform - Comprehensive Analytics with Procedure & Diagnosis Code Insights">
 </head>
 <body>
     <!-- Landing Page Section -->
@@ -18,7 +18,7 @@
                 <div class="chryselys-logo-main">
                     <img src="assets/chryselys.png" alt="Chryselys Logo" class="chryselys-logo-img" style="height:64px;">
                 </div>
-                <h1 class="hero-title">Enhanced NSCLC Healthcare Intelligence Platform</h1>
+                <h1 class="hero-title">NSCLC Healthcare Intelligence Platform</h1>
                 <p class="hero-subtitle">Comprehensive Analytics with Detailed Procedure & Diagnosis Code Insights</p>
                 <div class="hero-stats">
                     <div class="stat-item">
@@ -57,7 +57,7 @@
                     <div class="insight-card">
                         <div class="insight-icon">👨‍⚕️</div>
                         <h3>Provider Landscape</h3>
-                        <p>Enhanced provider analysis with specialty distribution, NPI fill rates, and prescribing focus insights.</p>
+                        <p> provider analysis with specialty distribution, NPI fill rates, and prescribing focus insights.</p>
                         <div class="insight-metric">15K+ Providers</div>
                     </div>
                     <div class="insight-card">
@@ -96,7 +96,7 @@
                         <img src="assets/chryselys.png" alt="Chryselys Logo" class="chryselys-logo-img" style="height:52px;">
                     </div>
                     <div class="dashboard-title">
-                        <h1>Enhanced NSCLC Healthcare Intelligence</h1>
+                        <h1> NSCLC Healthcare Intelligence</h1>
                         <p class="dashboard-subtitle">Comprehensive Analytics Platform</p>
                     </div>
                 </div>
@@ -178,9 +178,67 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- New Patients Trends Section -->
+                <div class="insight-section" style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <!-- New Patients Trends -->
+                    <div style="flex: 1 1 350px; min-width: 320px; display: flex; flex-direction: column;">
+                        <div class="insight-header">
+                            <h3>New Patients Trends</h3>
+                            <div class="insight-controls">
+                                <div class="toggle-group">
+                                    <button class="toggle-btn active" id="newPatientsYoY">YoY</button>
+                                    <button class="toggle-btn" id="newPatientsMoM">MoM</button>
+                                </div>
+                                <div class="year-filter" id="newPatientsYearFilter" style="display: none;">
+                                    <label>Year:</label>
+                                    <select id="newPatientsYearSelect">
+                                        <option value="2025">2025</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container full-width">
+                            <div class="chart-wrapper" style="position: relative; height: 350px;">
+                                <canvas id="newPatientsTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Prevalence Patients Trends -->
+                    <div style="flex: 1 1 350px; min-width: 320px; display: flex; flex-direction: column;">
+                        <div class="insight-header">
+                            <h3>Prevalence Patients Trends</h3>
+                            <div class="insight-controls">
+                                <div class="toggle-group">
+                                    <button class="toggle-btn active" id="prevalenceYoY">YoY</button>
+                                    <button class="toggle-btn" id="prevalenceMoM">MoM</button>
+                                </div>
+                                <div class="year-filter" id="prevalenceYearFilter" style="display: none;">
+                                    <label>Year:</label>
+                                    <select id="prevalenceYearSelect">
+                                        <option value="2025">2025</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container full-width">
+                            <div class="chart-wrapper" style="position: relative; height: 350px;">
+                                <canvas id="prevalencePatientsTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
-            <!-- Enhanced Procedure Analysis Section -->
+            <!--  Procedure Analysis Section -->
             <section id="procedure-analysis" class="content-section">
                 <div class="section-header">
                     <h2>Detailed Procedure Analysis</h2>
@@ -283,7 +341,7 @@
                 </div>
             </section>
 
-            <!-- Enhanced Diagnosis Analysis Section -->
+            <!--  Diagnosis Analysis Section -->
             <section id="diagnosis-analysis" class="content-section">
                 <div class="section-header">
                     <h2>Detailed Diagnosis Analysis</h2>
@@ -351,7 +409,7 @@
                 </div>
             </section>
 
-            <!-- Enhanced Provider Landscape Section -->
+            <!--  Provider Landscape Section -->
             <section id="provider-landscape" class="content-section">
                 <div class="section-header">
                     <h2>Provider Landscape Analysis</h2>
@@ -397,7 +455,7 @@
                 </div>
             </section>
 
-            <!-- Enhanced Demographics Section -->
+            <!--  Demographics Section -->
             <section id="demographics" class="content-section">
                 <div class="section-header">
                     <h2>Demographics & Geography Analysis</h2>
@@ -524,7 +582,7 @@
                 </div>
             </section>
 
-            <!-- Enhanced Data Quality Section -->
+            <!--  Data Quality Section -->
             <section id="data-quality" class="content-section">
                 <div class="section-header">
                     <h2>Data Quality & Strategic Intelligence</h2>
