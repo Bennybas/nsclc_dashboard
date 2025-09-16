@@ -119,9 +119,9 @@
                 <button class="nav-tab" data-section="procedure-analysis">Procedure Analysis</button>
                 <button class="nav-tab" data-section="diagnosis-analysis">Diagnosis Analysis</button>
                 <button class="nav-tab" data-section="provider-landscape">Provider Landscape</button>
-                <button class="nav-tab" data-section="demographics">Demographics</button>
+                <!-- <button class="nav-tab" data-section="demographics">Demographics</button> -->
                 <button class="nav-tab" data-section="treatment-landscape">Treatment Landscape</button>
-                <button class="nav-tab" data-section="temporal-trends">Temporal Trends</button>
+                <!-- <button class="nav-tab" data-section="temporal-trends">Temporal Trends</button> -->
                 <button class="nav-tab" data-section="market-basket">Market Basket</button>
                 <button class="nav-tab" data-section="data-quality">Data Quality</button>
             </div>
@@ -175,6 +175,18 @@
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 300px;">
                             <canvas id="claimsTypeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Gender and Age Distribution</h4>
+                            <div class="toggle-group">
+                                <button class="toggle-btn active" id="ageToggle">Age</button>
+                                <button class="toggle-btn" id="genderToggle">Gender</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="genderAgeDistributionChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -233,6 +245,53 @@
                             <div class="chart-wrapper" style="position: relative; height: 350px;">
                                 <canvas id="prevalencePatientsTrendsChart"></canvas>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="section-header">
+                    <h2>Demographics & Geography Analysis</h2>
+                    <button class="export-btn" data-chart="demographics">Export</button>
+                </div> -->
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Age Distribution Analysis</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="ageDistributionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top 10 States by Patient Count</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="geographicChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="section-header">
+                    <h2>Temporal Trends Analysis</h2>
+                    <button class="export-btn" data-chart="temporal">Export</button>
+                </div> -->
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Monthly Incidence Patterns 2024 YTD</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="monthlyTrendsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Yearly Trends 2017-2024</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="yearlyTrendsChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -456,31 +515,9 @@
             </section>
 
             <!--  Demographics Section -->
-            <section id="demographics" class="content-section">
-                <div class="section-header">
-                    <h2>Demographics & Geography Analysis</h2>
-                    <button class="export-btn" data-chart="demographics">Export</button>
-                </div>
-
-                <div class="charts-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Age Distribution Analysis</h4>
-                        </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="ageDistributionChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Top 10 States by Patient Count</h4>
-                        </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="geographicChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- <section id="demographics" class="content-section">
+                
+            </section> -->
 
             <!-- Treatment Landscape Section -->
             <section id="treatment-landscape" class="content-section">
@@ -510,31 +547,9 @@
             </section>
 
             <!-- Temporal Trends Section -->
-            <section id="temporal-trends" class="content-section">
-                <div class="section-header">
-                    <h2>Temporal Trends Analysis</h2>
-                    <button class="export-btn" data-chart="temporal">Export</button>
-                </div>
-
-                <div class="charts-grid">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Monthly Incidence Patterns 2024 YTD</h4>
-                        </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="monthlyTrendsChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Yearly Trends 2017-2024</h4>
-                        </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="yearlyTrendsChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- <section id="temporal-trends" class="content-section">
+                
+            </section> -->
 
             <!-- Market Basket Analysis Section -->
             <section id="market-basket" class="content-section">

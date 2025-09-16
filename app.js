@@ -103,12 +103,18 @@ class EnhancedChryselsysDashboard {
         }
       },
       demographics: {
+        gender_distribution: {
+          'F': 299131,
+          'M': 296613,
+          'U': 95
+        },
         age_distribution: {
-          '0-17': 0.1,
-          '18-24': 0.1,
-          '25-59': 9.6,
-          '60-74': 43.8,
-          '75+': 46.4
+          '0-17': 651,
+          '18-24': 646,
+          '25-59': 57394,
+          '60-74': 254634,
+          '75+': 194635,
+          'NULL': 87879
         },
         top_states: [
           { state: 'California', patients: 310000 },
@@ -327,6 +333,15 @@ class EnhancedChryselsysDashboard {
       prevalenceYearSelect.addEventListener('change', () => this.updatePrevalenceChart());
     }
 
+    // Gender/Age Distribution Toggle Listeners
+    const ageToggle = document.getElementById('ageToggle');
+    const genderToggle = document.getElementById('genderToggle');
+
+    if (ageToggle && genderToggle) {
+      ageToggle.addEventListener('click', () => this.toggleGenderAgeView('age'));
+      genderToggle.addEventListener('click', () => this.toggleGenderAgeView('gender'));
+    }
+
     console.log('✅ Enhanced event listeners setup complete');
   }
 
@@ -431,6 +446,7 @@ class EnhancedChryselsysDashboard {
       // Patient Analysis Charts
       this.createPatientVolumeChart();
       this.createClaimsTypeChart();
+      this.createGenderAgeDistributionChart();
       this.createNewPatientsTrendsChart();
       this.createPrevalencePatientsTrendsChart();
       
@@ -530,6 +546,99 @@ class EnhancedChryselsysDashboard {
       },
       options: this.getDoughnutChartOptions('Claims Type Distribution')
     });
+  }
+
+  // Gender/Age Distribution Chart
+  createGenderAgeDistributionChart() {
+    const ctx = document.getElementById('genderAgeDistributionChart');
+    if (!ctx) return;
+
+    // Initialize with age data
+    this.genderAgeViewMode = 'age';
+    this.updateGenderAgeChart();
+  }
+
+  updateGenderAgeChart() {
+    const ctx = document.getElementById('genderAgeDistributionChart');
+    if (!ctx) return;
+
+    const data = this.dashboardData?.demographics || {};
+    
+    if (this.charts.genderAgeDistribution) {
+      this.charts.genderAgeDistribution.destroy();
+    }
+
+    let chartData, title;
+
+    if (this.genderAgeViewMode === 'age') {
+      const ageData = data.age_distribution || {};
+      title = 'Age Distribution';
+      chartData = {
+        labels: ['0-17', '18-24', '25-59', '60-74', '75+', 'Unknown'],
+        datasets: [{
+          data: [
+            ageData['0-17'] || 0,
+            ageData['18-24'] || 0,
+            ageData['25-59'] || 0,
+            ageData['60-74'] || 0,
+            ageData['75+'] || 0,
+            ageData['NULL'] || 0
+          ],
+          backgroundColor: [
+            this.colors.bronze,
+            this.colors.ateneoBlue,
+            this.colors.paleCerulean,
+            this.colors.weldonBlue,
+            '#1FB8CD',
+            '#FFC185'
+          ],
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }]
+      };
+    } else {
+      const genderData = data.gender_distribution || {};
+      title = 'Gender Distribution';
+      chartData = {
+        labels: ['Female', 'Male', 'Unknown'],
+        datasets: [{
+          data: [
+            genderData['F'] || 0,
+            genderData['M'] || 0,
+            genderData['U'] || 0
+          ],
+          backgroundColor: [
+            this.colors.bronze,
+            this.colors.ateneoBlue,
+            this.colors.paleCerulean
+          ],
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }]
+      };
+    }
+
+    this.charts.genderAgeDistribution = new Chart(ctx, {
+      type: 'doughnut',
+      data: chartData,
+      options: this.getDoughnutChartOptions(title)
+    });
+  }
+
+  toggleGenderAgeView(mode) {
+    this.genderAgeViewMode = mode;
+    
+    // Update toggle buttons
+    const ageBtn = document.getElementById('ageToggle');
+    const genderBtn = document.getElementById('genderToggle');
+    
+    if (ageBtn && genderBtn) {
+      ageBtn.classList.toggle('active', mode === 'age');
+      genderBtn.classList.toggle('active', mode === 'gender');
+    }
+    
+    // Update chart
+    this.updateGenderAgeChart();
   }
 
   // New Patients Trends Chart
