@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <meta name="description" content="Chryselys  NSCLC Healthcare Intelligence Platform - Comprehensive Analytics with Procedure & Diagnosis Code Insights">
 </head>
 <body>
@@ -116,14 +118,14 @@
         <nav class="main-nav">
             <div class="nav-container">
                 <button class="nav-tab active" data-section="patient-analysis">Patient Analysis</button>
-                <button class="nav-tab" data-section="procedure-analysis">Procedure Analysis</button>
-                <button class="nav-tab" data-section="diagnosis-analysis">Diagnosis Analysis</button>
-                <button class="nav-tab" data-section="provider-landscape">Provider Landscape</button>
+                <button class="nav-tab" data-section="procedure-analysis">HCP/HCO Analysis</button>
+                <button class="nav-tab" data-section="diagnosis-analysis">Diagnosis and Prescription Analysis</button>
+        
                 <!-- <button class="nav-tab" data-section="demographics">Demographics</button> -->
-                <button class="nav-tab" data-section="treatment-landscape">Treatment Landscape</button>
+                <!-- <button class="nav-tab" data-section="treatment-landscape">Treatment Landscape</button> -->
                 <!-- <button class="nav-tab" data-section="temporal-trends">Temporal Trends</button> -->
-                <button class="nav-tab" data-section="market-basket">Market Basket</button>
-                <button class="nav-tab" data-section="data-quality">Data Quality</button>
+                <!-- <button class="nav-tab" data-section="market-basket">Market Basket</button> -->
+                <!-- <button class="nav-tab" data-section="data-quality">Data Quality</button> -->
             </div>
         </nav>
 
@@ -136,29 +138,49 @@
                     <h2>Patient Analysis Overview</h2>
                     <button class="export-btn" data-chart="patient">Export</button>
                 </div>
-                
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value">2.47M</div>
-                        <div class="stat-label">Total Patients</div>
-                        <div class="stat-change positive">+12% YoY</div>
+                      <div class="stat-value">2.47M</div>
+                      <div class="stat-label">Total Patients</div>
+                      
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Data Sources</div>
-                        <div class="stat-change neutral">Multi-source</div>
-                    </div>
+                      <div class="stat-value">3</div>
+                      <div class="stat-label">Data Sources</div>
+                      <div class="stat-change neutral">IQVIA, HealthVerity, Komodo</div>
+                    </div>                  
+                    <!-- Dx Patients -->
                     <div class="stat-card">
-                        <div class="stat-value">85%</div>
-                        <div class="stat-label">Claims Coverage</div>
-                        <div class="stat-change positive">+5% vs Q3</div>
+                      <div class="stat-value">Dx</div>
+                      <div class="stat-label">
+                        IQVIA: 585,915<br>
+                        HealthVerity: 904,220<br>
+                        Komodo: 961,381
+                      </div>
                     </div>
+                  
+                    <!-- Px Patients -->
                     <div class="stat-card">
-                        <div class="stat-value">62%</div>
-                        <div class="stat-label">Komodo Advantage</div>
-                        <div class="stat-change positive">vs IQVIA</div>
+                      <div class="stat-value">Px</div>
+                      <div class="stat-label">
+                        IQVIA: 532,363<br>
+                        HealthVerity: 844,532<br>
+                        Komodo: 911,865
+                      </div>
+                    </div>
+                  
+                    <!-- Rx Patients -->
+                    <div class="stat-card">
+                      <div class="stat-value">Rx</div>
+                      <div class="stat-label">
+                        IQVIA: 91,377<br>
+                        HealthVerity: 140,609<br>
+                        Komodo: 109,721
+                      </div>
                     </div>
                 </div>
+                  
+                
 
                 <div class="charts-grid">
                     <div class="chart-container">
@@ -177,16 +199,20 @@
                             <canvas id="claimsTypeChart"></canvas>
                         </div>
                     </div>
+                    <!-- Gender/Age Distribution Section -->
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>Gender and Age Distribution</h4>
-                            <div class="toggle-group">
-                                <button class="toggle-btn active" id="ageToggle">Age</button>
-                                <button class="toggle-btn" id="genderToggle">Gender</button>
+                            <h4 id="distributionChartTitle">Gender Distribution by Data Source</h4>
+                            <div class="chart-toggle">
+                                <div class="toggle-group">
+                                    <button class="toggle-btn active" id="genderToggle">Gender</button>
+                                    <button class="toggle-btn" id="ageToggle">Age</button>
+                                </div>
                             </div>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="genderAgeDistributionChart"></canvas>
+                            <canvas id="genderDistributionChart"></canvas>
+                            <canvas id="ageDistributionBySourceChart" style="display: none;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -254,20 +280,20 @@
                 </div> -->
 
                 <div class="charts-grid">
-                    <div class="chart-container">
+                    <!-- <div class="chart-container">
                         <div class="chart-header">
                             <h4>Age Distribution Analysis</h4>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 300px;">
                             <canvas id="ageDistributionChart"></canvas>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>Top 10 States by Patient Count</h4>
+                            <h4>Patient Distribution by State</h4>
                         </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="geographicChart"></canvas>
+                        <div class="map-wrapper" style="position: relative; height: 400px; border-radius: 8px; overflow: hidden;">
+                            <div id="geographicMap" style="width: 100%; height: 100%;"></div>
                         </div>
                     </div>
                 </div>
@@ -277,7 +303,7 @@
                     <button class="export-btn" data-chart="temporal">Export</button>
                 </div> -->
 
-                <div class="charts-grid">
+                <!-- <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
                             <h4>Monthly Incidence Patterns 2024 YTD</h4>
@@ -294,34 +320,27 @@
                             <canvas id="yearlyTrendsChart"></canvas>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </section>
 
-            <!--  Procedure Analysis Section -->
+            <!--  HCP/HCO Analysis Section -->
             <section id="procedure-analysis" class="content-section">
-                <div class="section-header">
-                    <h2>Detailed Procedure Analysis</h2>
-                    <button class="export-btn" data-chart="procedure">Export</button>
+                <!-- <div class="section-header">
+                    <h2>HCP/HCO Metrics</h2>
+                </div> -->
+
+                <!-- HCP Metrics: Referring / Rendering / Prescriber -->
+                <div class="section-header" style="margin-top: 8px;">
+                    <h3>HCP Metrics</h3>
                 </div>
 
-                <div class="insight-panel">
-                    <h3>Key Procedure Insights</h3>
-                    <div class="insight-grid">
-                        <div class="insight-item">
-                            <div class="insight-metric">J9045</div>
-                            <div class="insight-desc">Top Procedure Code - Carboplatin Administration</div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCP Fill Rate & Anomaly Check – Referring vs Rendering</h4>
                         </div>
-                        <div class="insight-item">
-                            <div class="insight-metric">42%</div>
-                            <div class="insight-desc">Chemotherapy Procedure Share</div>
-                        </div>
-                        <div class="insight-item">
-                            <div class="insight-metric">28%</div>
-                            <div class="insight-desc">Immunotherapy Procedures</div>
-                        </div>
-                        <div class="insight-item">
-                            <div class="insight-metric">15%</div>
-                            <div class="insight-desc">Targeted Therapy Utilization</div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcpFillAnomalyChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -329,140 +348,171 @@
                 <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>Top 5 Procedure Codes by Patient Count</h4>
+                            <h4>Top Rendering Specialties & NPIs by Patient Count</h4>
                         </div>
-                        <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="procedureCodesChart"></canvas>
+                        <div class="chart-wrapper" style="position: relative; height: 380px;">
+                            <canvas id="topRenderingSpecialtiesChart"></canvas>
                         </div>
                     </div>
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>Drug Class Distribution</h4>
+                            <h4>Top Referring Specialties & NPIs by Patient Count</h4>
                         </div>
-                        <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="drugClassChart"></canvas>
+                        <div class="chart-wrapper" style="position: relative; height: 380px;">
+                            <canvas id="topReferringSpecialtiesChart"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div class="data-table-container">
-                    <h4>Procedure Code Clinical Significance</h4>
-                    <div class="data-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Procedure Code</th>
-                                    <th>Description</th>
-                                    <th>Patient Count</th>
-                                    <th>Utilization %</th>
-                                    <th>Clinical Significance</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>J9045</td>
-                                    <td>Carboplatin Administration</td>
-                                    <td>856,432</td>
-                                    <td>34.7%</td>
-                                    <td>Primary chemotherapy backbone</td>
-                                </tr>
-                                <tr>
-                                    <td>J9271</td>
-                                    <td>Pembrolizumab (Keytruda)</td>
-                                    <td>642,185</td>
-                                    <td>26.0%</td>
-                                    <td>First-line immunotherapy</td>
-                                </tr>
-                                <tr>
-                                    <td>J9267</td>
-                                    <td>Paclitaxel Administration</td>
-                                    <td>518,734</td>
-                                    <td>21.0%</td>
-                                    <td>Combination chemotherapy</td>
-                                </tr>
-                                <tr>
-                                    <td>J9355</td>
-                                    <td>Trastuzumab Deruxtecan</td>
-                                    <td>289,456</td>
-                                    <td>11.7%</td>
-                                    <td>Targeted therapy</td>
-                                </tr>
-                                <tr>
-                                    <td>J9173</td>
-                                    <td>Durvalumab (Imfinzi)</td>
-                                    <td>163,278</td>
-                                    <td>6.6%</td>
-                                    <td>Maintenance immunotherapy</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top Prescriber Specialties by Patient Count</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 380px;">
+                            <canvas id="topPrescriberSpecialtiesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HCO Metrics: Billing / Facility -->
+                <div class="section-header" style="margin-top: 8px;">
+                    <h3>HCO Metrics</h3>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCO Fill Rate & Anomaly Check – Billing vs Facility</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoFillAnomalyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top Billing NPIs by Patient Count</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 380px;">
+                            <canvas id="topBillingNpiChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Top Facility NPIs by Patient Count</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 380px;">
+                            <canvas id="topFacilityNpiChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!--  Diagnosis Analysis Section -->
+            <!--  Other Metrics Section (replaces Diagnosis & Prescription analysis) -->
             <section id="diagnosis-analysis" class="content-section">
                 <div class="section-header">
-                    <h2>Detailed Diagnosis Analysis</h2>
-                    <button class="export-btn" data-chart="diagnosis">Export</button>
+                    <h2>Other Metrics</h2>
                 </div>
 
-                <div class="insight-panel">
-                    <h3>Diagnosis Code Insights</h3>
-                    <div class="insight-grid">
-                        <div class="insight-item">
-                            <div class="insight-metric">C78.00</div>
-                            <div class="insight-desc">Top Diagnosis Code - Primary NSCLC</div>
-                        </div>
-                        <div class="insight-item">
-                            <div class="insight-metric">45.2%</div>
-                            <div class="insight-desc">Primary NSCLC Prevalence</div>
-                        </div>
-                        <div class="insight-item">
-                            <div class="insight-metric">28.8%</div>
-                            <div class="insight-desc">Metastatic Disease Rate</div>
-                        </div>
-                        <div class="insight-item">
-                            <div class="insight-metric">92%</div>
-                            <div class="insight-desc">Coding Consistency Score</div>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Top 10 Products by Patient Count – Mx vs Rx (source-wise) -->
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Top 5 Diagnosis Codes Distribution</h4>
-                        </div>
-                        <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="diagnosisCodesChart"></canvas>
+                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Mx vs Rx (IQVIA)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 360px;">
+                            <canvas id="topProductsMxRxIqvia"></canvas>
                         </div>
                     </div>
                     <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Diagnosis Category Breakdown</h4>
+                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Mx vs Rx (HealthVerity)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 360px;">
+                            <canvas id="topProductsMxRxHv"></canvas>
                         </div>
-                        <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="diagnosisCategoryChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Mx vs Rx (Komodo)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 360px;">
+                            <canvas id="topProductsMxRxKomodo"></canvas>
                         </div>
                     </div>
                 </div>
 
+                <!-- Top 10 Products – Combined (Mx + Rx) across sources -->
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Coding Consistency Across Sources</h4>
+                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Combined (Mx + Rx)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 380px;">
+                            <canvas id="topProductsCombined"></canvas>
                         </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="codingConsistencyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- YoY Comparison with Competitors (source-wise) -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Top Products – YoY Comparison (IQVIA)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 320px;">
+                            <canvas id="topProductsYoyIqvia"></canvas>
                         </div>
                     </div>
                     <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Prevalence Rates by Category</h4>
+                        <div class="chart-header"><h4>Top Products – YoY Comparison (HealthVerity)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 320px;">
+                            <canvas id="topProductsYoyHv"></canvas>
                         </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Top Products – YoY Comparison (Komodo)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 320px;">
+                            <canvas id="topProductsYoyKomodo"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claims Status Split -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Claims Status Split – Paid vs Rejected vs Reversed</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 320px;">
+                            <canvas id="claimsStatusSplit"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MB Codes Provided vs Visible in Data -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>MB Codes Provided vs Visible in Data</h4></div>
                         <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="prevalenceRatesChart"></canvas>
+                            <canvas id="mbCodesProvidedVsVisible"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Diagnosis & Procedure Codes by Patient Count (source-wise) -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Top Diagnosis Codes – Patient Count (IQVIA/HV/Komodo)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 360px;">
+                            <canvas id="topDiagnosisCodes"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Top Procedure Codes – Patient Count (IQVIA/HV/Komodo)</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 360px;">
+                            <canvas id="topProcedureCodes"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patient Split by Payer Type -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header"><h4>Patient Split by Payer Type</h4></div>
+                        <div class="chart-wrapper" style="position: relative; height: 320px;">
+                            <canvas id="patientSplitByPayer"></canvas>
                         </div>
                     </div>
                 </div>
@@ -681,4 +731,5 @@
 
     <script src="app.js"></script>
 </body>
+</html>
 </html>

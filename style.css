@@ -1305,6 +1305,63 @@ body {
   color: var(--chryselys-ateneo-blue);
 }
 
+/* Chart Toggle Styles */
+.chart-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-group {
+  display: flex;
+  background: var(--color-gray-200);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.toggle-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+.toggle-btn:hover {
+  background: var(--color-gray-300);
+  color: var(--color-text);
+}
+
+.toggle-btn.active {
+  background: var(--chryselys-ateneo-blue);
+  color: var(--color-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode toggle styles */
+[data-theme="dark"] .toggle-group {
+  background: var(--color-charcoal-700);
+}
+
+[data-theme="dark"] .toggle-btn {
+  color: var(--color-gray-300);
+}
+
+[data-theme="dark"] .toggle-btn:hover {
+  background: var(--color-charcoal-800);
+  color: var(--color-white);
+}
+
+[data-theme="dark"] .toggle-btn.active {
+  background: var(--chryselys-ateneo-blue);
+  color: var(--color-white);
+}
+
 .chart-wrapper {
   border-radius: var(--radius-md);
   background: var(--bg-secondary);

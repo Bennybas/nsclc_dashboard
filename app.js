@@ -12,7 +12,18 @@ class EnhancedChryselsysDashboard {
       ateneoBlue: '#004567',
       paleCerulean: '#9bc0e2',
       weldonBlue: '#8295ae',
-      chartColors: ['#c98b27', '#004567', '#9bc0e2', '#8295ae', '#1FB8CD', '#FFC185', '#B4413C', '#ECEBD5', '#5D878F', '#DB4545']
+      // Distinct colors for pie charts to ensure differentiation
+      pieChart: {
+        primary: '#E74C3C',    // Vibrant red
+        secondary: '#3498DB',  // Bright blue
+        tertiary: '#2ECC71'    // Fresh green
+      },
+      chartColors: ['#c98b27', '#004567', '#9bc0e2', '#8295ae', '#1FB8CD', '#FFC185', '#B4413C', '#ECEBD5', '#5D878F', '#DB4545'],
+      sources: {
+        iqvia: '#9bc0e2',
+        healthverity: '#004567',
+        komodo: '#c98b27'
+      }
     };
 
     this.init();
@@ -52,6 +63,94 @@ class EnhancedChryselsysDashboard {
 
   initializeFallbackData() {
     this.dashboardData = {
+      hcp_hco_metrics: {
+        // Using Dx claims for Fill Rate & Anomaly charts
+        hcp_fill_anomaly: {
+          // Fill rate % for Referring vs Rendering HCPs
+          referring: { iqvia: 40.23, healthverity: 24.4, komodo: 12.54 },
+          rendering: { iqvia: 90.28, healthverity: 64.96, komodo: 79.56 },
+          // Anomaly %: HCP role showing HCO classification (ref/rendering identified_as_hco)
+          anomalies: {
+            referring: { iqvia: 0.76, healthverity: 1.17, komodo: 0.08 },
+            rendering: { iqvia: 2.98, healthverity: 6.32, komodo: 0.0 }
+          }
+        },
+        hco_fill_anomaly: {
+          // Fill rate % for Billing vs Facility HCOs
+          billing: { iqvia: 72.64, healthverity: 60.78, komodo: 87.63 },
+          facility: { iqvia: 18.56, healthverity: 16.65, komodo: 0.48 },
+          // Anomaly %: HCO role showing HCP classification (billing/facility identified_as_hcp)
+          anomalies: {
+            billing: { iqvia: 26.03, healthverity: 59.86, komodo: 25.81 },
+            facility: { iqvia: 15.65, healthverity: 19.4, komodo: 12.95 }
+          }
+        },
+        // Top Rendering Specialties by patient count – combined list across sources
+        top_rendering_specialties: [
+          { name: 'INTERNAL MEDICINE', iqvia: 556229, healthverity: 784255, komodo: 890182 },
+          { name: 'RADIOLOGY', iqvia: 440994, healthverity: 657961, komodo: 739941 },
+          { name: 'NURSE PRACTITIONER', iqvia: 286344, healthverity: 387988, komodo: 474340 },
+          { name: 'PATHOLOGY', iqvia: 238719, healthverity: 360088, komodo: 475247 },
+          { name: 'FAMILY MEDICINE', iqvia: 206223, healthverity: 317221, komodo: 355428 },
+          { name: 'PHYSICIAN ASSISTANT', iqvia: 137489, healthverity: 206215, komodo: 275588 },
+          { name: 'HOSPITALIST', iqvia: 108407, healthverity: 179594, komodo: 222078 },
+          { name: 'SURGERY', iqvia: 95387, healthverity: 150132, komodo: 182390 },
+          { name: 'ANESTHESIOLOGY', iqvia: 94889, healthverity: 115148, komodo: 213572 },
+          { name: 'THORACIC SURGERY', iqvia: 91643, healthverity: 230367, komodo: 265510 }
+        ],
+        // Top Referring Specialties by patient count
+        top_referring_specialties: [
+          { name: 'INTERNAL MEDICINE', iqvia: 526393, healthverity: 651754, komodo: 687968 },
+          { name: 'FAMILY MEDICINE', iqvia: 208377, healthverity: 245619, komodo: 229521 },
+          { name: 'NURSE PRACTITIONER', iqvia: 188992, healthverity: 205843, komodo: 202362 },
+          { name: 'RADIOLOGY', iqvia: 196108, healthverity: 182950, komodo: 178030 },
+          { name: 'THORACIC SURGERY', iqvia: 87510, healthverity: 148833, komodo: 166993 },
+          { name: 'EMERGENCY MEDICINE', iqvia: 114413, healthverity: 120914, komodo: 113885 },
+          { name: 'PHYSICIAN ASSISTANT', iqvia: 94953, healthverity: 105811, komodo: 113116 },
+          { name: 'HOSPITALIST', iqvia: 83118, healthverity: 80897, komodo: 81642 },
+          { name: 'SURGERY', iqvia: 79160, healthverity: 74850, komodo: 89677 },
+          { name: 'PATHOLOGY', iqvia: 47111, healthverity: 51110, komodo: 53602 }
+        ],
+        // Top Prescriber Specialties (paid only) by patient count
+        top_prescriber_specialties: [
+          { name: 'INTERNAL MEDICINE', iqvia: 83036, healthverity: 102956, komodo: 97688 },
+          { name: 'NURSE PRACTITIONER', iqvia: 15301, healthverity: 19225, komodo: 19912 },
+          { name: 'PHYSICIAN ASSISTANT', iqvia: 5605, healthverity: 7332, komodo: 7488 },
+          { name: 'SPECIALIST', iqvia: 2076, healthverity: 2291, komodo: 1928 },
+          { name: 'STUDENT IN TRAINING', iqvia: 553, healthverity: 728, komodo: 820 },
+          { name: 'CLINICAL NURSE SPECIALIST', iqvia: 356, healthverity: 647, komodo: 426 },
+          { name: 'FAMILY MEDICINE', iqvia: 347, healthverity: 1501, komodo: 0 },
+          { name: 'OPHTHALMOLOGY', iqvia: 272, healthverity: 926, komodo: 423 },
+          { name: 'PSYCHIATRY & NEUROLOGY', iqvia: 187, healthverity: 501, komodo: 311 },
+          { name: 'GENERAL PRACTICE', iqvia: 52, healthverity: 174, komodo: 611 }
+        ],
+        // Top Billing NPIs by patient count (union across sources)
+        top_billing_npis: [
+          { npi: '1013973866', iqvia: 47272, healthverity: 61668, komodo: 65433 }, // CARIS MPI INC
+          { npi: '1447437355', iqvia: 50814, healthverity: 50814, komodo: 65308 }, // NEOGENOMICS
+          { npi: '1811944101', iqvia: 17549, healthverity: 18960, komodo: 18362 }, // TEXAS ONCOLOGY PA
+          { npi: '1780653618', iqvia: 12382, healthverity: 12778, komodo: 15306 }, // H LEE MOFFITT
+          { npi: '1720688054', iqvia: 11698, healthverity: 9283, komodo: 12311 }, // FOUNDATION MEDICINE INC
+          { npi: '1679525919', iqvia: 11549, healthverity: 15365, komodo: 18440 }, // CLEVELAND CLINIC FOUNDATION
+          { npi: '1760590962', iqvia: 10266, healthverity: 11876, komodo: 40372 }, // FL CANCER SPEC RI
+          { npi: '1184045619', iqvia: 0, healthverity: 18699, komodo: 26451 }, // GUARDANT HEALTH
+          { npi: '1932145778', iqvia: 4857, healthverity: 8219, komodo: 10236 }, // QUEST INCORPORATED
+          { npi: '1891731626', iqvia: 6358, healthverity: 4270, komodo: 9929 } // QUEST CLINICAL LABS
+        ],
+        // Top Facility NPIs by patient count (union across sources)
+        top_facility_npis: [
+          { npi: '1447437355', iqvia: 26820, healthverity: 47610, komodo: 0 }, // NEOGENOMICS
+          { npi: '1811944101', iqvia: 11586, healthverity: 9899, komodo: 3407 }, // TEXAS ONCOLOGY PA
+          { npi: '1780653618', iqvia: 7942, healthverity: 11880, komodo: 0 }, // MOFFITT HOSPITAL INC
+          { npi: '1679525919', iqvia: 4612, healthverity: 7993, komodo: 0 }, // CLEVELAND CLINIC
+          { npi: '1720688054', iqvia: 4740, healthverity: 5609, komodo: 0 }, // TEMPUS/FOUNDATION entries
+          { npi: '1740733708', iqvia: 3913, healthverity: 5609, komodo: 0 },
+          { npi: '1003878539', iqvia: 3737, healthverity: 7855, komodo: 0 },
+          { npi: '1841251394', iqvia: 3434, healthverity: 0, komodo: 2302 },
+          { npi: '1740269299', iqvia: 3188, healthverity: 0, komodo: 2151 },
+          { npi: '1508147810', iqvia: 4033, healthverity: 0, komodo: 2301 }
+        ]
+      },
       patient_volumes: {
         komodo: 966185,
         healthverity: 908031,
@@ -87,6 +186,359 @@ class EnhancedChryselsysDashboard {
           histology: 10.4
         }
       },
+      other_metrics: {
+        top_products_mx_rx: {
+          iqvia: { 
+            labels: ['PARAPLATIN','KEYTRUDA','TAXOL','VP-16','OPDIVO','PLATINOL-AQ','ALIMTA','AVASTIN','IMFINZI','TECENTRIQ'], 
+            mx: [306860,165368,142731,85512,70578,64023,67627,45588,51442,44853], 
+            rx: [4191,4223,1931,9588,3004,8487,1785,7538,1895,0] // Note: Only 9 Rx products for IQVIA, TECENTRIQ has no Rx value in table, so 0
+          },
+          healthverity: { 
+            labels: ['PARAPLATIN','KEYTRUDA','TAXOL','VP-16','OPDIVO','PLATINOL-AQ','ALIMTA','AVASTIN','IMFINZI','TECENTRIQ'], 
+            mx: [383886,213708,183693,107755,88487,90668,67051,77380,64473,56793], 
+            rx: [25953,23478,11873,10766,10455,9832,8180,7649,6303,0] // TECENTRIQ has no Rx value, so 0
+          },
+          komodo: { 
+            labels: ['PARAPLATIN','KEYTRUDA','TAXOL','VP-16','OPDIVO','PLATINOL-AQ','ALIMTA','AVASTIN','IMFINZI','TECENTRIQ'], 
+            mx: [437839,240307,205597,122064,100090,98125,81031,73824,73073,64997], 
+            rx: [15673,10177,7613,11396,6665,8882,4871,7850,3976,0] // TECENTRIQ has no Rx value, so 0
+          }
+        },
+        top_products_combined: {
+          labels: [
+            'PARAPLATIN',
+            'KEYTRUDA',
+            'TAXOL',
+            'VP-16',
+            'OPDIVO',
+            'PLATINOL-AQ',
+            'ALIMTA',
+            'AVASTIN',
+            'IMFINZI',
+            'TECENTRIQ'
+          ],
+          iqvia: [309253, 167639, 143926, 87287, 71607, 64562, 68778, 46100, 52098, 45479],
+          healthverity: [390307, 221139, 186976, 110920, 90175, 92172, 71129, 78248, 65914, 58113],
+          komodo: [440791, 242462, 207641, 123876, 101107, 98823, 84393, 74317, 73734, 65614]
+        },
+        top_products_yoy: {
+          years: ['2021','2022','2023','2024','2025'],
+          iqvia: {
+            products: [
+              {
+                name: 'TAGRISSO',
+                patient_counts: [11044, 11961, 11962, 14836, 13398],
+                claim_counts: [78429, 86712, 87753, 106328, 52182]
+              },
+              {
+                name: 'ALECENSA',
+                patient_counts: [2061, 2260, 2300, 2620, 2415],
+                claim_counts: [16345, 17595, 17537, 19625, 9193]
+              },
+              {
+                name: 'GILOTRIF',
+                patient_counts: [1044, 1049, 1054, 1048, 688],
+                claim_counts: [5229, 5661, 5333, 5305, 2314]
+              },
+              {
+                name: 'TARCEVA',
+                patient_counts: [893, 754, 573, 567, 320],
+                claim_counts: [5764, 4910, 3699, 3085, 1113]
+              },
+              {
+                name: 'MEKINIST',
+                patient_counts: [714, 679, 125, 4, 0],
+                claim_counts: [3366, 3175, 149, 4, 0]
+              },
+              {
+                name: 'KEYTRUDA',
+                patient_counts: [711, 844, 848, 982, 631],
+                claim_counts: [3909, 4521, 5045, 5596, 2418]
+              },
+              {
+                name: 'TAFINLAR',
+                patient_counts: [695, 662, 670, 660, 440],
+                claim_counts: [3275, 3272, 3132, 3144, 1396]
+              },
+              {
+                name: 'LORBRENA',
+                patient_counts: [602, 734, 812, 1096, 1069],
+                claim_counts: [3619, 4713, 5218, 7223, 4049]
+              },
+              {
+                name: 'XALKORI',
+                patient_counts: [588, 507, 360, 345, 264],
+                claim_counts: [4049, 3438, 2439, 2352, 1011]
+              },
+              {
+                name: 'TABRECTA',
+                patient_counts: [570, 648, 682, 804, 623],
+                claim_counts: [2408, 3135, 3158, 4052, 2019]
+              }
+            ]
+          },
+          healthverity: {
+            products: [
+              {
+                name: 'TAGRISSO',
+                patient_counts: [10928, 10202, 10826, 11829, 9714],
+                claim_counts: [73601, 73294, 76590, 79555, 37786]
+              },
+              {
+                name: 'KEYTRUDA',
+                patient_counts: [6773, 7744, 4202, 5284, 2175],
+                claim_counts: [31196, 35758, 22448, 22754, 6594]
+              },
+              {
+                name: 'PARAPLATIN',
+                patient_counts: [4559, 4980, 4139, 3659, 1398],
+                claim_counts: [15171, 16654, 12147, 10914, 3127]
+              },
+              {
+                name: 'ALIMTA',
+                patient_counts: [2186, 1839, 587, 181, 51],
+                claim_counts: [9567, 7133, 1953, 386, 83]
+              },
+              {
+                name: 'TAXOL',
+                patient_counts: [2077, 2151, 1839, 1520, 519],
+                claim_counts: [8844, 8893, 6748, 5390, 1323]
+              },
+              {
+                name: 'ALECENSA',
+                patient_counts: [1965, 2094, 2185, 2301, 1905],
+                claim_counts: [14098, 15869, 15806, 15403, 7119]
+              },
+              {
+                name: 'VP-16',
+                patient_counts: [1664, 1807, 1536, 1321, 462],
+                claim_counts: [10478, 11714, 9793, 7435, 1742]
+              },
+              {
+                name: 'GILOTRIF',
+                patient_counts: [1245, 1184, 1194, 1258, 756],
+                claim_counts: [6373, 6628, 5621, 6460, 2838]
+              },
+              {
+                name: 'IMFINZI',
+                patient_counts: [1081, 1249, 1397, 1338, 847],
+                claim_counts: [7407, 7816, 7304, 6177, 2548]
+              },
+              {
+                name: 'TARCEVA',
+                patient_counts: [1024, 939, 751, 618, 342],
+                claim_counts: [5426, 4943, 3868, 2992, 1109]
+              }
+            ]
+          },
+          komodo: {
+            products: [
+              {
+                name: 'TAGRISSO',
+                patient_counts: [10925, 10721, 11475, 14018, 10252],
+                claim_counts: [77519, 80688, 87989, 104453, 41743]
+              },
+              {
+                name: 'PARAPLATIN',
+                patient_counts: [2407, 2771, 2577, 2444, 949],
+                claim_counts: [8725, 10076, 9017, 8349, 2632]
+              },
+              {
+                name: 'KEYTRUDA',
+                patient_counts: [2194, 2421, 2468, 2335, 1387],
+                claim_counts: [13765, 15268, 15698, 15185, 5523]
+              },
+              {
+                name: 'ALECENSA',
+                patient_counts: [2126, 2342, 2485, 2821, 2170],
+                claim_counts: [16495, 18675, 19842, 21759, 8679]
+              },
+              {
+                name: 'TAXOL',
+                patient_counts: [1241, 1336, 1311, 1092, 376],
+                claim_counts: [5349, 6266, 5444, 4138, 1120]
+              },
+              {
+                name: 'ALIMTA',
+                patient_counts: [1215, 1030, 339, 119, 38],
+                claim_counts: [5666, 4482, 1432, 228, 94]
+              },
+              {
+                name: 'TARCEVA',
+                patient_counts: [1177, 992, 787, 761, 326],
+                claim_counts: [7009, 5984, 4851, 3899, 1128]
+              },
+              {
+                name: 'GILOTRIF',
+                patient_counts: [1111, 1147, 1130, 1107, 636],
+                claim_counts: [6062, 6589, 6447, 6699, 2381]
+              },
+              {
+                name: 'VP-16',
+                patient_counts: [920, 1027, 934, 880, 320],
+                claim_counts: [5525, 6642, 6404, 5972, 1725]
+              },
+              {
+                name: 'MEKINIST',
+                patient_counts: [839, 846, 167, 8, 2],
+                claim_counts: [4284, 4348, 218, 13, 2]
+              }
+            ]
+          }
+        },
+        claims_status_split: {
+          iqvia: {
+            paid: { pt_cnt: 91377, clms_cnt: 1224052 },
+            rejected: { pt_cnt: 55500, clms_cnt: 187042 },
+            reversed: { pt_cnt: 30869, clms_cnt: 86251 }
+          },
+          healthverity: {
+            paid: { pt_cnt: 140609, clms_cnt: 1735189 }
+          },
+          komodo: {
+            paid: { pt_cnt: 109721, clms_cnt: 1603917 },
+            rejected: { pt_cnt: 66499, clms_cnt: 412558 },
+            reversed: { pt_cnt: 65597, clms_cnt: 399800 }
+          }
+        },
+        mb_codes_provided_vs_visible: {
+          labels: ['Rx', 'Dx', 'Px'],
+          provided: {
+            iqvia: [119, 77, 689],
+            healthverity: [119, 77, 689],
+            komodo: [119, 77, 689]
+          },
+          visible: {
+            iqvia: [91, 60, 379],
+            healthverity: [115, 63, 498],
+            komodo: [106, 68, 417]
+          }
+        },
+        top_diagnosis_codes: {
+          labels: [
+            'C3490',
+            'C3491',
+            'C3411',
+            'C7951',
+            'C3492',
+            'C3412',
+            'C7931',
+            'C771',
+            'C7800',
+            'C3431'
+          ],
+          iqvia: [
+            483011,  // C3490
+            211521,  // C3491
+            196538,  // C3411
+            189530,  // C7951
+            160308,  // C3492
+            153223,  // C3412
+            145389,  // C7931
+            127582,  // C771
+            115671,  // C7800
+            114460   // C3431
+          ],
+          healthverity: [
+            764778,  // C3490
+            383501,  // C3491
+            314213,  // C3411
+            285510,  // C7951
+            294520,  // C3492
+            245201,  // C3412
+            210649,  // C7931
+            230625,  // C771
+            230096,  // C7800
+            191152   // C3431
+          ],
+          komodo: [
+            800195,  // C3490
+            393908,  // C3491
+            335235,  // C3411
+            298830,  // C7951
+            300837,  // C3492
+            262049,  // C3412
+            219917,  // C7931
+            235137,  // C771
+            223328,  // C7800
+            203486   // C3431
+          ]
+        },
+        top_procedure_codes: {
+          labels: [
+            'J9045',  // INJECTION, CARBOPLATIN, 50 MG
+            'J9271',  // INJECTION, PEMBROLIZUMAB, 1 MG
+            'J9267',  // INJECTION, PACLITAXEL, 1 MG
+            'J9181',  // INJECTION, ETOPOSIDE, 10 MG
+            'J9299',  // INJECTION, NIVOLUMAB, 1 MG
+            'J9060',  // INJECTION, CISPLATIN, POWDER OR SOLUTION, 10 MG
+            '32663',  // LUNG LOBECTOMY
+            'J9173',  // INJECTION, DURVALUMAB, 10 MG
+            'J9035',  // INJECTION, BEVACIZUMAB, 10 MG
+            'J9171',  // INJECTION, DOCETAXEL, 1 MG
+            'J9022'   // INJECTION, ATEZOLIZUMAB, 10 MG (only in IQVIA/Komodo)
+          ],
+          iqvia: [
+            306711, // J9045
+            165319, // J9271
+            142485, // J9267
+            85193,  // J9181
+            70545,  // J9299
+            63936,  // J9060
+            0,      // 32663 (not present in IQVIA)
+            49143,  // J9173
+            43250,  // J9035
+            40597,  // J9171
+            43625   // J9022
+          ],
+          healthverity: [
+            383663, // J9045
+            213592, // J9271
+            183243, // J9267
+            107237, // J9181
+            88404,  // J9299
+            90551,  // J9060
+            89706,  // 32663
+            61839,  // J9173
+            64920,  // J9035
+            56352,  // J9171
+            0       // J9022 (not present in HV)
+          ],
+          komodo: [
+            437522, // J9045
+            240117, // J9271
+            205150, // J9267
+            121660, // J9181
+            100007, // J9299
+            97990,  // J9060
+            92074,  // 32663
+            70000,  // J9173
+            62764,  // J9035
+            56352,  // J9171 (using HV value, but Komodo has 62751 for J9022, so J9171 should be 0 if not present)
+            62751   // J9022
+          ]
+        },
+        payer_split: {
+          dx: {
+            labels: ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'],
+            iqvia: [22953412, 21049281, 4697701, 225459, 10369755],
+            healthverity: [18049151, 39976858, 10558199, 1585792, 4748101],
+            komodo: [16938543, 56212426, 9197276, 666369, 9000841]
+          },
+          px: {
+            labels: ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'],
+            iqvia: [4166476, 4178523, 855716, 42130, 10372],
+            healthverity: [3300094, 7362815, 2147055, 348535, 915218],
+            komodo: [2629358, 8437043, 1361673, 110980, 1365145]
+          },
+          rx: {
+            labels: ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'],
+            iqvia: [624573, 507765, 82230, 9354, 156],
+            healthverity: [449189, 273377, 241666, 2718, 902528],
+            komodo: [535495, 767793, 160167, 11055, 130292]
+          }
+        }
+      },
       provider_data: {
         specialties: {
           oncology: 42,
@@ -104,11 +556,25 @@ class EnhancedChryselsysDashboard {
       },
       demographics: {
         gender_distribution: {
+          iqvia: {
           'F': 299131,
           'M': 296613,
           'U': 95
+          },
+          healthverity: {
+            'F': 464628,
+            'M': 442215,
+            'U': 1188
+          },
+          komodo: {
+            'F': 487136,
+            'M': 469665,
+            'U': 9172,
+            'NULL': 212
+          }
         },
         age_distribution: {
+          iqvia: {
           '0-17': 651,
           '18-24': 646,
           '25-59': 57394,
@@ -116,18 +582,52 @@ class EnhancedChryselsysDashboard {
           '75+': 194635,
           'NULL': 87879
         },
-        top_states: [
-          { state: 'California', patients: 310000 },
-          { state: 'Texas', patients: 285000 },
-          { state: 'Florida', patients: 267000 },
-          { state: 'New York', patients: 245000 },
-          { state: 'Pennsylvania', patients: 198000 },
-          { state: 'Illinois', patients: 187000 },
-          { state: 'Ohio', patients: 165000 },
-          { state: 'Georgia', patients: 142000 },
-          { state: 'North Carolina', patients: 134000 },
-          { state: 'Michigan', patients: 128000 }
-        ]
+          healthverity: {
+            '0-17': 1027,
+            '18-24': 1005,
+            '25-59': 99940,
+            '60-74': 417587,
+            '75+': 388454,
+            'NULL': 18
+          },
+          komodo: {
+            '0-17': 884,
+            '18-24': 861,
+            '25-59': 93232,
+            '60-74': 422789,
+            '75+': 446744,
+            'NULL': 1675
+          }
+        },
+        geographic_distribution: {
+          healthverity: {
+            'CA': 77361, 'FL': 75492, 'NY': 67650, 'TX': 56566, 'OH': 51269,
+            'MI': 44258, 'PA': 43277, 'IL': 35761, 'GA': 26555, 'NJ': 26369,
+            'IN': 25171, 'KY': 22556, 'NC': 21928, 'TN': 20439, 'VA': 20099,
+            'AZ': 18404, 'MO': 17452, 'WA': 16883, 'SC': 15847, 'MN': 15633,
+            'WI': 15586, 'AL': 14405, 'LA': 13691, 'MA': 13336, 'MD': 12723,
+            'CT': 11892, 'OK': 10166, 'CO': 9822, 'AR': 9558, 'IA': 9363,
+            'MS': 8110, 'WV': 7991, 'OR': 7863, 'KS': 7636, 'NV': 6670,
+            'ME': 6256, 'NM': 4148, 'NE': 4108, 'ID': 3675, 'DE': 3550,
+            'NH': 3238, 'HI': 3079, 'MT': 2810, 'SD': 2551, 'UT': 2469,
+            'RI': 2379, 'PR': 2124, 'ND': 2096, 'WY': 1270, 'VT': 1086,
+            'AK': 989, 'DC': 793, 'PW': 182, 'VI': 103, 'AE': 8, 'AA': 2, 'AP': 1
+          },
+          komodo: {
+            'FL': 82436, 'CA': 74228, 'NY': 66687, 'PA': 51866, 'OH': 49597,
+            'TX': 48576, 'MI': 43852, 'IL': 35049, 'MA': 29313, 'TN': 28880,
+            'NJ': 28318, 'GA': 24453, 'IN': 24224, 'AZ': 22853, 'NC': 22191,
+            'VA': 21656, 'WI': 19588, 'KY': 19288, 'WA': 19233, 'SC': 18570,
+            'MO': 16620, 'AL': 16266, 'MN': 15416, 'MD': 15042, 'LA': 14643,
+            'CT': 13929, 'AR': 13755, 'WV': 10748, 'IA': 9708, 'OR': 9602,
+            'KS': 8971, 'MS': 8683, 'OK': 8558, 'ME': 8397, 'CO': 8124,
+            'NV': 7078, 'NE': 5879, 'NH': 5776, 'UT': 5025, 'DE': 4251,
+            'NM': 3697, 'VT': 3049, 'HI': 2824, 'ID': 2646, 'SD': 2632,
+            'RI': 2496, 'MT': 2452, 'ND': 1353, 'DC': 1279, 'AK': 1157,
+            'PR': 1099, 'WY': 1060
+          },
+          iqvia: {} // No data for IQVIA
+        }
       },
       temporal_trends: {
         monthly_2024: {
@@ -174,9 +674,22 @@ class EnhancedChryselsysDashboard {
           komodo: { paid: 66, rejected: 17, reversed: 17 }
         },
         types: {
-          medical: 65,
-          pharmacy: 35
-        }
+          dx: {
+            IQVIA: 47490854,
+            HEALTHVERITY: 66499023,
+            KOMODO: 90432525
+          },
+          px: {
+            IQVIA: 8659323,
+            HEALTHVERITY: 11480361,
+            KOMODO: 13011942
+          },
+          rx: {
+            IQVIA: 1224052,
+            HEALTHVERITY: 1735189,
+            KOMODO: 1603917
+          }
+        },
       },
       
       new_patients_trends: {
@@ -333,14 +846,7 @@ class EnhancedChryselsysDashboard {
       prevalenceYearSelect.addEventListener('change', () => this.updatePrevalenceChart());
     }
 
-    // Gender/Age Distribution Toggle Listeners
-    const ageToggle = document.getElementById('ageToggle');
-    const genderToggle = document.getElementById('genderToggle');
-
-    if (ageToggle && genderToggle) {
-      ageToggle.addEventListener('click', () => this.toggleGenderAgeView('age'));
-      genderToggle.addEventListener('click', () => this.toggleGenderAgeView('gender'));
-    }
+    // Gender/Age Distribution toggle functionality removed - now using separate charts
 
     console.log('✅ Enhanced event listeners setup complete');
   }
@@ -446,19 +952,23 @@ class EnhancedChryselsysDashboard {
       // Patient Analysis Charts
       this.createPatientVolumeChart();
       this.createClaimsTypeChart();
-      this.createGenderAgeDistributionChart();
+      this.createGenderDistributionChart();
+      this.createAgeDistributionBySourceChart();
+      this.initializeDistributionToggle();
       this.createNewPatientsTrendsChart();
       this.createPrevalencePatientsTrendsChart();
       
-      // Procedure Analysis Charts
-      this.createProcedureCodesChart();
-      this.createDrugClassChart();
+      // HCP/HCO Metrics Charts
+      this.createHcpFillAnomalyChart();
+      this.createTopRenderingSpecialtiesChart();
+      this.createTopReferringSpecialtiesChart();
+      this.createTopPrescriberSpecialtiesChart();
+      this.createHcoFillAnomalyChart();
+      this.createTopBillingNpiChart();
+      this.createTopFacilityNpiChart();
       
       // Diagnosis Analysis Charts
-      this.createDiagnosisCodesChart();
-      this.createDiagnosisCategoryChart();
-      this.createCodingConsistencyChart();
-      this.createPrevalenceRatesChart();
+      this.createOtherMetricsCharts();
       
       // Provider Landscape Charts
       this.createProviderSpecialtyChart();
@@ -466,7 +976,7 @@ class EnhancedChryselsysDashboard {
       
       // Demographics Charts
       this.createAgeDistributionChart();
-      this.createGeographicChart();
+      this.createGeographicMap();
       
       // Treatment Landscape Charts
       this.createTreatmentTrendsChart();
@@ -525,9 +1035,15 @@ class EnhancedChryselsysDashboard {
     if (!ctx) return;
 
     const data = this.dashboardData?.claims_data?.types || {
-      medical: 65,
-      pharmacy: 35
+      dx: { IQVIA: 0, HEALTHVERITY: 0, KOMODO: 0 },
+      px: { IQVIA: 0, HEALTHVERITY: 0, KOMODO: 0 },
+      rx: { IQVIA: 0, HEALTHVERITY: 0, KOMODO: 0 }
     };
+
+    // Calculate totals for each claim type
+    const dxTotal = (data.dx?.IQVIA || 0) + (data.dx?.HEALTHVERITY || 0) + (data.dx?.KOMODO || 0);
+    const pxTotal = (data.px?.IQVIA || 0) + (data.px?.HEALTHVERITY || 0) + (data.px?.KOMODO || 0);
+    const rxTotal = (data.rx?.IQVIA || 0) + (data.rx?.HEALTHVERITY || 0) + (data.rx?.KOMODO || 0);
 
     if (this.charts.claimsType) {
       this.charts.claimsType.destroy();
@@ -536,10 +1052,10 @@ class EnhancedChryselsysDashboard {
     this.charts.claimsType = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Medical Claims', 'Pharmacy Claims'],
+        labels: ['Diagnosis Claims (DX)', 'Procedure Claims (PX)', 'Prescription Claims (RX)'],
         datasets: [{
-          data: [data.medical, data.pharmacy],
-          backgroundColor: [this.colors.ateneoBlue, this.colors.weldonBlue],
+          data: [dxTotal, pxTotal, rxTotal],
+          backgroundColor: [this.colors.pieChart.primary, this.colors.pieChart.secondary, this.colors.pieChart.tertiary],
           borderWidth: 2,
           borderColor: '#ffffff'
         }]
@@ -548,97 +1064,197 @@ class EnhancedChryselsysDashboard {
     });
   }
 
-  // Gender/Age Distribution Chart
-  createGenderAgeDistributionChart() {
-    const ctx = document.getElementById('genderAgeDistributionChart');
+  // Gender Distribution Chart by Data Source
+  createGenderDistributionChart() {
+    const ctx = document.getElementById('genderDistributionChart');
     if (!ctx) return;
 
-    // Initialize with age data
-    this.genderAgeViewMode = 'age';
-    this.updateGenderAgeChart();
-  }
-
-  updateGenderAgeChart() {
-    const ctx = document.getElementById('genderAgeDistributionChart');
-    if (!ctx) return;
-
-    const data = this.dashboardData?.demographics || {};
+    const data = this.dashboardData?.demographics?.gender_distribution || {};
     
-    if (this.charts.genderAgeDistribution) {
-      this.charts.genderAgeDistribution.destroy();
+    if (this.charts.genderDistribution) {
+      this.charts.genderDistribution.destroy();
     }
 
-    let chartData, title;
+    // Create datasets for each data source
+    const datasets = [];
+    const dataSources = ['komodo', 'healthverity', 'iqvia'];
+    const sourceColors = [this.colors.bronze, this.colors.ateneoBlue, this.colors.paleCerulean];
+    const sourceLabels = ['Komodo', 'HealthVerity', 'IQVIA'];
 
-    if (this.genderAgeViewMode === 'age') {
-      const ageData = data.age_distribution || {};
-      title = 'Age Distribution';
-      chartData = {
-        labels: ['0-17', '18-24', '25-59', '60-74', '75+', 'Unknown'],
-        datasets: [{
+    dataSources.forEach((source, index) => {
+      const sourceData = data[source] || {};
+      datasets.push({
+        label: sourceLabels[index],
           data: [
-            ageData['0-17'] || 0,
-            ageData['18-24'] || 0,
-            ageData['25-59'] || 0,
-            ageData['60-74'] || 0,
-            ageData['75+'] || 0,
-            ageData['NULL'] || 0
-          ],
-          backgroundColor: [
-            this.colors.bronze,
-            this.colors.ateneoBlue,
-            this.colors.paleCerulean,
-            this.colors.weldonBlue,
-            '#1FB8CD',
-            '#FFC185'
-          ],
+          sourceData['F'] || 0,
+          sourceData['M'] || 0,
+          sourceData['U'] || 0,
+          sourceData['NULL'] || 0
+        ],
+        backgroundColor: sourceColors[index],
           borderWidth: 2,
           borderColor: '#ffffff'
-        }]
-      };
-    } else {
-      const genderData = data.gender_distribution || {};
-      title = 'Gender Distribution';
-      chartData = {
-        labels: ['Female', 'Male', 'Unknown'],
-        datasets: [{
-          data: [
-            genderData['F'] || 0,
-            genderData['M'] || 0,
-            genderData['U'] || 0
-          ],
-          backgroundColor: [
-            this.colors.bronze,
-            this.colors.ateneoBlue,
-            this.colors.paleCerulean
-          ],
-          borderWidth: 2,
-          borderColor: '#ffffff'
-        }]
-      };
-    }
+      });
+    });
 
-    this.charts.genderAgeDistribution = new Chart(ctx, {
-      type: 'doughnut',
-      data: chartData,
-      options: this.getDoughnutChartOptions(title)
+    this.charts.genderDistribution = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Female', 'Male', 'Unknown', 'NULL'],
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Gender Distribution by Data Source'
+          }
+        },
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Gender'
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Patient Count'
+            }
+          }
+        }
+      }
     });
   }
 
-  toggleGenderAgeView(mode) {
-    this.genderAgeViewMode = mode;
+  // Age Distribution Chart by Data Source
+  createAgeDistributionBySourceChart() {
+    const ctx = document.getElementById('ageDistributionBySourceChart');
+    if (!ctx) return;
+
+    const data = this.dashboardData?.demographics?.age_distribution || {};
     
-    // Update toggle buttons
-    const ageBtn = document.getElementById('ageToggle');
-    const genderBtn = document.getElementById('genderToggle');
-    
-    if (ageBtn && genderBtn) {
-      ageBtn.classList.toggle('active', mode === 'age');
-      genderBtn.classList.toggle('active', mode === 'gender');
+    if (this.charts.ageDistributionBySource) {
+      this.charts.ageDistributionBySource.destroy();
     }
+
+    // Create datasets for each data source
+    const datasets = [];
+    const dataSources = ['iqvia', 'healthverity', 'komodo'];
+    const sourceColors = [this.colors.ateneoBlue, this.colors.weldonBlue, this.colors.forestGreen];
+    const sourceLabels = ['IQVIA', 'HealthVerity', 'Komodo'];
+
+    dataSources.forEach((source, index) => {
+      const sourceData = data[source] || {};
+      datasets.push({
+        label: sourceLabels[index],
+        data: [
+          sourceData['0-17'] || 0,
+          sourceData['18-24'] || 0,
+          sourceData['25-59'] || 0,
+          sourceData['60-74'] || 0,
+          sourceData['75+'] || 0,
+          sourceData['NULL'] || 0
+        ],
+        backgroundColor: sourceColors[index],
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      });
+    });
+
+    this.charts.ageDistributionBySource = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['0-17', '18-24', '25-59', '60-74', '75+', 'Unknown'],
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Age Distribution by Data Source'
+          }
+        },
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Age Group'
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Patient Count'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Initialize Distribution Chart Toggle
+  initializeDistributionToggle() {
+    const genderToggle = document.getElementById('genderToggle');
+    const ageToggle = document.getElementById('ageToggle');
+    const title = document.getElementById('distributionChartTitle');
+    const genderChart = document.getElementById('genderDistributionChart');
+    const ageChart = document.getElementById('ageDistributionBySourceChart');
     
-    // Update chart
-    this.updateGenderAgeChart();
+    if (!genderToggle || !ageToggle || !title || !genderChart || !ageChart) return;
+
+    // Set initial state (Gender is default)
+    this.distributionViewMode = 'gender';
+    
+    // Add event listeners
+    genderToggle.addEventListener('click', () => {
+      if (this.distributionViewMode === 'gender') return;
+      
+      this.distributionViewMode = 'gender';
+      genderToggle.classList.add('active');
+      ageToggle.classList.remove('active');
+      title.textContent = 'Gender Distribution by Data Source';
+      genderChart.style.display = 'block';
+      ageChart.style.display = 'none';
+      
+      // Ensure gender chart is created if not already
+      if (!this.charts.genderDistribution) {
+        this.createGenderDistributionChart();
+      }
+    });
+    
+    ageToggle.addEventListener('click', () => {
+      if (this.distributionViewMode === 'age') return;
+      
+      this.distributionViewMode = 'age';
+      ageToggle.classList.add('active');
+      genderToggle.classList.remove('active');
+      title.textContent = 'Age Distribution by Data Source';
+      genderChart.style.display = 'none';
+      ageChart.style.display = 'block';
+      
+      // Ensure age chart is created if not already
+      if (!this.charts.ageDistributionBySource) {
+        this.createAgeDistributionBySourceChart();
+      }
+    });
   }
 
   // New Patients Trends Chart
@@ -893,7 +1509,7 @@ class EnhancedChryselsysDashboard {
     this.updatePrevalenceChart();
   }
 
-  // Procedure Analysis Charts
+  // Procedure Analysis 
   createProcedureCodesChart() {
     const ctx = document.getElementById('procedureCodesChart');
     if (!ctx) return;
@@ -950,122 +1566,523 @@ class EnhancedChryselsysDashboard {
     });
   }
 
-  // Diagnosis Analysis Charts
-  createDiagnosisCodesChart() {
-    const ctx = document.getElementById('diagnosisCodesChart');
+  // HCP/HCO Metrics Charts (source-wise color coding)
+  createHcpFillAnomalyChart() {
+    const ctx = document.getElementById('hcpFillAnomalyChart');
     if (!ctx) return;
 
-    const data = this.dashboardData?.diagnosis_codes?.top_5 || [];
-    
-    if (this.charts.diagnosisCodes) {
-      this.charts.diagnosisCodes.destroy();
-    }
+    const metrics = this.dashboardData?.hcp_hco_metrics?.hcp_fill_anomaly;
+    if (!metrics) return;
 
-    this.charts.diagnosisCodes = new Chart(ctx, {
+    if (this.charts.hcpFillAnomaly) this.charts.hcpFillAnomaly.destroy();
+
+    const labels = ['Referring Fill %', 'Rendering Fill %', 'Referring Anomaly %', 'Rendering Anomaly %'];
+    const iqvia = [metrics.referring.iqvia, metrics.rendering.iqvia, metrics.anomalies.referring.iqvia, metrics.anomalies.rendering.iqvia];
+    const hv = [metrics.referring.healthverity, metrics.rendering.healthverity, metrics.anomalies.referring.healthverity, metrics.anomalies.rendering.healthverity];
+    const komodo = [metrics.referring.komodo, metrics.rendering.komodo, metrics.anomalies.referring.komodo, metrics.anomalies.rendering.komodo];
+
+    this.charts.hcpFillAnomaly = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.map(item => `${item.code}\n${item.description.substring(0, 15)}...`),
-        datasets: [{
-          label: 'Patient Count',
-          data: data.map(item => item.patients),
-          backgroundColor: this.colors.chartColors.slice(0, 5),
-          borderColor: this.colors.chartColors.slice(0, 5),
-          borderWidth: 1
-        }]
+        labels,
+        datasets: [
+          { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia, borderColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity, borderColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo, borderColor: this.colors.sources.komodo }
+        ]
       },
       options: {
-        ...this.getBarChartOptions('Top 5 Diagnosis Codes', 'Patient Count'),
-        indexAxis: 'y' // This makes it a horizontal bar chart
+        ...this.getBarChartOptions('HCP Fill Rate & Anomaly – Referring vs Rendering', 'Percentage (%)'),
+        plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } },
+        responsive: true,
+        maintainAspectRatio: false
       }
     });
   }
 
-  createDiagnosisCategoryChart() {
-    const ctx = document.getElementById('diagnosisCategoryChart');
+  createHcoFillAnomalyChart() {
+    const ctx = document.getElementById('hcoFillAnomalyChart');
     if (!ctx) return;
 
-    const data = this.dashboardData?.diagnosis_codes?.categories || {
-      primary: 45.2,
-      metastatic: 28.8,
-      anatomical: 15.6,
-      histology: 10.4
-    };
+    const metrics = this.dashboardData?.hcp_hco_metrics?.hco_fill_anomaly;
+    if (!metrics) return;
 
-    if (this.charts.diagnosisCategory) {
-      this.charts.diagnosisCategory.destroy();
-    }
+    if (this.charts.hcoFillAnomaly) this.charts.hcoFillAnomaly.destroy();
 
-    this.charts.diagnosisCategory = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Primary NSCLC', 'Metastatic', 'Anatomical', 'Histology'],
-        datasets: [{
-          data: [data.primary, data.metastatic, data.anatomical, data.histology],
-          backgroundColor: [this.colors.bronze, this.colors.ateneoBlue, this.colors.paleCerulean, this.colors.weldonBlue],
-          borderWidth: 2,
-          borderColor: '#ffffff'
-        }]
-      },
-      options: this.getDoughnutChartOptions('Diagnosis Category Breakdown')
-    });
-  }
+    const labels = ['Billing Fill %', 'Facility Fill %', 'Billing Anomaly %', 'Facility Anomaly %'];
+    const iqvia = [metrics.billing.iqvia, metrics.facility.iqvia, metrics.anomalies.billing.iqvia, metrics.anomalies.facility.iqvia];
+    const hv = [metrics.billing.healthverity, metrics.facility.healthverity, metrics.anomalies.billing.healthverity, metrics.anomalies.facility.healthverity];
+    const komodo = [metrics.billing.komodo, metrics.facility.komodo, metrics.anomalies.billing.komodo, metrics.anomalies.facility.komodo];
 
-  createCodingConsistencyChart() {
-    const ctx = document.getElementById('codingConsistencyChart');
-    if (!ctx) return;
-
-    if (this.charts.codingConsistency) {
-      this.charts.codingConsistency.destroy();
-    }
-
-    this.charts.codingConsistency = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['IQVIA', 'HealthVerity', 'Komodo'],
-        datasets: [{
-          label: 'Coding Consistency Score',
-          data: [89, 94, 91],
-          borderColor: this.colors.bronze,
-          backgroundColor: this.colors.bronze + '20',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 8
-        }]
-      },
-      options: this.getLineChartOptions('Coding Consistency Across Sources', 'Consistency Score (%)')
-    });
-  }
-
-  createPrevalenceRatesChart() {
-    const ctx = document.getElementById('prevalenceRatesChart');
-    if (!ctx) return;
-
-    const data = this.dashboardData?.diagnosis_codes?.categories || {
-      primary: 45.2,
-      metastatic: 28.8,
-      anatomical: 15.6,
-      histology: 10.4
-    };
-
-    if (this.charts.prevalenceRates) {
-      this.charts.prevalenceRates.destroy();
-    }
-
-    this.charts.prevalenceRates = new Chart(ctx, {
+    this.charts.hcoFillAnomaly = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Primary NSCLC', 'Metastatic', 'Anatomical', 'Histology'],
-        datasets: [{
-          label: 'Prevalence Rate (%)',
-          data: [data.primary, data.metastatic, data.anatomical, data.histology],
-          backgroundColor: this.colors.chartColors.slice(0, 4),
-          borderColor: this.colors.chartColors.slice(0, 4),
-          borderWidth: 1
-        }]
+        labels,
+        datasets: [
+          { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia, borderColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity, borderColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo, borderColor: this.colors.sources.komodo }
+        ]
       },
-      options: this.getBarChartOptions('Prevalence Rates by Category', 'Percentage (%)')
+      options: {
+        ...this.getBarChartOptions('HCO Fill Rate & Anomaly – Billing vs Facility', 'Percentage (%)'),
+        plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } }
+      }
     });
+  }
+
+  createTopRenderingSpecialtiesChart() {
+    const ctx = document.getElementById('topRenderingSpecialtiesChart');
+    if (!ctx) return;
+    const rows = this.dashboardData?.hcp_hco_metrics?.top_rendering_specialties || [];
+    if (this.charts.topRenderingSpecialties) this.charts.topRenderingSpecialties.destroy();
+
+    const labels = rows.map(r => r.name);
+    const iqvia = rows.map(r => r.iqvia);
+    const hv = rows.map(r => r.healthverity);
+    const komodo = rows.map(r => r.komodo);
+
+    this.charts.topRenderingSpecialties = new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [
+        { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia },
+        { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity },
+        { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo }
+      ] },
+      options: { ...this.getBarChartOptions('Top Rendering Specialties & NPIs by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopReferringSpecialtiesChart() {
+    const ctx = document.getElementById('topReferringSpecialtiesChart');
+    if (!ctx) return;
+    const rows = this.dashboardData?.hcp_hco_metrics?.top_referring_specialties || [];
+    if (this.charts.topReferringSpecialties) this.charts.topReferringSpecialties.destroy();
+
+    const labels = rows.map(r => r.name);
+    const iqvia = rows.map(r => r.iqvia);
+    const hv = rows.map(r => r.healthverity);
+    const komodo = rows.map(r => r.komodo);
+
+    this.charts.topReferringSpecialties = new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [
+        { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia },
+        { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity },
+        { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo }
+      ] },
+      options: { ...this.getBarChartOptions('Top Referring Specialties & NPIs by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopPrescriberSpecialtiesChart() {
+    const ctx = document.getElementById('topPrescriberSpecialtiesChart');
+    if (!ctx) return;
+    const rows = this.dashboardData?.hcp_hco_metrics?.top_prescriber_specialties || [];
+    if (this.charts.topPrescriberSpecialties) this.charts.topPrescriberSpecialties.destroy();
+
+    const labels = rows.map(r => r.name);
+    const iqvia = rows.map(r => r.iqvia);
+    const hv = rows.map(r => r.healthverity);
+    const komodo = rows.map(r => r.komodo);
+
+    this.charts.topPrescriberSpecialties = new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [
+        { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia },
+        { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity },
+        { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo }
+      ] },
+      options: { ...this.getBarChartOptions('Top Prescriber Specialties by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopBillingNpiChart() {
+    const ctx = document.getElementById('topBillingNpiChart');
+    if (!ctx) return;
+    const rows = this.dashboardData?.hcp_hco_metrics?.top_billing_npis || [];
+    if (this.charts.topBillingNpi) this.charts.topBillingNpi.destroy();
+
+    const labels = rows.map(r => r.npi);
+    const iqvia = rows.map(r => r.iqvia);
+    const hv = rows.map(r => r.healthverity);
+    const komodo = rows.map(r => r.komodo);
+
+    this.charts.topBillingNpi = new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [
+        { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia },
+        { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity },
+        { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo }
+      ] },
+      options: { ...this.getBarChartOptions('Top Billing NPIs by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopFacilityNpiChart() {
+    const ctx = document.getElementById('topFacilityNpiChart');
+    if (!ctx) return;
+    const rows = this.dashboardData?.hcp_hco_metrics?.top_facility_npis || [];
+    if (this.charts.topFacilityNpi) this.charts.topFacilityNpi.destroy();
+
+    const labels = rows.map(r => r.npi);
+    const iqvia = rows.map(r => r.iqvia);
+    const hv = rows.map(r => r.healthverity);
+    const komodo = rows.map(r => r.komodo);
+
+    this.charts.topFacilityNpi = new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [
+        { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia },
+        { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity },
+        { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo }
+      ] },
+      options: { ...this.getBarChartOptions('Top Facility NPIs by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  // Diagnosis Analysis Charts
+  createOtherMetricsCharts() {
+    this.createTopProductsMxRxCharts();
+    this.createTopProductsCombinedChart();
+    this.createTopProductsYoyCharts();
+    this.createClaimsStatusSplit();
+    this.createMbCodesProvidedVsVisible();
+    this.createTopDiagnosisCodes();
+    this.createTopProcedureCodes();
+    this.createPatientSplitByPayer();
+  }
+
+  createTopProductsMxRxCharts() {
+    const data = this.dashboardData?.other_metrics?.top_products_mx_rx;
+    if (!data) return;
+    const makeChart = (elId, series, color) => {
+      const ctx = document.getElementById(elId); if (!ctx) return;
+      const labels = series.labels;
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Mx', data: series.mx, backgroundColor: color, borderColor: color },
+            { label: 'Rx', data: series.rx, backgroundColor: this.shadeColor(color, -15), borderColor: this.shadeColor(color, -15) }
+          ]
+        },
+        options: { ...this.getBarChartOptions('Top 10 Products – Mx vs Rx', 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      });
+    };
+    makeChart('topProductsMxRxIqvia', data.iqvia, this.colors.sources.iqvia);
+    makeChart('topProductsMxRxHv', data.healthverity, this.colors.sources.healthverity);
+    makeChart('topProductsMxRxKomodo', data.komodo, this.colors.sources.komodo);
+  }
+
+  createTopProductsCombinedChart() {
+    const ctx = document.getElementById('topProductsCombined'); if (!ctx) return;
+    const data = this.dashboardData?.other_metrics?.top_products_combined; if (!data) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [
+          { label: 'IQVIA', data: data.iqvia, backgroundColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: data.healthverity, backgroundColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: data.komodo, backgroundColor: this.colors.sources.komodo }
+        ]
+      },
+      options: { ...this.getBarChartOptions('Top 10 Products – Combined (Mx + Rx)', 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopProductsYoyCharts() {
+    const data = this.dashboardData?.other_metrics?.top_products_yoy;
+    if (!data) return;
+
+    // Helper to generate a color palette for multiple lines
+    const getColorPalette = (baseColor, count) => {
+      // Use HSL to generate variations
+      const colors = [];
+      let h, s, l;
+      // Try to parse baseColor as hex, fallback to bronze if not
+      try {
+        // Remove # if present
+        let hex = baseColor.replace('#', '');
+        if (hex.length === 3) {
+          hex = hex.split('').map(x => x + x).join('');
+        }
+        const num = parseInt(hex, 16);
+        const r = (num >> 16) & 255;
+        const g = (num >> 8) & 255;
+        const b = num & 255;
+        // Convert to HSL
+        let rr = r / 255, gg = g / 255, bb = b / 255;
+        const max = Math.max(rr, gg, bb), min = Math.min(rr, gg, bb);
+        l = (max + min) / 2;
+        if (max === min) {
+          h = s = 0;
+        } else {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case rr: h = (gg - bb) / d + (gg < bb ? 6 : 0); break;
+            case gg: h = (bb - rr) / d + 2; break;
+            case bb: h = (rr - gg) / d + 4; break;
+          }
+          h /= 6;
+        }
+        h = Math.round(h * 360);
+        s = Math.round(s * 100);
+        l = Math.round(l * 60 + 20); // brighten a bit
+      } catch {
+        h = 30; s = 60; l = 50; // fallback bronze
+      }
+      for (let i = 0; i < count; i++) {
+        const hue = (h + i * (360 / count)) % 360;
+        colors.push(`hsl(${hue},${s}%,${l}%)`);
+      }
+      return colors;
+    };
+
+    const makeLine = (elId, sourceData, baseColor) => {
+      const ctx = document.getElementById(elId);
+      if (!ctx) return;
+      const products = (sourceData.products || []).slice(0, 5); // Only top 5 products
+      if (!products.length) return;
+
+      // Generate a color palette for top 5 products
+      const palette = getColorPalette(baseColor, products.length);
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.years,
+          datasets: products.map((product, idx) => ({
+            label: product.name,
+            data: product.patient_counts,
+            borderColor: palette[idx],
+            backgroundColor: palette[idx] + '20',
+            borderWidth: 2,
+            tension: 0.35,
+            fill: false
+          }))
+        },
+        options: this.getLineChartOptions('YoY Trend – Top 5 Products', 'Patients')
+      });
+    };
+
+    makeLine('topProductsYoyIqvia', data.iqvia, this.colors.sources.iqvia);
+    makeLine('topProductsYoyHv', data.healthverity, this.colors.sources.healthverity);
+    makeLine('topProductsYoyKomodo', data.komodo, this.colors.sources.komodo);
+  }
+
+  createClaimsStatusSplit() {
+    const ctx = document.getElementById('claimsStatusSplit'); if (!ctx) return;
+    const s = this.dashboardData?.other_metrics?.claims_status_split; if (!s) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Paid','Rejected','Reversed'],
+        datasets: [
+          { 
+            label: 'IQVIA', 
+            data: [
+              s.iqvia.paid?.pt_cnt || 0, 
+              s.iqvia.rejected?.pt_cnt || 0, 
+              s.iqvia.reversed?.pt_cnt || 0
+            ], 
+            backgroundColor: this.colors.sources.iqvia 
+          },
+          { 
+            label: 'HealthVerity', 
+            data: [
+              s.healthverity.paid?.pt_cnt || 0, 
+              s.healthverity.rejected?.pt_cnt || 0, 
+              s.healthverity.reversed?.pt_cnt || 0
+            ], 
+            backgroundColor: this.colors.sources.healthverity 
+          },
+          { 
+            label: 'Komodo', 
+            data: [
+              s.komodo.paid?.pt_cnt || 0, 
+              s.komodo.rejected?.pt_cnt || 0, 
+              s.komodo.reversed?.pt_cnt || 0
+            ], 
+            backgroundColor: this.colors.sources.komodo 
+          }
+        ]
+      },
+      options: { 
+        ...this.getBarChartOptions('Claims Status Split – Paid vs Rejected vs Reversed', 'Patient Count'), 
+        plugins: { 
+          ...this.getBarChartOptions('', '').plugins, 
+          legend: { display: true, position: 'top' } 
+        }, 
+        scales: { y: { beginAtZero: true } } 
+      }
+    });
+  }
+
+  createMbCodesProvidedVsVisible() {
+    const ctx = document.getElementById('mbCodesProvidedVsVisible'); if (!ctx) return;
+    const data = this.dashboardData?.other_metrics?.mb_codes_provided_vs_visible; if (!data) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [
+          { label: 'Provided (IQVIA)', data: data.provided.iqvia, backgroundColor: this.shadeColor(this.colors.sources.iqvia, -10) },
+          { label: 'Visible (IQVIA)', data: data.visible.iqvia, backgroundColor: this.colors.sources.iqvia },
+          { label: 'Provided (HV)', data: data.provided.healthverity, backgroundColor: this.shadeColor(this.colors.sources.healthverity, -10) },
+          { label: 'Visible (HV)', data: data.visible.healthverity, backgroundColor: this.colors.sources.healthverity },
+          { label: 'Provided (Komodo)', data: data.provided.komodo, backgroundColor: this.shadeColor(this.colors.sources.komodo, -10) },
+          { label: 'Visible (Komodo)', data: data.visible.komodo, backgroundColor: this.colors.sources.komodo }
+        ]
+      },
+      options: { ...this.getBarChartOptions('MB Codes Provided vs Visible in Data', 'Count'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopDiagnosisCodes() {
+    const ctx = document.getElementById('topDiagnosisCodes'); if (!ctx) return;
+    const data = this.dashboardData?.other_metrics?.top_diagnosis_codes; if (!data) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [
+          { label: 'IQVIA', data: data.iqvia, backgroundColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: data.healthverity, backgroundColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: data.komodo, backgroundColor: this.colors.sources.komodo }
+        ]
+      },
+      options: { ...this.getBarChartOptions('Top Diagnosis Codes – Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createTopProcedureCodes() {
+    const ctx = document.getElementById('topProcedureCodes'); if (!ctx) return;
+    const data = this.dashboardData?.other_metrics?.top_procedure_codes; if (!data) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [
+          { label: 'IQVIA', data: data.iqvia, backgroundColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: data.healthverity, backgroundColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: data.komodo, backgroundColor: this.colors.sources.komodo }
+        ]
+      },
+      options: { ...this.getBarChartOptions('Top Procedure Codes – Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+    });
+  }
+
+  createPatientSplitByPayer() {
+    const ctx = document.getElementById('patientSplitByPayer'); if (!ctx) return;
+    const data = this.dashboardData?.other_metrics?.payer_split; if (!data) return;
+    
+    // Get labels from any category (they should be the same)
+    const labels = data.dx?.labels || ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'];
+    
+    // Create datasets for each data source across all categories
+    const datasets = [];
+    
+    // IQVIA data across all categories
+    datasets.push({
+      label: 'IQVIA - DX',
+      data: data.dx?.iqvia || [],
+      backgroundColor: this.colors.sources.iqvia,
+      stack: 'iqvia'
+    });
+    datasets.push({
+      label: 'IQVIA - PX',
+      data: data.px?.iqvia || [],
+      backgroundColor: this.shadeColor(this.colors.sources.iqvia, -20),
+      stack: 'iqvia'
+    });
+    datasets.push({
+      label: 'IQVIA - RX',
+      data: data.rx?.iqvia || [],
+      backgroundColor: this.shadeColor(this.colors.sources.iqvia, -40),
+      stack: 'iqvia'
+    });
+    
+    // HealthVerity data across all categories
+    datasets.push({
+      label: 'HealthVerity - DX',
+      data: data.dx?.healthverity || [],
+      backgroundColor: this.colors.sources.healthverity,
+      stack: 'healthverity'
+    });
+    datasets.push({
+      label: 'HealthVerity - PX',
+      data: data.px?.healthverity || [],
+      backgroundColor: this.shadeColor(this.colors.sources.healthverity, -20),
+      stack: 'healthverity'
+    });
+    datasets.push({
+      label: 'HealthVerity - RX',
+      data: data.rx?.healthverity || [],
+      backgroundColor: this.shadeColor(this.colors.sources.healthverity, -40),
+      stack: 'healthverity'
+    });
+    
+    // Komodo data across all categories
+    datasets.push({
+      label: 'Komodo - DX',
+      data: data.dx?.komodo || [],
+      backgroundColor: this.colors.sources.komodo,
+      stack: 'komodo'
+    });
+    datasets.push({
+      label: 'Komodo - PX',
+      data: data.px?.komodo || [],
+      backgroundColor: this.shadeColor(this.colors.sources.komodo, -20),
+      stack: 'komodo'
+    });
+    datasets.push({
+      label: 'Komodo - RX',
+      data: data.rx?.komodo || [],
+      backgroundColor: this.shadeColor(this.colors.sources.komodo, -40),
+      stack: 'komodo'
+    });
+    
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: datasets
+      },
+      options: {
+        ...this.getBarChartOptions('Patient Split by Payer Type and Data Category', 'Patient Count'),
+        plugins: {
+          ...this.getBarChartOptions('', '').plugins,
+          legend: { 
+            display: true, 
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20
+            }
+          }
+        },
+        scales: { 
+          y: { 
+            beginAtZero: true,
+            stacked: true
+          },
+          x: {
+            stacked: true
+          }
+        }
+      }
+    });
+  }
+
+  shadeColor(hex, percent) {
+    const f = parseInt(hex.slice(1), 16), t = percent < 0 ? 0 : 255, p = Math.abs(percent) / 100,
+      R = f >> 16, G = f >> 8 & 0x00FF, B = f & 0x0000FF;
+    const to = (c) => Math.round((t - c) * p + c);
+    return '#' + (0x1000000 + (to(R) << 16) + (to(G) << 8) + to(B)).toString(16).slice(1);
   }
 
   // Provider Landscape Charts
@@ -1136,61 +2153,261 @@ class EnhancedChryselsysDashboard {
     const ctx = document.getElementById('ageDistributionChart');
     if (!ctx) return;
 
-    const data = this.dashboardData?.demographics?.age_distribution || {
-      '0-17': 0.1,
-      '18-24': 0.1,
-      '25-59': 9.6,
-      '60-74': 43.8,
-      '75+': 46.4
-    };
+    const data = this.dashboardData?.demographics?.age_distribution || {};
 
     if (this.charts.ageDistribution) {
       this.charts.ageDistribution.destroy();
     }
 
+    // Create datasets for each data source
+    const datasets = [];
+    const dataSources = ['komodo', 'healthverity', 'iqvia'];
+    const sourceColors = [this.colors.bronze, this.colors.ateneoBlue, this.colors.paleCerulean];
+    const sourceLabels = ['Komodo', 'HealthVerity', 'IQVIA'];
+
+    dataSources.forEach((source, index) => {
+      const sourceData = data[source] || {};
+      datasets.push({
+        label: sourceLabels[index],
+        data: [
+          sourceData['0-17'] || 0,
+          sourceData['18-24'] || 0,
+          sourceData['25-59'] || 0,
+          sourceData['60-74'] || 0,
+          sourceData['75+'] || 0,
+          sourceData['NULL'] || 0
+        ],
+        backgroundColor: sourceColors[index],
+        borderWidth: 1
+      });
+    });
+
     this.charts.ageDistribution = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: Object.keys(data),
-        datasets: [{
-          label: 'Percentage of Patients (%)',
-          data: Object.values(data),
-          backgroundColor: this.colors.chartColors.slice(0, 5),
-          borderColor: this.colors.chartColors.slice(0, 5),
-          borderWidth: 1
-        }]
+        labels: ['0-17', '18-24', '25-59', '60-74', '75+', 'Unknown'],
+        datasets: datasets
       },
-      options: this.getBarChartOptions('Age Distribution Analysis', 'Percentage (%)')
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Age Distribution Analysis by Data Source'
+          }
+        },
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Age Group'
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Patient Count'
+            }
+          }
+        }
+      }
     });
   }
 
-  createGeographicChart() {
-    const ctx = document.getElementById('geographicChart');
-    if (!ctx) return;
+  createGeographicMap() {
+    const mapContainer = document.getElementById('geographicMap');
+    if (!mapContainer) return;
 
-    const data = this.dashboardData?.demographics?.top_states || [];
-
-    if (this.charts.geographic) {
-      this.charts.geographic.destroy();
+    // Destroy existing map if it exists
+    if (this.geographicMap) {
+      this.geographicMap.remove();
     }
 
-    this.charts.geographic = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: data.map(item => item.state),
-        datasets: [{
-          label: 'Patient Count',
-          data: data.map(item => item.patients),
-          backgroundColor: this.colors.chartColors,
-          borderColor: this.colors.chartColors,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        ...this.getBarChartOptions('Top 10 States by Patient Count', 'Patient Count'),
-        indexAxis: 'y' // This makes it a horizontal bar chart
+    const data = this.dashboardData?.demographics?.geographic_distribution || {};
+
+    // Create the map centered on the US
+    this.geographicMap = L.map('geographicMap').setView([39.8283, -98.5795], 4);
+
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.geographicMap);
+
+    // State coordinates mapping (using state abbreviations)
+    const stateCoordinates = {
+      'AL': [32.806671, -86.791130], 'AK': [61.370716, -152.404419], 'AZ': [33.729759, -111.431221],
+      'AR': [34.969704, -92.373123], 'CA': [36.116203, -119.681564], 'CO': [39.059811, -105.311104],
+      'CT': [41.597782, -72.755371], 'DE': [39.318523, -75.507141], 'FL': [27.766279, -81.686783],
+      'GA': [33.040619, -83.643074], 'HI': [21.094318, -157.498337], 'ID': [44.240459, -114.478828],
+      'IL': [40.349457, -88.986137], 'IN': [39.790942, -86.147685], 'IA': [42.011539, -93.210526],
+      'KS': [38.526600, -96.726486], 'KY': [37.668140, -84.670067], 'LA': [31.169546, -91.867805],
+      'ME': [44.323535, -69.765261], 'MD': [39.063946, -76.802101], 'MA': [42.230171, -71.530106],
+      'MI': [43.326618, -84.536095], 'MN': [45.694454, -93.900192], 'MS': [32.741646, -89.678696],
+      'MO': [38.572954, -92.189283], 'MT': [46.921925, -110.454353], 'NE': [41.125370, -98.268082],
+      'NV': [38.313515, -117.055374], 'NH': [43.452492, -71.563896], 'NJ': [40.298904, -74.521011],
+      'NM': [34.840515, -106.248482], 'NY': [42.165726, -74.948051], 'NC': [35.630066, -79.806419],
+      'ND': [47.528912, -99.784012], 'OH': [40.388783, -82.764915], 'OK': [35.565342, -96.928917],
+      'OR': [44.572021, -122.070938], 'PA': [40.590752, -77.209755], 'RI': [41.680893, -71.51178],
+      'SC': [33.856892, -80.945007], 'SD': [44.299782, -99.438828], 'TN': [35.747845, -86.692345],
+      'TX': [31.968598, -99.901813], 'UT': [40.150032, -111.862434], 'VT': [44.045876, -72.710686],
+      'VA': [37.769337, -78.169968], 'WA': [47.400902, -121.490494], 'WV': [38.349497, -81.633294],
+      'WI': [44.268543, -89.616508], 'WY': [42.755966, -107.302490], 'DC': [38.907192, -77.036873],
+      'PR': [18.220833, -66.590149], 'VI': [18.335765, -64.896335], 'AE': [0, 0], 'AA': [0, 0], 'AP': [0, 0], 'PW': [0, 0]
+    };
+
+    // State name mapping for display
+    const stateNames = {
+      'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+      'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+      'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+      'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+      'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+      'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+      'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+      'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+      'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+      'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
+      'DC': 'District of Columbia', 'PR': 'Puerto Rico', 'VI': 'Virgin Islands'
+    };
+
+    // Get all unique states from both data sources
+    const allStates = new Set([
+      ...Object.keys(data.healthverity || {}),
+      ...Object.keys(data.komodo || {})
+    ]);
+
+    // Calculate max and min for color scaling
+    const allValues = [];
+    allStates.forEach(state => {
+      if (data.healthverity[state]) allValues.push(data.healthverity[state]);
+      if (data.komodo[state]) allValues.push(data.komodo[state]);
+    });
+    const maxPatients = Math.max(...allValues);
+    const minPatients = Math.min(...allValues);
+
+    // Create markers for each state
+    allStates.forEach(state => {
+      const coords = stateCoordinates[state];
+      if (coords && coords[0] !== 0) { // Skip invalid coordinates
+        const healthverityCount = data.healthverity[state] || 0;
+        const komodoCount = data.komodo[state] || 0;
+        const totalCount = healthverityCount + komodoCount;
+
+        // Calculate color intensity based on total patient count
+        const intensity = (totalCount - minPatients) / (maxPatients - minPatients);
+        const color = this.getColorForIntensity(intensity);
+        
+        // Create circle marker
+        const marker = L.circleMarker(coords, {
+          radius: Math.max(8, Math.sqrt(totalCount / 1000)), // Scale radius based on patient count
+          fillColor: color,
+          color: '#ffffff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.7
+        }).addTo(this.geographicMap);
+
+        // Add popup with state information
+        marker.bindPopup(`
+          <div style="text-align: center; min-width: 200px;">
+            <h4 style="margin: 0 0 12px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+            <div style="margin: 8px 0;">
+              <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="color: ${this.colors.ateneoBlue}; font-weight: bold;">HealthVerity:</span>
+                <span style="font-weight: bold;">${healthverityCount.toLocaleString()}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="color: ${this.colors.bronze}; font-weight: bold;">Komodo:</span>
+                <span style="font-weight: bold;">${komodoCount.toLocaleString()}</span>
+              </div>
+              <hr style="margin: 8px 0; border: none; border-top: 1px solid #e2e8f0;">
+              <div style="display: flex; justify-content: space-between; margin: 4px 0;">
+                <span style="font-weight: bold; color: #2d3748;">Total:</span>
+                <span style="font-weight: bold; font-size: 16px; color: #2d3748;">${totalCount.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        `);
       }
     });
+
+    // Add legend
+    this.addMapLegendWithSources(maxPatients, minPatients);
+  }
+
+  getColorForIntensity(intensity) {
+    // Create a color gradient from light blue to dark blue
+    const colors = [
+      '#e6f3ff', // Light blue
+      '#b3d9ff', 
+      '#80bfff',
+      '#4da6ff',
+      '#1a8cff',
+      '#0066cc', // Medium blue
+      '#004d99',
+      '#003366', // Dark blue
+      '#001a33',
+      '#000d1a'  // Very dark blue
+    ];
+    
+    const index = Math.floor(intensity * (colors.length - 1));
+    return colors[index];
+  }
+
+  addMapLegendWithSources(maxPatients, minPatients) {
+    const legend = L.control({position: 'bottomright'});
+    
+    legend.onAdd = function(map) {
+      const div = L.DomUtil.create('div', 'map-legend');
+      div.style.background = 'white';
+      div.style.padding = '12px';
+      div.style.borderRadius = '8px';
+      div.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+      div.style.fontSize = '12px';
+      div.style.minWidth = '180px';
+      
+      const colors = [
+        '#e6f3ff', '#b3d9ff', '#80bfff', '#4da6ff', '#1a8cff',
+        '#0066cc', '#004d99', '#003366', '#001a33', '#000d1a'
+      ];
+      
+      let html = '<h4 style="margin: 0 0 8px 0; color: #1a365d;">Patient Count</h4>';
+      
+      for (let i = colors.length - 1; i >= 0; i--) {
+        const value = minPatients + (maxPatients - minPatients) * (i / (colors.length - 1));
+        html += `
+          <div style="display: flex; align-items: center; margin: 2px 0;">
+            <div style="width: 12px; height: 12px; background: ${colors[i]}; margin-right: 8px; border-radius: 2px;"></div>
+            <span>${Math.round(value).toLocaleString()}+</span>
+          </div>
+        `;
+      }
+      
+      html += '<hr style="margin: 8px 0; border: none; border-top: 1px solid #e2e8f0;">';
+      html += '<h5 style="margin: 0 0 6px 0; color: #1a365d;">Data Sources</h5>';
+      html += `
+        <div style="display: flex; align-items: center; margin: 2px 0;">
+          <div style="width: 12px; height: 12px; background: #0066cc; margin-right: 8px; border-radius: 2px;"></div>
+          <span>HealthVerity</span>
+        </div>
+        <div style="display: flex; align-items: center; margin: 2px 0;">
+          <div style="width: 12px; height: 12px; background: #D2691E; margin-right: 8px; border-radius: 2px;"></div>
+          <span>Komodo</span>
+        </div>
+      `;
+      
+      div.innerHTML = html;
+      return div;
+    };
+    
+    legend.addTo(this.geographicMap);
   }
 
   // Treatment Landscape Charts
