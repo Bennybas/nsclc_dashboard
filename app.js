@@ -1837,117 +1837,202 @@ class EnhancedChryselsysDashboard {
       'TECENTRIQ': '#004976'
     };
     
-    const renderPair = (mxCanvasId, rxCanvasId, series, sourceColor, sourceName) => {
-      const mxCtx = document.getElementById(mxCanvasId);
-      const rxCtx = document.getElementById(rxCanvasId);
-      if (!mxCtx || !rxCtx) return;
-      const labels = series.labels;
-      
-      const mxBackgrounds = labels.map(label => {
-        const upperLabel = label.toUpperCase();
-        return brandColors[upperLabel] || sourceColor;
-      });
-      const rxBackgrounds = labels.map(label => {
-        const upperLabel = label.toUpperCase();
-        const baseColor = brandColors[upperLabel] || sourceColor;
-        return this.shadeColor(baseColor, -15);
-      });
-      
-      const mxChart = new Chart(mxCtx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Mx',
-            data: series.mx,
-            backgroundColor: mxBackgrounds,
-            borderColor: mxBackgrounds
-          }]
-        },
-        options: { ...this.getBarChartOptions(`Top 10 Products – Mx (${sourceName})`, 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
-      });
-      
-      const rxChart = new Chart(rxCtx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Rx',
-            data: series.rx,
-            backgroundColor: rxBackgrounds,
-            borderColor: rxBackgrounds
-          }]
-        },
-        options: { ...this.getBarChartOptions(`Top 10 Products – Rx (${sourceName})`, 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
-      });
-      
-      this.charts[mxCanvasId] = mxChart;
-      this.charts[rxCanvasId] = rxChart;
-    };
+    const canvas = document.getElementById('topProductsLineChart');
+    if (!canvas) return;
     
-    // Create split charts for each data source
-    renderPair('topProductsMxIqvia', 'topProductsRxIqvia', data.iqvia, this.colors.sources.iqvia, 'IQVIA');
-    renderPair('topProductsMxHv', 'topProductsRxHv', data.healthverity, this.colors.sources.healthverity, 'HealthVerity');
-    renderPair('topProductsMxKomodo', 'topProductsRxKomodo', data.komodo, this.colors.sources.komodo, 'Komodo');
+    // Initialize with Mx data (default)
+    this.mxRxViewMode = 'mx';
+    this.createLineChart(canvas, data, brandColors, 'mx');
     
     // Initialize toggle functionality
     this.initializeMxRxToggle();
   }
+  
+  createLineChart(canvas, data, brandColors, dataType) {
+    const ctx = canvas.getContext('2d');
+    
+    // Destroy existing chart if it exists
+    if (this.charts['topProductsLineChart']) {
+      this.charts['topProductsLineChart'].destroy();
+    }
+    
+    // Sources on X-axis
+    const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
+    const sourceData = [data.iqvia, data.healthverity, data.komodo];
+    
+    // Create datasets for each drug
+    const datasets = data.iqvia.labels.map((drug, index) => {
+      const drugData = sources.map((source, sourceIndex) => {
+        const sourceInfo = sourceData[sourceIndex];
+        return sourceInfo[dataType][index];
+      });
+      
+      return {
+        label: drug,
+        data: drugData,
+        borderColor: brandColors[drug.toUpperCase()] || this.getRandomColor(),
+        backgroundColor: brandColors[drug.toUpperCase()] || this.getRandomColor(),
+        borderWidth: 2,
+        fill: false,
+        tension: 0.1
+      };
+    });
+    
+    const chart = new Chart(ctx, {
+      type: 'line',
+        data: {
+        labels: sources,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: `Top 10 Products by Patient Count – ${dataType.toUpperCase()}`,
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          },
+          subtitle: {
+            display: true,
+            text: 'Click legend to show individual lines • Use "Show All" button to reset',
+            font: {
+              size: 12,
+              style: 'italic'
+            },
+            color: '#666'
+          },
+          legend: {
+            display: true,
+            position: 'right',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              boxWidth: 12,
+              boxHeight: 12
+            },
+            onClick: (e, legendItem, legend) => {
+              const chart = legend.chart;
+              const index = legendItem.datasetIndex;
+              
+              // Hide all datasets first
+              chart.data.datasets.forEach((dataset, i) => {
+                chart.getDatasetMeta(i).hidden = true;
+              });
+              
+              // Show only the clicked dataset
+              chart.getDatasetMeta(index).hidden = false;
+              
+              chart.update();
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Data Sources'
+            },
+            grid: {
+              display: true
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Patient Count'
+            },
+            beginAtZero: true,
+            grid: {
+              display: true
+            }
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        }
+      }
+    });
+    
+    this.charts['topProductsLineChart'] = chart;
+  }
+  
+  getRandomColor() {
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
 
   // Initialize Mx vs Rx Chart Toggle
   initializeMxRxToggle() {
-    const iqviaBtn = document.getElementById('mxRxIqviaBtn');
-    const hvBtn = document.getElementById('mxRxHvBtn');
-    const komodoBtn = document.getElementById('mxRxKomodoBtn');
+    const mxBtn = document.getElementById('mxBtn');
+    const rxBtn = document.getElementById('rxBtn');
+    const showAllBtn = document.getElementById('showAllBtn');
     const title = document.getElementById('mxRxChartTitle');
-    const iqviaCharts = document.getElementById('iqviaCharts');
-    const hvCharts = document.getElementById('hvCharts');
-    const komodoCharts = document.getElementById('komodoCharts');
     
-    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaCharts || !hvCharts || !komodoCharts) return;
+    if (!mxBtn || !rxBtn || !showAllBtn || !title) return;
 
-    // Set initial state (IQVIA is default)
-    this.mxRxViewMode = 'iqvia';
+    // Set initial state (Mx is default)
+    this.mxRxViewMode = 'mx';
     
     // Add event listeners
-    iqviaBtn.addEventListener('click', () => {
-      if (this.mxRxViewMode === 'iqvia') return;
+    mxBtn.addEventListener('click', () => {
+      if (this.mxRxViewMode === 'mx') return;
       
-      this.mxRxViewMode = 'iqvia';
-      iqviaBtn.classList.add('active');
-      hvBtn.classList.remove('active');
-      komodoBtn.classList.remove('active');
-      title.textContent = 'Top 10 Products by Patient Count – Mx & Rx (IQVIA)';
-      iqviaCharts.style.display = 'flex';
-      hvCharts.style.display = 'none';
-      komodoCharts.style.display = 'none';
+      this.mxRxViewMode = 'mx';
+      mxBtn.classList.add('active');
+      rxBtn.classList.remove('active');
+      title.textContent = 'Top 10 Products by Patient Count – Mx';
+      this.updateLineChart('mx');
     });
     
-    hvBtn.addEventListener('click', () => {
-      if (this.mxRxViewMode === 'healthverity') return;
+    rxBtn.addEventListener('click', () => {
+      if (this.mxRxViewMode === 'rx') return;
       
-      this.mxRxViewMode = 'healthverity';
-      hvBtn.classList.add('active');
-      iqviaBtn.classList.remove('active');
-      komodoBtn.classList.remove('active');
-      title.textContent = 'Top 10 Products by Patient Count – Mx & Rx (HealthVerity)';
-      iqviaCharts.style.display = 'none';
-      hvCharts.style.display = 'flex';
-      komodoCharts.style.display = 'none';
+      this.mxRxViewMode = 'rx';
+      rxBtn.classList.add('active');
+      mxBtn.classList.remove('active');
+      title.textContent = 'Top 10 Products by Patient Count – Rx';
+      this.updateLineChart('rx');
     });
     
-    komodoBtn.addEventListener('click', () => {
-      if (this.mxRxViewMode === 'komodo') return;
-      
-      this.mxRxViewMode = 'komodo';
-      komodoBtn.classList.add('active');
-      iqviaBtn.classList.remove('active');
-      hvBtn.classList.remove('active');
-      title.textContent = 'Top 10 Products by Patient Count – Mx & Rx (Komodo)';
-      iqviaCharts.style.display = 'none';
-      hvCharts.style.display = 'none';
-      komodoCharts.style.display = 'flex';
+    showAllBtn.addEventListener('click', () => {
+      const chart = this.charts['topProductsLineChart'];
+      if (chart) {
+        // Show all datasets
+        chart.data.datasets.forEach((dataset, i) => {
+          chart.getDatasetMeta(i).hidden = false;
+        });
+        chart.update();
+      }
     });
+  }
+  
+  updateLineChart(dataType) {
+    const data = this.dashboardData?.other_metrics?.top_products_mx_rx;
+    if (!data) return;
+    
+    // Brand colors for specific drugs
+    const brandColors = {
+      'PARAPLATIN': '#005587',
+      'KEYTRUDA': '#007378',
+      'TAXOL': '#490A3D',
+      'VP-16': '#00314D',
+      'OPDIVO': '#184D90',
+      'PLATINOL-AQ': '#003366',
+      'ALIMTA': '#28B463',
+      'AVASTIN': '#61367C',
+      'IMFINZI': '#A50935',
+      'TECENTRIQ': '#004976'
+    };
+    
+    const canvas = document.getElementById('topProductsLineChart');
+    if (!canvas) return;
+    
+    this.createLineChart(canvas, data, brandColors, dataType);
   }
 
   createTopProductsCombinedChart() {
@@ -2078,70 +2163,12 @@ class EnhancedChryselsysDashboard {
       return chart;
     };
 
-    // Create all charts but store references
+    // Create all charts and store references
     this.charts.topProductsYoyIqvia = makeLine('topProductsYoyIqvia', data.iqvia, this.colors.sources.iqvia, 'IQVIA');
     this.charts.topProductsYoyHv = makeLine('topProductsYoyHv', data.healthverity, this.colors.sources.healthverity, 'HealthVerity');
     this.charts.topProductsYoyKomodo = makeLine('topProductsYoyKomodo', data.komodo, this.colors.sources.komodo, 'Komodo');
-    
-    // Initialize toggle functionality
-    this.initializeYoyToggle();
   }
 
-  // Initialize YoY Chart Toggle
-  initializeYoyToggle() {
-    const iqviaBtn = document.getElementById('yoyIqviaBtn');
-    const hvBtn = document.getElementById('yoyHvBtn');
-    const komodoBtn = document.getElementById('yoyKomodoBtn');
-    const title = document.getElementById('yoyChartTitle');
-    const iqviaChart = document.getElementById('topProductsYoyIqvia');
-    const hvChart = document.getElementById('topProductsYoyHv');
-    const komodoChart = document.getElementById('topProductsYoyKomodo');
-    
-    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaChart || !hvChart || !komodoChart) return;
-
-    // Set initial state (IQVIA is default)
-    this.yoyViewMode = 'iqvia';
-    
-    // Add event listeners
-    iqviaBtn.addEventListener('click', () => {
-      if (this.yoyViewMode === 'iqvia') return;
-      
-      this.yoyViewMode = 'iqvia';
-      iqviaBtn.classList.add('active');
-      hvBtn.classList.remove('active');
-      komodoBtn.classList.remove('active');
-      title.textContent = 'Top Products – YoY Comparison (IQVIA)';
-      iqviaChart.style.display = 'block';
-      hvChart.style.display = 'none';
-      komodoChart.style.display = 'none';
-    });
-    
-    hvBtn.addEventListener('click', () => {
-      if (this.yoyViewMode === 'healthverity') return;
-      
-      this.yoyViewMode = 'healthverity';
-      hvBtn.classList.add('active');
-      iqviaBtn.classList.remove('active');
-      komodoBtn.classList.remove('active');
-      title.textContent = 'Top Products – YoY Comparison (HealthVerity)';
-      iqviaChart.style.display = 'none';
-      hvChart.style.display = 'block';
-      komodoChart.style.display = 'none';
-    });
-    
-    komodoBtn.addEventListener('click', () => {
-      if (this.yoyViewMode === 'komodo') return;
-      
-      this.yoyViewMode = 'komodo';
-      komodoBtn.classList.add('active');
-      iqviaBtn.classList.remove('active');
-      hvBtn.classList.remove('active');
-      title.textContent = 'Top Products – YoY Comparison (Komodo)';
-      iqviaChart.style.display = 'none';
-      hvChart.style.display = 'none';
-      komodoChart.style.display = 'block';
-    });
-  }
 
   createClaimsStatusSplit() {
     const ctx = document.getElementById('claimsStatusSplit'); if (!ctx) return;
@@ -2246,122 +2273,209 @@ class EnhancedChryselsysDashboard {
   }
 
   createPatientSplitByPayer() {
-    const iqviaCanvas = document.getElementById('patientSplitByPayerIqvia');
-    const hvCanvas = document.getElementById('patientSplitByPayerHv');
-    const komodoCanvas = document.getElementById('patientSplitByPayerKomodo');
-    if (!iqviaCanvas || !hvCanvas || !komodoCanvas) return;
-    const data = this.dashboardData?.other_metrics?.payer_split; if (!data) return;
+    const data = this.dashboardData?.other_metrics?.payer_split;
+    if (!data) return;
     
-    const labels = data.dx?.labels || ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'];
+    const canvas = document.getElementById('payerSplitLineChart');
+    if (!canvas) return;
     
-    const buildDatasets = (sourceKey) => {
-      return [
-        {
-          label: 'DX',
-          data: data.dx?.[sourceKey] || [],
-          backgroundColor: '#1F77B4',
-          borderColor: '#1F77B4',
-          stack: 'stack'
-        },
-        {
-          label: 'PX',
-          data: data.px?.[sourceKey] || [],
-          backgroundColor: '#FF7F0E',
-          borderColor: '#FF7F0E',
-          stack: 'stack'
-        },
-        {
-          label: 'RX',
-          data: data.rx?.[sourceKey] || [],
-          backgroundColor: '#2CA02C',
-          borderColor: '#2CA02C',
-          stack: 'stack'
-        }
-      ];
-    };
+    // Initialize with DX data (default)
+    this.payerViewMode = 'dx';
+    this.createPayerLineChart(canvas, data, 'dx');
     
-    const commonOptions = {
-      ...this.getBarChartOptions('Patient Split by Payer Type and Data Category', 'Patient Count'),
-      plugins: {
-        ...this.getBarChartOptions('', '').plugins,
-        legend: { 
-          display: true, 
-          position: 'top',
-          labels: { usePointStyle: true, padding: 20 }
-        }
-      },
-      scales: { y: { beginAtZero: true, stacked: true }, x: { stacked: true } }
-    };
-    
-    this.charts.patientSplitByPayerIqvia = new Chart(iqviaCanvas, {
-      type: 'bar',
-      data: { labels, datasets: buildDatasets('iqvia') },
-      options: commonOptions
-    });
-    
-    this.charts.patientSplitByPayerHv = new Chart(hvCanvas, {
-      type: 'bar',
-      data: { labels, datasets: buildDatasets('healthverity') },
-      options: commonOptions
-    });
-    
-    this.charts.patientSplitByPayerKomodo = new Chart(komodoCanvas, {
-      type: 'bar',
-      data: { labels, datasets: buildDatasets('komodo') },
-      options: commonOptions
-    });
-    
+    // Initialize toggle functionality
     this.initializePayerSplitToggle();
+  }
+  
+  createPayerLineChart(canvas, data, dataType) {
+    const ctx = canvas.getContext('2d');
+    
+    // Destroy existing chart if it exists
+    if (this.charts['payerSplitLineChart']) {
+      this.charts['payerSplitLineChart'].destroy();
+    }
+    
+    // Sources on X-axis
+    const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
+    const sourceData = [data[dataType]?.iqvia || [], data[dataType]?.healthverity || [], data[dataType]?.komodo || []];
+    const labels = data[dataType]?.labels || ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'];
+    
+    // Create datasets for each payer type
+    const datasets = labels.map((payer, index) => {
+      const payerData = sources.map((source, sourceIndex) => {
+        return sourceData[sourceIndex][index] || 0;
+      });
+      
+      // Different colors for each payer type
+      const payerColors = {
+        'Commercial': '#1F77B4',
+        'Medicare': '#FF7F0E', 
+        'Medicaid': '#2CA02C',
+        'Other': '#D62728',
+        'NULL': '#9467BD'
+      };
+      
+      return {
+        label: payer,
+        data: payerData,
+        borderColor: payerColors[payer] || this.getRandomColor(),
+        backgroundColor: payerColors[payer] || this.getRandomColor(),
+        borderWidth: 2,
+        fill: false,
+        tension: 0.1
+      };
+    });
+    
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: sources,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: `Patient Split by Payer Type – ${dataType.toUpperCase()}`,
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          },
+          subtitle: {
+            display: true,
+            text: 'Click legend to show individual lines • Use "Show All" button to reset',
+            font: {
+              size: 12,
+              style: 'italic'
+            },
+            color: '#666'
+          },
+          legend: {
+            display: true,
+            position: 'right',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              boxWidth: 12,
+              boxHeight: 12
+            },
+            onClick: (e, legendItem, legend) => {
+              const chart = legend.chart;
+              const index = legendItem.datasetIndex;
+              
+              // Hide all datasets first
+              chart.data.datasets.forEach((dataset, i) => {
+                chart.getDatasetMeta(i).hidden = true;
+              });
+              
+              // Show only the clicked dataset
+              chart.getDatasetMeta(index).hidden = false;
+              
+              chart.update();
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Data Sources'
+            },
+            grid: {
+              display: true
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Patient Count'
+            },
+            beginAtZero: true,
+            grid: {
+              display: true
+            }
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        }
+      }
+    });
+    
+    this.charts['payerSplitLineChart'] = chart;
   }
 
   // Toggle for Patient Split by Payer
   initializePayerSplitToggle() {
-    const iqviaBtn = document.getElementById('payerIqviaBtn');
-    const hvBtn = document.getElementById('payerHvBtn');
-    const komodoBtn = document.getElementById('payerKomodoBtn');
+    const dxBtn = document.getElementById('payerDxBtn');
+    const pxBtn = document.getElementById('payerPxBtn');
+    const rxBtn = document.getElementById('payerRxBtn');
+    const showAllBtn = document.getElementById('payerShowAllBtn');
     const title = document.getElementById('payerSplitTitle');
-    const iqviaCanvas = document.getElementById('patientSplitByPayerIqvia');
-    const hvCanvas = document.getElementById('patientSplitByPayerHv');
-    const komodoCanvas = document.getElementById('patientSplitByPayerKomodo');
-    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaCanvas || !hvCanvas || !komodoCanvas) return;
     
-    // Default: IQVIA
-    iqviaCanvas.style.display = 'block';
-    hvCanvas.style.display = 'none';
-    komodoCanvas.style.display = 'none';
+    if (!dxBtn || !pxBtn || !rxBtn || !showAllBtn || !title) return;
+
+    // Set initial state (DX is default)
+    this.payerViewMode = 'dx';
     
-    iqviaBtn.addEventListener('click', () => {
-      if (iqviaBtn.classList.contains('active')) return;
-      iqviaBtn.classList.add('active');
-      hvBtn.classList.remove('active');
-      komodoBtn.classList.remove('active');
-      title.textContent = 'Patient Split by Payer Type (IQVIA)';
-      iqviaCanvas.style.display = 'block';
-      hvCanvas.style.display = 'none';
-      komodoCanvas.style.display = 'none';
+    // Add event listeners
+    dxBtn.addEventListener('click', () => {
+      if (this.payerViewMode === 'dx') return;
+      
+      this.payerViewMode = 'dx';
+      dxBtn.classList.add('active');
+      pxBtn.classList.remove('active');
+      rxBtn.classList.remove('active');
+      title.textContent = 'Patient Split by Payer Type – DX';
+      this.updatePayerLineChart('dx');
     });
     
-    hvBtn.addEventListener('click', () => {
-      if (hvBtn.classList.contains('active')) return;
-      hvBtn.classList.add('active');
-      iqviaBtn.classList.remove('active');
-      komodoBtn.classList.remove('active');
-      title.textContent = 'Patient Split by Payer Type (HealthVerity)';
-      iqviaCanvas.style.display = 'none';
-      hvCanvas.style.display = 'block';
-      komodoCanvas.style.display = 'none';
+    pxBtn.addEventListener('click', () => {
+      if (this.payerViewMode === 'px') return;
+      
+      this.payerViewMode = 'px';
+      pxBtn.classList.add('active');
+      dxBtn.classList.remove('active');
+      rxBtn.classList.remove('active');
+      title.textContent = 'Patient Split by Payer Type – PX';
+      this.updatePayerLineChart('px');
     });
     
-    komodoBtn.addEventListener('click', () => {
-      if (komodoBtn.classList.contains('active')) return;
-      komodoBtn.classList.add('active');
-      iqviaBtn.classList.remove('active');
-      hvBtn.classList.remove('active');
-      title.textContent = 'Patient Split by Payer Type (Komodo)';
-      iqviaCanvas.style.display = 'none';
-      hvCanvas.style.display = 'none';
-      komodoCanvas.style.display = 'block';
+    rxBtn.addEventListener('click', () => {
+      if (this.payerViewMode === 'rx') return;
+      
+      this.payerViewMode = 'rx';
+      rxBtn.classList.add('active');
+      dxBtn.classList.remove('active');
+      pxBtn.classList.remove('active');
+      title.textContent = 'Patient Split by Payer Type – RX';
+      this.updatePayerLineChart('rx');
     });
+    
+    showAllBtn.addEventListener('click', () => {
+      const chart = this.charts['payerSplitLineChart'];
+      if (chart) {
+        // Show all datasets
+        chart.data.datasets.forEach((dataset, i) => {
+          chart.getDatasetMeta(i).hidden = false;
+        });
+        chart.update();
+      }
+    });
+  }
+  
+  updatePayerLineChart(dataType) {
+    const data = this.dashboardData?.other_metrics?.payer_split;
+    if (!data) return;
+    
+    const canvas = document.getElementById('payerSplitLineChart');
+    if (!canvas) return;
+    
+    this.createPayerLineChart(canvas, data, dataType);
   }
 
   shadeColor(hex, percent) {
@@ -2569,159 +2683,158 @@ class EnhancedChryselsysDashboard {
       ...Object.keys(data.komodo || {})
     ]);
 
-    // Create markers for each state with both colors
+    // Collect all counts to determine min/max for gradient (from both sources)
+    const allCounts = [];
+    allStates.forEach(state => {
+      const healthverityCount = data.healthverity[state] || 0;
+      const komodoCount = data.komodo[state] || 0;
+      if (healthverityCount > 0) allCounts.push(healthverityCount);
+      if (komodoCount > 0) allCounts.push(komodoCount);
+    });
+
+    const maxCount = Math.max(...allCounts);
+    const minCount = Math.min(...allCounts);
+
+    // Create bubble heat map markers for both data sources
     allStates.forEach(state => {
       const coords = stateCoordinates[state];
       if (coords && coords[0] !== 0) { // Skip invalid coordinates
         const healthverityCount = data.healthverity[state] || 0;
         const komodoCount = data.komodo[state] || 0;
-        const totalCount = healthverityCount + komodoCount;
 
-        if (totalCount > 0) {
-          // Calculate positions for adjacent markers (side by side)
-          const offset = 0.3; // degrees - increased for better separation
-          const healthverityCoords = [coords[0], coords[1] - offset]; // Left side
-          const komodoCoords = [coords[0], coords[1] + offset]; // Right side
+        // Calculate positions for adjacent markers (side by side)
+        const offset = 0.4; // degrees - increased for better separation
+        const healthverityCoords = [coords[0], coords[1] - offset]; // Left side
+        const komodoCoords = [coords[0], coords[1] + offset]; // Right side
+        
+        // Create HealthVerity bubble (left side)
+        if (healthverityCount > 0) {
+          // Calculate bubble size based on count
+          const minRadius = 8;
+          const maxRadius = 35;
+          const radius = minRadius + ((healthverityCount - minCount) / (maxCount - minCount)) * (maxRadius - minRadius);
           
-          // Create HealthVerity marker (left side)
-          if (healthverityCount > 0) {
-            const healthverityMarker = L.circleMarker(healthverityCoords, {
-              radius: Math.max(8, Math.sqrt(healthverityCount / 2000)),
-              fillColor: this.colors.ateneoBlue,
-              color: '#ffffff',
-              weight: 2,
-              opacity: 1,
-              fillOpacity: 0.8
-            });
-            
-            // Add count label for HealthVerity
-            const healthverityLabel = L.marker(healthverityCoords, {
-              icon: L.divIcon({
-                className: 'map-count-label',
-                html: `<div style="
-                  background: rgba(255,255,255,0.95);
-                  border: 2px solid ${this.colors.ateneoBlue};
-                  border-radius: 50%;
-                  width: 28px;
-                  height: 28px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 11px;
-                  font-weight: bold;
-                  color: ${this.colors.ateneoBlue};
-                  text-align: center;
-                  line-height: 1;
-                  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                ">${healthverityCount > 999 ? (healthverityCount/1000).toFixed(1) + 'k' : healthverityCount}</div>`,
-                iconSize: [28, 28],
-                iconAnchor: [14, 14]
-              })
-            });
-            
-            // Add individual popup for HealthVerity marker
-            healthverityMarker.bindPopup(`
-              <div style="text-align: center; min-width: 180px;">
-                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
-                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
-                  <div style="width: 16px; height: 16px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px;"></div>
-                  <span style="color: ${this.colors.ateneoBlue}; font-weight: bold; font-size: 16px;">HealthVerity: ${healthverityCount.toLocaleString()}</span>
-                </div>
-              </div>
-            `);
-            
-            // Add individual popup for HealthVerity label
-            healthverityLabel.bindPopup(`
-              <div style="text-align: center; min-width: 180px;">
-                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
-                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
-                  <div style="width: 16px; height: 16px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px;"></div>
-                  <span style="color: ${this.colors.ateneoBlue}; font-weight: bold; font-size: 16px;">HealthVerity: ${healthverityCount.toLocaleString()}</span>
-                </div>
-              </div>
-            `);
-            
-            healthverityMarker.addTo(this.geographicMap);
-            healthverityLabel.addTo(this.geographicMap);
-          }
+          // Calculate color intensity based on count for HealthVerity (blue gradient)
+          const intensity = (healthverityCount - minCount) / (maxCount - minCount);
+          const bubbleColor = this.getColorForIntensity(intensity);
           
-          // Create Komodo marker (right side)
-          if (komodoCount > 0) {
-            const komodoMarker = L.circleMarker(komodoCoords, {
-              radius: Math.max(8, Math.sqrt(komodoCount / 2000)),
-              fillColor: this.colors.bronze,
-              color: '#ffffff',
-              weight: 2,
-              opacity: 1,
-              fillOpacity: 0.8
-            });
-            
-            // Add count label for Komodo
-            const komodoLabel = L.marker(komodoCoords, {
-              icon: L.divIcon({
-                className: 'map-count-label',
-                html: `<div style="
-                  background: rgba(255,255,255,0.95);
-                  border: 2px solid ${this.colors.bronze};
-                  border-radius: 50%;
-                  width: 28px;
-                  height: 28px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  font-size: 11px;
-                  font-weight: bold;
-                  color: ${this.colors.bronze};
-                  text-align: center;
-                  line-height: 1;
-                  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                ">${komodoCount > 999 ? (komodoCount/1000).toFixed(1) + 'k' : komodoCount}</div>`,
-                iconSize: [28, 28],
-                iconAnchor: [14, 14]
-              })
-            });
-            
-            // Add individual popup for Komodo marker
-            komodoMarker.bindPopup(`
-              <div style="text-align: center; min-width: 180px;">
-                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
-                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
-                  <div style="width: 16px; height: 16px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px;"></div>
-                  <span style="color: ${this.colors.bronze}; font-weight: bold; font-size: 16px;">Komodo: ${komodoCount.toLocaleString()}</span>
-                </div>
+          const healthverityMarker = L.circleMarker(healthverityCoords, {
+            radius: radius,
+            fillColor: bubbleColor,
+            color: '#ffffff',
+            weight: 3,
+            opacity: 1,
+            fillOpacity: 0.7
+          });
+          
+          // Add count label inside the bubble
+          const healthverityLabel = L.marker(healthverityCoords, {
+            icon: L.divIcon({
+              className: 'map-count-label',
+              html: `<div style="
+                background: transparent;
+                color: ${healthverityCount > maxCount * 0.5 ? '#ffffff' : '#333333'};
+                font-size: ${radius > 20 ? '10px' : radius > 12 ? '8px' : '6px'};
+                font-weight: bold;
+                text-align: center;
+                line-height: 1;
+                text-shadow: ${healthverityCount > maxCount * 0.5 ? '1px 1px 2px rgba(0,0,0,0.8)' : '1px 1px 2px rgba(255,255,255,0.8)'};
+                pointer-events: none;
+              ">${healthverityCount > 999 ? (healthverityCount/1000).toFixed(1) + 'k' : healthverityCount}</div>`,
+              iconSize: [radius * 2, radius * 2],
+              iconAnchor: [radius, radius]
+            })
+          });
+          
+          // Add popup for HealthVerity marker
+          healthverityMarker.bindPopup(`
+            <div style="text-align: center; min-width: 180px;">
+              <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+              <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                <div style="width: 16px; height: 16px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px;"></div>
+                <span style="color: ${this.colors.ateneoBlue}; font-weight: bold; font-size: 16px;">HealthVerity: ${healthverityCount.toLocaleString()}</span>
               </div>
-            `);
-            
-            // Add individual popup for Komodo label
-            komodoLabel.bindPopup(`
-              <div style="text-align: center; min-width: 180px;">
-                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
-                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
-                  <div style="width: 16px; height: 16px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px;"></div>
-                  <span style="color: ${this.colors.bronze}; font-weight: bold; font-size: 16px;">Komodo: ${komodoCount.toLocaleString()}</span>
-                </div>
+              <div style="font-size: 11px; color: #718096; margin-top: 8px;">
+                Bubble size and color intensity represent patient count
               </div>
-            `);
-            
-            komodoMarker.addTo(this.geographicMap);
-            komodoLabel.addTo(this.geographicMap);
-          }
+            </div>
+          `);
+          
+          healthverityMarker.addTo(this.geographicMap);
+          healthverityLabel.addTo(this.geographicMap);
+        }
+        
+        // Create Komodo bubble (right side)
+        if (komodoCount > 0) {
+          // Calculate bubble size based on count
+          const minRadius = 8;
+          const maxRadius = 35;
+          const radius = minRadius + ((komodoCount - minCount) / (maxCount - minCount)) * (maxRadius - minRadius);
+          
+          // Calculate color intensity based on count for Komodo (bronze/orange gradient)
+          const intensity = (komodoCount - minCount) / (maxCount - minCount);
+          const bubbleColor = this.getColorForKomodoIntensity(intensity);
+          
+          const komodoMarker = L.circleMarker(komodoCoords, {
+            radius: radius,
+            fillColor: bubbleColor,
+            color: '#ffffff',
+            weight: 3,
+            opacity: 1,
+            fillOpacity: 0.7
+          });
+          
+          // Add count label inside the bubble
+          const komodoLabel = L.marker(komodoCoords, {
+            icon: L.divIcon({
+              className: 'map-count-label',
+              html: `<div style="
+                background: transparent;
+                color: ${komodoCount > maxCount * 0.5 ? '#ffffff' : '#333333'};
+                font-size: ${radius > 20 ? '10px' : radius > 12 ? '8px' : '6px'};
+                font-weight: bold;
+                text-align: center;
+                line-height: 1;
+                text-shadow: ${komodoCount > maxCount * 0.5 ? '1px 1px 2px rgba(0,0,0,0.8)' : '1px 1px 2px rgba(255,255,255,0.8)'};
+                pointer-events: none;
+              ">${komodoCount > 999 ? (komodoCount/1000).toFixed(1) + 'k' : komodoCount}</div>`,
+              iconSize: [radius * 2, radius * 2],
+              iconAnchor: [radius, radius]
+            })
+          });
+          
+          // Add popup for Komodo marker
+          komodoMarker.bindPopup(`
+            <div style="text-align: center; min-width: 180px;">
+              <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+              <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                <div style="width: 16px; height: 16px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px;"></div>
+                <span style="color: ${this.colors.bronze}; font-weight: bold; font-size: 16px;">Komodo: ${komodoCount.toLocaleString()}</span>
+              </div>
+              <div style="font-size: 11px; color: #718096; margin-top: 8px;">
+                Bubble size and color intensity represent patient count
+              </div>
+            </div>
+          `);
+          
+          komodoMarker.addTo(this.geographicMap);
+          komodoLabel.addTo(this.geographicMap);
         }
       }
     });
 
-    // Add simplified legend with only data sources
-    this.addSimpleMapLegend();
+    // Add simple data source legend only
+    this.addSimpleDataSourceLegend();
   }
 
-  addSimpleMapLegend() {
+  addSimpleDataSourceLegend() {
     // Remove existing legend if it exists
     const existingLegend = document.querySelector('.map-legend');
     if (existingLegend) {
       existingLegend.remove();
     }
 
-    // Create simple legend with only data sources
+    // Create simple data source legend
     const legend = L.control({ position: 'bottomright' });
     
     legend.onAdd = () => {
@@ -2740,15 +2853,15 @@ class EnhancedChryselsysDashboard {
       div.innerHTML = `
         <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; text-align: center;">Data Sources</div>
         <div style="display: flex; align-items: center; margin: 4px 0;">
-          <div style="width: 12px; height: 12px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px; border: 2px solid #ffffff;"></div>
-          <span style="color: #4a5568;">HealthVerity</span>
+          <div style="width: 12px; height: 12px; background: #0066cc; border-radius: 50%; margin-right: 8px; border: 2px solid #ffffff;"></div>
+          <span style="color: #4a5568;">HealthVerity (Blue Gradient)</span>
         </div>
         <div style="display: flex; align-items: center; margin: 4px 0;">
-          <div style="width: 12px; height: 12px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px; border: 2px solid #ffffff;"></div>
-          <span style="color: #4a5568;">Komodo</span>
+          <div style="width: 12px; height: 12px; background: #e68a00; border-radius: 50%; margin-right: 8px; border: 2px solid #ffffff;"></div>
+          <span style="color: #4a5568;">Komodo (Bronze Gradient)</span>
         </div>
         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #718096; text-align: center;">
-          Click markers for details
+          Bubble size & color intensity = patient count
         </div>
       `;
       
@@ -2759,7 +2872,7 @@ class EnhancedChryselsysDashboard {
   }
 
   getColorForIntensity(intensity) {
-    // Create a color gradient from light blue to dark blue
+    // Create a color gradient from light blue to dark blue for HealthVerity
     const colors = [
       '#e6f3ff', // Light blue
       '#b3d9ff', 
@@ -2771,6 +2884,25 @@ class EnhancedChryselsysDashboard {
       '#003366', // Dark blue
       '#001a33',
       '#000d1a'  // Very dark blue
+    ];
+    
+    const index = Math.floor(intensity * (colors.length - 1));
+    return colors[index];
+  }
+
+  getColorForKomodoIntensity(intensity) {
+    // Create a color gradient from light bronze/orange to dark bronze for Komodo
+    const colors = [
+      '#fff4e6', // Light bronze
+      '#ffe0b3', 
+      '#ffcc80',
+      '#ffb84d',
+      '#ffa31a',
+      '#e68a00', // Medium bronze
+      '#cc7a00',
+      '#b36b00', // Dark bronze
+      '#995c00',
+      '#804d00'  // Very dark bronze
     ];
     
     const index = Math.floor(intensity * (colors.length - 1));
