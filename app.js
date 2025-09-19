@@ -1837,53 +1837,58 @@ class EnhancedChryselsysDashboard {
       'TECENTRIQ': '#004976'
     };
     
-    const makeChart = (elId, series, sourceColor, sourceName) => {
-      const ctx = document.getElementById(elId); if (!ctx) return;
+    const renderPair = (mxCanvasId, rxCanvasId, series, sourceColor, sourceName) => {
+      const mxCtx = document.getElementById(mxCanvasId);
+      const rxCtx = document.getElementById(rxCanvasId);
+      if (!mxCtx || !rxCtx) return;
       const labels = series.labels;
       
-      // Create datasets with brand colors for each product
-      const datasets = [
-        {
-          label: 'Mx',
-          data: series.mx,
-          backgroundColor: labels.map(label => {
-            const upperLabel = label.toUpperCase();
-            return brandColors[upperLabel] || sourceColor;
-          }),
-          borderColor: labels.map(label => {
-            const upperLabel = label.toUpperCase();
-            return brandColors[upperLabel] || sourceColor;
-          })
-        },
-        {
-          label: 'Rx',
-          data: series.rx,
-          backgroundColor: labels.map(label => {
-            const upperLabel = label.toUpperCase();
-            const baseColor = brandColors[upperLabel] || sourceColor;
-            return this.shadeColor(baseColor, -15);
-          }),
-          borderColor: labels.map(label => {
-            const upperLabel = label.toUpperCase();
-            const baseColor = brandColors[upperLabel] || sourceColor;
-            return this.shadeColor(baseColor, -15);
-          })
-        }
-      ];
-      
-      const chart = new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets },
-        options: { ...this.getBarChartOptions(`Top 10 Products – Mx vs Rx (${sourceName})`, 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      const mxBackgrounds = labels.map(label => {
+        const upperLabel = label.toUpperCase();
+        return brandColors[upperLabel] || sourceColor;
+      });
+      const rxBackgrounds = labels.map(label => {
+        const upperLabel = label.toUpperCase();
+        const baseColor = brandColors[upperLabel] || sourceColor;
+        return this.shadeColor(baseColor, -15);
       });
       
-      return chart;
+      const mxChart = new Chart(mxCtx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Mx',
+            data: series.mx,
+            backgroundColor: mxBackgrounds,
+            borderColor: mxBackgrounds
+          }]
+        },
+        options: { ...this.getBarChartOptions(`Top 10 Products – Mx (${sourceName})`, 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      });
+      
+      const rxChart = new Chart(rxCtx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Rx',
+            data: series.rx,
+            backgroundColor: rxBackgrounds,
+            borderColor: rxBackgrounds
+          }]
+        },
+        options: { ...this.getBarChartOptions(`Top 10 Products – Rx (${sourceName})`, 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      });
+      
+      this.charts[mxCanvasId] = mxChart;
+      this.charts[rxCanvasId] = rxChart;
     };
     
-    // Create all charts but store references
-    this.charts.topProductsMxRxIqvia = makeChart('topProductsMxRxIqvia', data.iqvia, this.colors.sources.iqvia, 'IQVIA');
-    this.charts.topProductsMxRxHv = makeChart('topProductsMxRxHv', data.healthverity, this.colors.sources.healthverity, 'HealthVerity');
-    this.charts.topProductsMxRxKomodo = makeChart('topProductsMxRxKomodo', data.komodo, this.colors.sources.komodo, 'Komodo');
+    // Create split charts for each data source
+    renderPair('topProductsMxIqvia', 'topProductsRxIqvia', data.iqvia, this.colors.sources.iqvia, 'IQVIA');
+    renderPair('topProductsMxHv', 'topProductsRxHv', data.healthverity, this.colors.sources.healthverity, 'HealthVerity');
+    renderPair('topProductsMxKomodo', 'topProductsRxKomodo', data.komodo, this.colors.sources.komodo, 'Komodo');
     
     // Initialize toggle functionality
     this.initializeMxRxToggle();
@@ -1895,11 +1900,11 @@ class EnhancedChryselsysDashboard {
     const hvBtn = document.getElementById('mxRxHvBtn');
     const komodoBtn = document.getElementById('mxRxKomodoBtn');
     const title = document.getElementById('mxRxChartTitle');
-    const iqviaChart = document.getElementById('topProductsMxRxIqvia');
-    const hvChart = document.getElementById('topProductsMxRxHv');
-    const komodoChart = document.getElementById('topProductsMxRxKomodo');
+    const iqviaCharts = document.getElementById('iqviaCharts');
+    const hvCharts = document.getElementById('hvCharts');
+    const komodoCharts = document.getElementById('komodoCharts');
     
-    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaChart || !hvChart || !komodoChart) return;
+    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaCharts || !hvCharts || !komodoCharts) return;
 
     // Set initial state (IQVIA is default)
     this.mxRxViewMode = 'iqvia';
@@ -1912,10 +1917,10 @@ class EnhancedChryselsysDashboard {
       iqviaBtn.classList.add('active');
       hvBtn.classList.remove('active');
       komodoBtn.classList.remove('active');
-      title.textContent = 'Top 10 Products by Patient Count – Mx vs Rx (IQVIA)';
-      iqviaChart.style.display = 'block';
-      hvChart.style.display = 'none';
-      komodoChart.style.display = 'none';
+      title.textContent = 'Top 10 Products by Patient Count – Mx & Rx (IQVIA)';
+      iqviaCharts.style.display = 'flex';
+      hvCharts.style.display = 'none';
+      komodoCharts.style.display = 'none';
     });
     
     hvBtn.addEventListener('click', () => {
@@ -1925,10 +1930,10 @@ class EnhancedChryselsysDashboard {
       hvBtn.classList.add('active');
       iqviaBtn.classList.remove('active');
       komodoBtn.classList.remove('active');
-      title.textContent = 'Top 10 Products by Patient Count – Mx vs Rx (HealthVerity)';
-      iqviaChart.style.display = 'none';
-      hvChart.style.display = 'block';
-      komodoChart.style.display = 'none';
+      title.textContent = 'Top 10 Products by Patient Count – Mx & Rx (HealthVerity)';
+      iqviaCharts.style.display = 'none';
+      hvCharts.style.display = 'flex';
+      komodoCharts.style.display = 'none';
     });
     
     komodoBtn.addEventListener('click', () => {
@@ -1938,10 +1943,10 @@ class EnhancedChryselsysDashboard {
       komodoBtn.classList.add('active');
       iqviaBtn.classList.remove('active');
       hvBtn.classList.remove('active');
-      title.textContent = 'Top 10 Products by Patient Count – Mx vs Rx (Komodo)';
-      iqviaChart.style.display = 'none';
-      hvChart.style.display = 'none';
-      komodoChart.style.display = 'block';
+      title.textContent = 'Top 10 Products by Patient Count – Mx & Rx (Komodo)';
+      iqviaCharts.style.display = 'none';
+      hvCharts.style.display = 'none';
+      komodoCharts.style.display = 'flex';
     });
   }
 
@@ -2241,104 +2246,121 @@ class EnhancedChryselsysDashboard {
   }
 
   createPatientSplitByPayer() {
-    const ctx = document.getElementById('patientSplitByPayer'); if (!ctx) return;
+    const iqviaCanvas = document.getElementById('patientSplitByPayerIqvia');
+    const hvCanvas = document.getElementById('patientSplitByPayerHv');
+    const komodoCanvas = document.getElementById('patientSplitByPayerKomodo');
+    if (!iqviaCanvas || !hvCanvas || !komodoCanvas) return;
     const data = this.dashboardData?.other_metrics?.payer_split; if (!data) return;
     
-    // Get labels from any category (they should be the same)
     const labels = data.dx?.labels || ['Commercial', 'Medicare', 'Medicaid', 'Other', 'NULL'];
     
-    // Create datasets for each data source across all categories
-    const datasets = [];
-    
-    // IQVIA data across all categories
-    datasets.push({
-      label: 'IQVIA - DX',
-      data: data.dx?.iqvia || [],
-      backgroundColor: this.colors.sources.iqvia,
-      stack: 'iqvia'
-    });
-    datasets.push({
-      label: 'IQVIA - PX',
-      data: data.px?.iqvia || [],
-      backgroundColor: this.shadeColor(this.colors.sources.iqvia, -20),
-      stack: 'iqvia'
-    });
-    datasets.push({
-      label: 'IQVIA - RX',
-      data: data.rx?.iqvia || [],
-      backgroundColor: this.shadeColor(this.colors.sources.iqvia, -40),
-      stack: 'iqvia'
-    });
-    
-    // HealthVerity data across all categories
-    datasets.push({
-      label: 'HealthVerity - DX',
-      data: data.dx?.healthverity || [],
-      backgroundColor: this.colors.sources.healthverity,
-      stack: 'healthverity'
-    });
-    datasets.push({
-      label: 'HealthVerity - PX',
-      data: data.px?.healthverity || [],
-      backgroundColor: this.shadeColor(this.colors.sources.healthverity, -20),
-      stack: 'healthverity'
-    });
-    datasets.push({
-      label: 'HealthVerity - RX',
-      data: data.rx?.healthverity || [],
-      backgroundColor: this.shadeColor(this.colors.sources.healthverity, -40),
-      stack: 'healthverity'
-    });
-    
-    // Komodo data across all categories
-    datasets.push({
-      label: 'Komodo - DX',
-      data: data.dx?.komodo || [],
-      backgroundColor: this.colors.sources.komodo,
-      stack: 'komodo'
-    });
-    datasets.push({
-      label: 'Komodo - PX',
-      data: data.px?.komodo || [],
-      backgroundColor: this.shadeColor(this.colors.sources.komodo, -20),
-      stack: 'komodo'
-    });
-    datasets.push({
-      label: 'Komodo - RX',
-      data: data.rx?.komodo || [],
-      backgroundColor: this.shadeColor(this.colors.sources.komodo, -40),
-      stack: 'komodo'
-    });
-    
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: datasets
-      },
-      options: {
-        ...this.getBarChartOptions('Patient Split by Payer Type and Data Category', 'Patient Count'),
-        plugins: {
-          ...this.getBarChartOptions('', '').plugins,
-          legend: { 
-            display: true, 
-            position: 'top',
-            labels: {
-              usePointStyle: true,
-              padding: 20
-            }
-          }
+    const buildDatasets = (sourceKey) => {
+      return [
+        {
+          label: 'DX',
+          data: data.dx?.[sourceKey] || [],
+          backgroundColor: '#1F77B4',
+          borderColor: '#1F77B4',
+          stack: 'stack'
         },
-        scales: { 
-          y: { 
-            beginAtZero: true,
-            stacked: true
-          },
-          x: {
-            stacked: true
-          }
+        {
+          label: 'PX',
+          data: data.px?.[sourceKey] || [],
+          backgroundColor: '#FF7F0E',
+          borderColor: '#FF7F0E',
+          stack: 'stack'
+        },
+        {
+          label: 'RX',
+          data: data.rx?.[sourceKey] || [],
+          backgroundColor: '#2CA02C',
+          borderColor: '#2CA02C',
+          stack: 'stack'
         }
-      }
+      ];
+    };
+    
+    const commonOptions = {
+      ...this.getBarChartOptions('Patient Split by Payer Type and Data Category', 'Patient Count'),
+      plugins: {
+        ...this.getBarChartOptions('', '').plugins,
+        legend: { 
+          display: true, 
+          position: 'top',
+          labels: { usePointStyle: true, padding: 20 }
+        }
+      },
+      scales: { y: { beginAtZero: true, stacked: true }, x: { stacked: true } }
+    };
+    
+    this.charts.patientSplitByPayerIqvia = new Chart(iqviaCanvas, {
+      type: 'bar',
+      data: { labels, datasets: buildDatasets('iqvia') },
+      options: commonOptions
+    });
+    
+    this.charts.patientSplitByPayerHv = new Chart(hvCanvas, {
+      type: 'bar',
+      data: { labels, datasets: buildDatasets('healthverity') },
+      options: commonOptions
+    });
+    
+    this.charts.patientSplitByPayerKomodo = new Chart(komodoCanvas, {
+      type: 'bar',
+      data: { labels, datasets: buildDatasets('komodo') },
+      options: commonOptions
+    });
+    
+    this.initializePayerSplitToggle();
+  }
+
+  // Toggle for Patient Split by Payer
+  initializePayerSplitToggle() {
+    const iqviaBtn = document.getElementById('payerIqviaBtn');
+    const hvBtn = document.getElementById('payerHvBtn');
+    const komodoBtn = document.getElementById('payerKomodoBtn');
+    const title = document.getElementById('payerSplitTitle');
+    const iqviaCanvas = document.getElementById('patientSplitByPayerIqvia');
+    const hvCanvas = document.getElementById('patientSplitByPayerHv');
+    const komodoCanvas = document.getElementById('patientSplitByPayerKomodo');
+    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaCanvas || !hvCanvas || !komodoCanvas) return;
+    
+    // Default: IQVIA
+    iqviaCanvas.style.display = 'block';
+    hvCanvas.style.display = 'none';
+    komodoCanvas.style.display = 'none';
+    
+    iqviaBtn.addEventListener('click', () => {
+      if (iqviaBtn.classList.contains('active')) return;
+      iqviaBtn.classList.add('active');
+      hvBtn.classList.remove('active');
+      komodoBtn.classList.remove('active');
+      title.textContent = 'Patient Split by Payer Type (IQVIA)';
+      iqviaCanvas.style.display = 'block';
+      hvCanvas.style.display = 'none';
+      komodoCanvas.style.display = 'none';
+    });
+    
+    hvBtn.addEventListener('click', () => {
+      if (hvBtn.classList.contains('active')) return;
+      hvBtn.classList.add('active');
+      iqviaBtn.classList.remove('active');
+      komodoBtn.classList.remove('active');
+      title.textContent = 'Patient Split by Payer Type (HealthVerity)';
+      iqviaCanvas.style.display = 'none';
+      hvCanvas.style.display = 'block';
+      komodoCanvas.style.display = 'none';
+    });
+    
+    komodoBtn.addEventListener('click', () => {
+      if (komodoBtn.classList.contains('active')) return;
+      komodoBtn.classList.add('active');
+      iqviaBtn.classList.remove('active');
+      hvBtn.classList.remove('active');
+      title.textContent = 'Patient Split by Payer Type (Komodo)';
+      iqviaCanvas.style.display = 'none';
+      hvCanvas.style.display = 'none';
+      komodoCanvas.style.display = 'block';
     });
   }
 

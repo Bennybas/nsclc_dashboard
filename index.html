@@ -437,7 +437,7 @@
                 <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4 id="mxRxChartTitle">Top 10 Products by Patient Count – Mx vs Rx (IQVIA)</h4>
+                            <h4 id="mxRxChartTitle">Top 10 Products by Patient Count – Mx & Rx (IQVIA)</h4>
                             <div class="chart-toggle">
                                 <div class="toggle-group">
                                     <button class="toggle-btn active" id="mxRxIqviaBtn">IQVIA</button>
@@ -447,9 +447,41 @@
                             </div>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 360px;">
-                            <canvas id="topProductsMxRxIqvia"></canvas>
-                            <canvas id="topProductsMxRxHv" style="display: none;"></canvas>
-                            <canvas id="topProductsMxRxKomodo" style="display: none;"></canvas>
+                            <!-- IQVIA Charts -->
+                            <div class="split-charts" id="iqviaCharts" style="display: flex; gap: 16px; height: 100%;">
+                                <div class="chart-column" style="flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 8px 0; text-align: center; color: #374151; font-size: 14px;">Mx</h5>
+                                    <canvas id="topProductsMxIqvia" style="flex: 1;"></canvas>
+                                </div>
+                                <div class="chart-column" style="flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 8px 0; text-align: center; color: #374151; font-size: 14px;">Rx</h5>
+                                    <canvas id="topProductsRxIqvia" style="flex: 1;"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- HealthVerity Charts -->
+                            <div class="split-charts" id="hvCharts" style="display: flex; gap: 16px; height: 100%; display: none;">
+                                <div class="chart-column" style="flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 8px 0; text-align: center; color: #374151; font-size: 14px;">Mx</h5>
+                                    <canvas id="topProductsMxHv" style="flex: 1;"></canvas>
+                                </div>
+                                <div class="chart-column" style="flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 8px 0; text-align: center; color: #374151; font-size: 14px;">Rx</h5>
+                                    <canvas id="topProductsRxHv" style="flex: 1;"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Komodo Charts -->
+                            <div class="split-charts" id="komodoCharts" style="display: flex; gap: 16px; height: 100%; display: none;">
+                                <div class="chart-column" style="flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 8px 0; text-align: center; color: #374151; font-size: 14px;">Mx</h5>
+                                    <canvas id="topProductsMxKomodo" style="flex: 1;"></canvas>
+                                </div>
+                                <div class="chart-column" style="flex: 1; display: flex; flex-direction: column;">
+                                    <h5 style="margin: 0 0 8px 0; text-align: center; color: #374151; font-size: 14px;">Rx</h5>
+                                    <canvas id="topProductsRxKomodo" style="flex: 1;"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -524,9 +556,20 @@
                 <!-- Patient Split by Payer Type -->
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <div class="chart-header"><h4>Patient Split by Payer Type</h4></div>
+                        <div class="chart-header">
+                            <h4 id="payerSplitTitle">Patient Split by Payer Type (IQVIA)</h4>
+                            <div class="chart-toggle">
+                                <div class="toggle-group">
+                                    <button class="toggle-btn active" id="payerIqviaBtn">IQVIA</button>
+                                    <button class="toggle-btn" id="payerHvBtn">HealthVerity</button>
+                                    <button class="toggle-btn" id="payerKomodoBtn">Komodo</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="chart-wrapper" style="position: relative; height: 320px;">
-                            <canvas id="patientSplitByPayer"></canvas>
+                            <canvas id="patientSplitByPayerIqvia"></canvas>
+                            <canvas id="patientSplitByPayerHv" style="display: none;"></canvas>
+                            <canvas id="patientSplitByPayerKomodo" style="display: none;"></canvas>
                         </div>
                     </div>
                 </div>
