@@ -14,9 +14,9 @@ class EnhancedChryselsysDashboard {
       weldonBlue: '#8295ae',
       // Distinct colors for pie charts to ensure differentiation
       pieChart: {
-        primary: '#E74C3C',    // Vibrant red
+        primary: '#c98b27',    // Vibrant red
         secondary: '#3498DB',  // Bright blue
-        tertiary: '#2ECC71'    // Fresh green
+        tertiary: '#004567'    // Fresh green
       },
       chartColors: ['#c98b27', '#004567', '#9bc0e2', '#8295ae', '#1FB8CD', '#FFC185', '#B4413C', '#ECEBD5', '#5D878F', '#DB4545'],
       sources: {
@@ -959,11 +959,13 @@ class EnhancedChryselsysDashboard {
       this.createPrevalencePatientsTrendsChart();
       
       // HCP/HCO Metrics Charts
-      this.createHcpFillAnomalyChart();
+      this.createHcpRenderingChart();
+      this.createHcpReferringChart();
       this.createTopRenderingSpecialtiesChart();
       this.createTopReferringSpecialtiesChart();
       this.createTopPrescriberSpecialtiesChart();
-      this.createHcoFillAnomalyChart();
+      this.createHcoBillingChart();
+      this.createHcoFacilityChart();
       this.createTopBillingNpiChart();
       this.createTopFacilityNpiChart();
       
@@ -1567,21 +1569,21 @@ class EnhancedChryselsysDashboard {
   }
 
   // HCP/HCO Metrics Charts (source-wise color coding)
-  createHcpFillAnomalyChart() {
-    const ctx = document.getElementById('hcpFillAnomalyChart');
+  createHcpRenderingChart() {
+    const ctx = document.getElementById('hcpRenderingChart');
     if (!ctx) return;
 
     const metrics = this.dashboardData?.hcp_hco_metrics?.hcp_fill_anomaly;
     if (!metrics) return;
 
-    if (this.charts.hcpFillAnomaly) this.charts.hcpFillAnomaly.destroy();
+    if (this.charts.hcpRendering) this.charts.hcpRendering.destroy();
 
-    const labels = ['Referring Fill %', 'Rendering Fill %', 'Referring Anomaly %', 'Rendering Anomaly %'];
-    const iqvia = [metrics.referring.iqvia, metrics.rendering.iqvia, metrics.anomalies.referring.iqvia, metrics.anomalies.rendering.iqvia];
-    const hv = [metrics.referring.healthverity, metrics.rendering.healthverity, metrics.anomalies.referring.healthverity, metrics.anomalies.rendering.healthverity];
-    const komodo = [metrics.referring.komodo, metrics.rendering.komodo, metrics.anomalies.referring.komodo, metrics.anomalies.rendering.komodo];
+    const labels = ['Fill Rate %', 'Anomaly %'];
+    const iqvia = [metrics.rendering.iqvia, metrics.anomalies.rendering.iqvia];
+    const hv = [metrics.rendering.healthverity, metrics.anomalies.rendering.healthverity];
+    const komodo = [metrics.rendering.komodo, metrics.anomalies.rendering.komodo];
 
-    this.charts.hcpFillAnomaly = new Chart(ctx, {
+    this.charts.hcpRendering = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1592,7 +1594,7 @@ class EnhancedChryselsysDashboard {
         ]
       },
       options: {
-        ...this.getBarChartOptions('HCP Fill Rate & Anomaly – Referring vs Rendering', 'Percentage (%)'),
+        ...this.getBarChartOptions('HCP Rendering Metrics', 'Percentage (%)'),
         plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } },
         responsive: true,
         maintainAspectRatio: false
@@ -1600,21 +1602,21 @@ class EnhancedChryselsysDashboard {
     });
   }
 
-  createHcoFillAnomalyChart() {
-    const ctx = document.getElementById('hcoFillAnomalyChart');
+  createHcpReferringChart() {
+    const ctx = document.getElementById('hcpReferringChart');
     if (!ctx) return;
 
-    const metrics = this.dashboardData?.hcp_hco_metrics?.hco_fill_anomaly;
+    const metrics = this.dashboardData?.hcp_hco_metrics?.hcp_fill_anomaly;
     if (!metrics) return;
 
-    if (this.charts.hcoFillAnomaly) this.charts.hcoFillAnomaly.destroy();
+    if (this.charts.hcpReferring) this.charts.hcpReferring.destroy();
 
-    const labels = ['Billing Fill %', 'Facility Fill %', 'Billing Anomaly %', 'Facility Anomaly %'];
-    const iqvia = [metrics.billing.iqvia, metrics.facility.iqvia, metrics.anomalies.billing.iqvia, metrics.anomalies.facility.iqvia];
-    const hv = [metrics.billing.healthverity, metrics.facility.healthverity, metrics.anomalies.billing.healthverity, metrics.anomalies.facility.healthverity];
-    const komodo = [metrics.billing.komodo, metrics.facility.komodo, metrics.anomalies.billing.komodo, metrics.anomalies.facility.komodo];
+    const labels = ['Fill Rate %', 'Anomaly %'];
+    const iqvia = [metrics.referring.iqvia, metrics.anomalies.referring.iqvia];
+    const hv = [metrics.referring.healthverity, metrics.anomalies.referring.healthverity];
+    const komodo = [metrics.referring.komodo, metrics.anomalies.referring.komodo];
 
-    this.charts.hcoFillAnomaly = new Chart(ctx, {
+    this.charts.hcpReferring = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1625,7 +1627,71 @@ class EnhancedChryselsysDashboard {
         ]
       },
       options: {
-        ...this.getBarChartOptions('HCO Fill Rate & Anomaly – Billing vs Facility', 'Percentage (%)'),
+        ...this.getBarChartOptions('HCP Referring Metrics', 'Percentage (%)'),
+        plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } },
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  }
+
+  createHcoBillingChart() {
+    const ctx = document.getElementById('hcoBillingChart');
+    if (!ctx) return;
+
+    const metrics = this.dashboardData?.hcp_hco_metrics?.hco_fill_anomaly;
+    if (!metrics) return;
+
+    if (this.charts.hcoBilling) this.charts.hcoBilling.destroy();
+
+    const labels = ['Fill Rate %', 'Anomaly %'];
+    const iqvia = [metrics.billing.iqvia, metrics.anomalies.billing.iqvia];
+    const hv = [metrics.billing.healthverity, metrics.anomalies.billing.healthverity];
+    const komodo = [metrics.billing.komodo, metrics.anomalies.billing.komodo];
+
+    this.charts.hcoBilling = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia, borderColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity, borderColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo, borderColor: this.colors.sources.komodo }
+        ]
+      },
+      options: {
+        ...this.getBarChartOptions('HCO Billing Metrics', 'Percentage (%)'),
+        plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } }
+      }
+    });
+  }
+
+  createHcoFacilityChart() {
+    const ctx = document.getElementById('hcoFacilityChart');
+    if (!ctx) return;
+
+    const metrics = this.dashboardData?.hcp_hco_metrics?.hco_fill_anomaly;
+    if (!metrics) return;
+
+    if (this.charts.hcoFacility) this.charts.hcoFacility.destroy();
+
+    const labels = ['Fill Rate %', 'Anomaly %'];
+    const iqvia = [metrics.facility.iqvia, metrics.anomalies.facility.iqvia];
+    const hv = [metrics.facility.healthverity, metrics.anomalies.facility.healthverity];
+    const komodo = [metrics.facility.komodo, metrics.anomalies.facility.komodo];
+
+    this.charts.hcoFacility = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'IQVIA', data: iqvia, backgroundColor: this.colors.sources.iqvia, borderColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity, borderColor: this.colors.sources.healthverity },
+          { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo, borderColor: this.colors.sources.komodo }
+        ]
+      },
+      options: {
+        ...this.getBarChartOptions('HCO Facility Metrics', 'Percentage (%)'),
         plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } }
       }
     });
@@ -1756,29 +1822,133 @@ class EnhancedChryselsysDashboard {
   createTopProductsMxRxCharts() {
     const data = this.dashboardData?.other_metrics?.top_products_mx_rx;
     if (!data) return;
-    const makeChart = (elId, series, color) => {
+    
+    // Brand colors for specific drugs
+    const brandColors = {
+      'PARAPLATIN': '#005587',
+      'KEYTRUDA': '#007378',
+      'TAXOL': '#490A3D',
+      'VP-16': '#00314D',
+      'OPDIVO': '#184D90',
+      'PLATINOL-AQ': '#003366',
+      'ALIMTA': '#28B463',
+      'AVASTIN': '#61367C',
+      'IMFINZI': '#A50935',
+      'TECENTRIQ': '#004976'
+    };
+    
+    const makeChart = (elId, series, sourceColor, sourceName) => {
       const ctx = document.getElementById(elId); if (!ctx) return;
       const labels = series.labels;
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Mx', data: series.mx, backgroundColor: color, borderColor: color },
-            { label: 'Rx', data: series.rx, backgroundColor: this.shadeColor(color, -15), borderColor: this.shadeColor(color, -15) }
-          ]
+      
+      // Create datasets with brand colors for each product
+      const datasets = [
+        {
+          label: 'Mx',
+          data: series.mx,
+          backgroundColor: labels.map(label => {
+            const upperLabel = label.toUpperCase();
+            return brandColors[upperLabel] || sourceColor;
+          }),
+          borderColor: labels.map(label => {
+            const upperLabel = label.toUpperCase();
+            return brandColors[upperLabel] || sourceColor;
+          })
         },
-        options: { ...this.getBarChartOptions('Top 10 Products – Mx vs Rx', 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+        {
+          label: 'Rx',
+          data: series.rx,
+          backgroundColor: labels.map(label => {
+            const upperLabel = label.toUpperCase();
+            const baseColor = brandColors[upperLabel] || sourceColor;
+            return this.shadeColor(baseColor, -15);
+          }),
+          borderColor: labels.map(label => {
+            const upperLabel = label.toUpperCase();
+            const baseColor = brandColors[upperLabel] || sourceColor;
+            return this.shadeColor(baseColor, -15);
+          })
+        }
+      ];
+      
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: { ...this.getBarChartOptions(`Top 10 Products – Mx vs Rx (${sourceName})`, 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
       });
+      
+      return chart;
     };
-    makeChart('topProductsMxRxIqvia', data.iqvia, this.colors.sources.iqvia);
-    makeChart('topProductsMxRxHv', data.healthverity, this.colors.sources.healthverity);
-    makeChart('topProductsMxRxKomodo', data.komodo, this.colors.sources.komodo);
+    
+    // Create all charts but store references
+    this.charts.topProductsMxRxIqvia = makeChart('topProductsMxRxIqvia', data.iqvia, this.colors.sources.iqvia, 'IQVIA');
+    this.charts.topProductsMxRxHv = makeChart('topProductsMxRxHv', data.healthverity, this.colors.sources.healthverity, 'HealthVerity');
+    this.charts.topProductsMxRxKomodo = makeChart('topProductsMxRxKomodo', data.komodo, this.colors.sources.komodo, 'Komodo');
+    
+    // Initialize toggle functionality
+    this.initializeMxRxToggle();
+  }
+
+  // Initialize Mx vs Rx Chart Toggle
+  initializeMxRxToggle() {
+    const iqviaBtn = document.getElementById('mxRxIqviaBtn');
+    const hvBtn = document.getElementById('mxRxHvBtn');
+    const komodoBtn = document.getElementById('mxRxKomodoBtn');
+    const title = document.getElementById('mxRxChartTitle');
+    const iqviaChart = document.getElementById('topProductsMxRxIqvia');
+    const hvChart = document.getElementById('topProductsMxRxHv');
+    const komodoChart = document.getElementById('topProductsMxRxKomodo');
+    
+    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaChart || !hvChart || !komodoChart) return;
+
+    // Set initial state (IQVIA is default)
+    this.mxRxViewMode = 'iqvia';
+    
+    // Add event listeners
+    iqviaBtn.addEventListener('click', () => {
+      if (this.mxRxViewMode === 'iqvia') return;
+      
+      this.mxRxViewMode = 'iqvia';
+      iqviaBtn.classList.add('active');
+      hvBtn.classList.remove('active');
+      komodoBtn.classList.remove('active');
+      title.textContent = 'Top 10 Products by Patient Count – Mx vs Rx (IQVIA)';
+      iqviaChart.style.display = 'block';
+      hvChart.style.display = 'none';
+      komodoChart.style.display = 'none';
+    });
+    
+    hvBtn.addEventListener('click', () => {
+      if (this.mxRxViewMode === 'healthverity') return;
+      
+      this.mxRxViewMode = 'healthverity';
+      hvBtn.classList.add('active');
+      iqviaBtn.classList.remove('active');
+      komodoBtn.classList.remove('active');
+      title.textContent = 'Top 10 Products by Patient Count – Mx vs Rx (HealthVerity)';
+      iqviaChart.style.display = 'none';
+      hvChart.style.display = 'block';
+      komodoChart.style.display = 'none';
+    });
+    
+    komodoBtn.addEventListener('click', () => {
+      if (this.mxRxViewMode === 'komodo') return;
+      
+      this.mxRxViewMode = 'komodo';
+      komodoBtn.classList.add('active');
+      iqviaBtn.classList.remove('active');
+      hvBtn.classList.remove('active');
+      title.textContent = 'Top 10 Products by Patient Count – Mx vs Rx (Komodo)';
+      iqviaChart.style.display = 'none';
+      hvChart.style.display = 'none';
+      komodoChart.style.display = 'block';
+    });
   }
 
   createTopProductsCombinedChart() {
     const ctx = document.getElementById('topProductsCombined'); if (!ctx) return;
     const data = this.dashboardData?.other_metrics?.top_products_combined; if (!data) return;
+    
     new Chart(ctx, {
       type: 'bar',
       data: {
@@ -1797,61 +1967,52 @@ class EnhancedChryselsysDashboard {
     const data = this.dashboardData?.other_metrics?.top_products_yoy;
     if (!data) return;
 
-    // Helper to generate a color palette for multiple lines
-    const getColorPalette = (baseColor, count) => {
-      // Use HSL to generate variations
-      const colors = [];
-      let h, s, l;
-      // Try to parse baseColor as hex, fallback to bronze if not
-      try {
-        // Remove # if present
-        let hex = baseColor.replace('#', '');
-        if (hex.length === 3) {
-          hex = hex.split('').map(x => x + x).join('');
-        }
-        const num = parseInt(hex, 16);
-        const r = (num >> 16) & 255;
-        const g = (num >> 8) & 255;
-        const b = num & 255;
-        // Convert to HSL
-        let rr = r / 255, gg = g / 255, bb = b / 255;
-        const max = Math.max(rr, gg, bb), min = Math.min(rr, gg, bb);
-        l = (max + min) / 2;
-        if (max === min) {
-          h = s = 0;
-        } else {
-          const d = max - min;
-          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-          switch (max) {
-            case rr: h = (gg - bb) / d + (gg < bb ? 6 : 0); break;
-            case gg: h = (bb - rr) / d + 2; break;
-            case bb: h = (rr - gg) / d + 4; break;
-          }
-          h /= 6;
-        }
-        h = Math.round(h * 360);
-        s = Math.round(s * 100);
-        l = Math.round(l * 60 + 20); // brighten a bit
-      } catch {
-        h = 30; s = 60; l = 50; // fallback bronze
-      }
-      for (let i = 0; i < count; i++) {
-        const hue = (h + i * (360 / count)) % 360;
-        colors.push(`hsl(${hue},${s}%,${l}%)`);
-      }
-      return colors;
+    // Brand colors for specific drugs - consistent across all data sources
+    const brandColors = {
+      'PARAPLATIN': '#005587',    // Blue
+      'KEYTRUDA': '#007378',      // Teal/green
+      'TAXOL': '#490A3D',         // Purple/violet
+      'VP-16': '#00314D',         // Navy
+      'OPDIVO': '#184D90',        // Royal blue
+      'PLATINOL-AQ': '#003366',   // Blue/gray (primary)
+      'ALIMTA': '#28B463',        // Bright teal green
+      'AVASTIN': '#61367C',       // Purple
+      'IMFINZI': '#A50935',       // Maroon
+      'TECENTRIQ': '#004976'      // Deep blue
     };
 
-    const makeLine = (elId, sourceData, baseColor) => {
+    // Fallback colors for drugs not in brand colors list
+    const fallbackColors = [
+      '#FF6B6B', // Coral red
+      '#4ECDC4', // Turquoise
+      '#45B7D1', // Sky blue
+      '#96CEB4', // Mint green
+      '#FFEAA7', // Soft yellow
+      '#DDA0DD', // Plum
+      '#98D8C8', // Seafoam
+      '#F7DC6F', // Golden yellow
+      '#BB8FCE', // Light purple
+      '#85C1E9'  // Light blue
+    ];
+
+    // Helper to get fallback color for drugs not in brand colors
+    const getFallbackColor = (index) => {
+      return fallbackColors[index % fallbackColors.length];
+    };
+
+    const makeLine = (elId, sourceData, baseColor, sourceName) => {
       const ctx = document.getElementById(elId);
       if (!ctx) return;
       const products = (sourceData.products || []).slice(0, 5); // Only top 5 products
       if (!products.length) return;
 
-      // Generate a color palette for top 5 products
-      const palette = getColorPalette(baseColor, products.length);
+      // Assign colors to products - use brand colors when available, fallback colors otherwise
+      const palette = products.map((product, idx) => {
+        const upperName = product.name.toUpperCase();
+        return brandColors[upperName] || getFallbackColor(idx);
+      });
 
-      new Chart(ctx, {
+      const chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: data.years,
@@ -1860,18 +2021,121 @@ class EnhancedChryselsysDashboard {
             data: product.patient_counts,
             borderColor: palette[idx],
             backgroundColor: palette[idx] + '20',
-            borderWidth: 2,
+            borderWidth: 3,
             tension: 0.35,
-            fill: false
+            fill: false,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: palette[idx],
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
           }))
         },
-        options: this.getLineChartOptions('YoY Trend – Top 5 Products', 'Patients')
+        options: {
+          ...this.getLineChartOptions(`YoY Trend – Top 5 Products (${sourceName})`, 'Patients'),
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              align: 'start',
+              labels: {
+                usePointStyle: false,
+                padding: 15,
+                font: {
+                  size: 12,
+                  family: 'Roboto, sans-serif'
+                },
+                color: '#374151',
+                boxWidth: 20,
+                boxHeight: 3,
+                generateLabels: function(chart) {
+                  const original = Chart.defaults.plugins.legend.labels.generateLabels;
+                  const labels = original.call(this, chart);
+                  
+                  // Customize the legend labels to show proper line colors
+                  labels.forEach((label, index) => {
+                    const dataset = chart.data.datasets[index];
+                    if (dataset) {
+                      label.fillStyle = dataset.borderColor;
+                      label.strokeStyle = dataset.borderColor;
+                      label.lineWidth = 3;
+                    }
+                  });
+                  
+                  return labels;
+                }
+              }
+            }
+          }
+        }
       });
+      
+      return chart;
     };
 
-    makeLine('topProductsYoyIqvia', data.iqvia, this.colors.sources.iqvia);
-    makeLine('topProductsYoyHv', data.healthverity, this.colors.sources.healthverity);
-    makeLine('topProductsYoyKomodo', data.komodo, this.colors.sources.komodo);
+    // Create all charts but store references
+    this.charts.topProductsYoyIqvia = makeLine('topProductsYoyIqvia', data.iqvia, this.colors.sources.iqvia, 'IQVIA');
+    this.charts.topProductsYoyHv = makeLine('topProductsYoyHv', data.healthverity, this.colors.sources.healthverity, 'HealthVerity');
+    this.charts.topProductsYoyKomodo = makeLine('topProductsYoyKomodo', data.komodo, this.colors.sources.komodo, 'Komodo');
+    
+    // Initialize toggle functionality
+    this.initializeYoyToggle();
+  }
+
+  // Initialize YoY Chart Toggle
+  initializeYoyToggle() {
+    const iqviaBtn = document.getElementById('yoyIqviaBtn');
+    const hvBtn = document.getElementById('yoyHvBtn');
+    const komodoBtn = document.getElementById('yoyKomodoBtn');
+    const title = document.getElementById('yoyChartTitle');
+    const iqviaChart = document.getElementById('topProductsYoyIqvia');
+    const hvChart = document.getElementById('topProductsYoyHv');
+    const komodoChart = document.getElementById('topProductsYoyKomodo');
+    
+    if (!iqviaBtn || !hvBtn || !komodoBtn || !title || !iqviaChart || !hvChart || !komodoChart) return;
+
+    // Set initial state (IQVIA is default)
+    this.yoyViewMode = 'iqvia';
+    
+    // Add event listeners
+    iqviaBtn.addEventListener('click', () => {
+      if (this.yoyViewMode === 'iqvia') return;
+      
+      this.yoyViewMode = 'iqvia';
+      iqviaBtn.classList.add('active');
+      hvBtn.classList.remove('active');
+      komodoBtn.classList.remove('active');
+      title.textContent = 'Top Products – YoY Comparison (IQVIA)';
+      iqviaChart.style.display = 'block';
+      hvChart.style.display = 'none';
+      komodoChart.style.display = 'none';
+    });
+    
+    hvBtn.addEventListener('click', () => {
+      if (this.yoyViewMode === 'healthverity') return;
+      
+      this.yoyViewMode = 'healthverity';
+      hvBtn.classList.add('active');
+      iqviaBtn.classList.remove('active');
+      komodoBtn.classList.remove('active');
+      title.textContent = 'Top Products – YoY Comparison (HealthVerity)';
+      iqviaChart.style.display = 'none';
+      hvChart.style.display = 'block';
+      komodoChart.style.display = 'none';
+    });
+    
+    komodoBtn.addEventListener('click', () => {
+      if (this.yoyViewMode === 'komodo') return;
+      
+      this.yoyViewMode = 'komodo';
+      komodoBtn.classList.add('active');
+      iqviaBtn.classList.remove('active');
+      hvBtn.classList.remove('active');
+      title.textContent = 'Top Products – YoY Comparison (Komodo)';
+      iqviaChart.style.display = 'none';
+      hvChart.style.display = 'none';
+      komodoChart.style.display = 'block';
+    });
   }
 
   createClaimsStatusSplit() {
@@ -2283,16 +2547,7 @@ class EnhancedChryselsysDashboard {
       ...Object.keys(data.komodo || {})
     ]);
 
-    // Calculate max and min for color scaling
-    const allValues = [];
-    allStates.forEach(state => {
-      if (data.healthverity[state]) allValues.push(data.healthverity[state]);
-      if (data.komodo[state]) allValues.push(data.komodo[state]);
-    });
-    const maxPatients = Math.max(...allValues);
-    const minPatients = Math.min(...allValues);
-
-    // Create markers for each state
+    // Create markers for each state with both colors
     allStates.forEach(state => {
       const coords = stateCoordinates[state];
       if (coords && coords[0] !== 0) { // Skip invalid coordinates
@@ -2300,46 +2555,185 @@ class EnhancedChryselsysDashboard {
         const komodoCount = data.komodo[state] || 0;
         const totalCount = healthverityCount + komodoCount;
 
-        // Calculate color intensity based on total patient count
-        const intensity = (totalCount - minPatients) / (maxPatients - minPatients);
-        const color = this.getColorForIntensity(intensity);
-        
-        // Create circle marker
-        const marker = L.circleMarker(coords, {
-          radius: Math.max(8, Math.sqrt(totalCount / 1000)), // Scale radius based on patient count
-          fillColor: color,
-          color: '#ffffff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.7
-        }).addTo(this.geographicMap);
-
-        // Add popup with state information
-        marker.bindPopup(`
-          <div style="text-align: center; min-width: 200px;">
-            <h4 style="margin: 0 0 12px 0; color: #1a365d;">${stateNames[state] || state}</h4>
-            <div style="margin: 8px 0;">
-              <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                <span style="color: ${this.colors.ateneoBlue}; font-weight: bold;">HealthVerity:</span>
-                <span style="font-weight: bold;">${healthverityCount.toLocaleString()}</span>
+        if (totalCount > 0) {
+          // Calculate positions for adjacent markers (side by side)
+          const offset = 0.3; // degrees - increased for better separation
+          const healthverityCoords = [coords[0], coords[1] - offset]; // Left side
+          const komodoCoords = [coords[0], coords[1] + offset]; // Right side
+          
+          // Create HealthVerity marker (left side)
+          if (healthverityCount > 0) {
+            const healthverityMarker = L.circleMarker(healthverityCoords, {
+              radius: Math.max(8, Math.sqrt(healthverityCount / 2000)),
+              fillColor: this.colors.ateneoBlue,
+              color: '#ffffff',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.8
+            });
+            
+            // Add count label for HealthVerity
+            const healthverityLabel = L.marker(healthverityCoords, {
+              icon: L.divIcon({
+                className: 'map-count-label',
+                html: `<div style="
+                  background: rgba(255,255,255,0.95);
+                  border: 2px solid ${this.colors.ateneoBlue};
+                  border-radius: 50%;
+                  width: 28px;
+                  height: 28px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 11px;
+                  font-weight: bold;
+                  color: ${this.colors.ateneoBlue};
+                  text-align: center;
+                  line-height: 1;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                ">${healthverityCount > 999 ? (healthverityCount/1000).toFixed(1) + 'k' : healthverityCount}</div>`,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+              })
+            });
+            
+            // Add individual popup for HealthVerity marker
+            healthverityMarker.bindPopup(`
+              <div style="text-align: center; min-width: 180px;">
+                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                  <div style="width: 16px; height: 16px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px;"></div>
+                  <span style="color: ${this.colors.ateneoBlue}; font-weight: bold; font-size: 16px;">HealthVerity: ${healthverityCount.toLocaleString()}</span>
+                </div>
               </div>
-              <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                <span style="color: ${this.colors.bronze}; font-weight: bold;">Komodo:</span>
-                <span style="font-weight: bold;">${komodoCount.toLocaleString()}</span>
+            `);
+            
+            // Add individual popup for HealthVerity label
+            healthverityLabel.bindPopup(`
+              <div style="text-align: center; min-width: 180px;">
+                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                  <div style="width: 16px; height: 16px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px;"></div>
+                  <span style="color: ${this.colors.ateneoBlue}; font-weight: bold; font-size: 16px;">HealthVerity: ${healthverityCount.toLocaleString()}</span>
+                </div>
               </div>
-              <hr style="margin: 8px 0; border: none; border-top: 1px solid #e2e8f0;">
-              <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                <span style="font-weight: bold; color: #2d3748;">Total:</span>
-                <span style="font-weight: bold; font-size: 16px; color: #2d3748;">${totalCount.toLocaleString()}</span>
+            `);
+            
+            healthverityMarker.addTo(this.geographicMap);
+            healthverityLabel.addTo(this.geographicMap);
+          }
+          
+          // Create Komodo marker (right side)
+          if (komodoCount > 0) {
+            const komodoMarker = L.circleMarker(komodoCoords, {
+              radius: Math.max(8, Math.sqrt(komodoCount / 2000)),
+              fillColor: this.colors.bronze,
+              color: '#ffffff',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.8
+            });
+            
+            // Add count label for Komodo
+            const komodoLabel = L.marker(komodoCoords, {
+              icon: L.divIcon({
+                className: 'map-count-label',
+                html: `<div style="
+                  background: rgba(255,255,255,0.95);
+                  border: 2px solid ${this.colors.bronze};
+                  border-radius: 50%;
+                  width: 28px;
+                  height: 28px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 11px;
+                  font-weight: bold;
+                  color: ${this.colors.bronze};
+                  text-align: center;
+                  line-height: 1;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                ">${komodoCount > 999 ? (komodoCount/1000).toFixed(1) + 'k' : komodoCount}</div>`,
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+              })
+            });
+            
+            // Add individual popup for Komodo marker
+            komodoMarker.bindPopup(`
+              <div style="text-align: center; min-width: 180px;">
+                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                  <div style="width: 16px; height: 16px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px;"></div>
+                  <span style="color: ${this.colors.bronze}; font-weight: bold; font-size: 16px;">Komodo: ${komodoCount.toLocaleString()}</span>
+                </div>
               </div>
-            </div>
-          </div>
-        `);
+            `);
+            
+            // Add individual popup for Komodo label
+            komodoLabel.bindPopup(`
+              <div style="text-align: center; min-width: 180px;">
+                <h4 style="margin: 0 0 8px 0; color: #1a365d;">${stateNames[state] || state}</h4>
+                <div style="display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                  <div style="width: 16px; height: 16px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px;"></div>
+                  <span style="color: ${this.colors.bronze}; font-weight: bold; font-size: 16px;">Komodo: ${komodoCount.toLocaleString()}</span>
+                </div>
+              </div>
+            `);
+            
+            komodoMarker.addTo(this.geographicMap);
+            komodoLabel.addTo(this.geographicMap);
+          }
+        }
       }
     });
 
-    // Add legend
-    this.addMapLegendWithSources(maxPatients, minPatients);
+    // Add simplified legend with only data sources
+    this.addSimpleMapLegend();
+  }
+
+  addSimpleMapLegend() {
+    // Remove existing legend if it exists
+    const existingLegend = document.querySelector('.map-legend');
+    if (existingLegend) {
+      existingLegend.remove();
+    }
+
+    // Create simple legend with only data sources
+    const legend = L.control({ position: 'bottomright' });
+    
+    legend.onAdd = () => {
+      const div = L.DomUtil.create('div', 'map-legend');
+      div.style.cssText = `
+        background: rgba(255, 255, 255, 0.95);
+        padding: 12px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        font-family: 'Roboto', sans-serif;
+        font-size: 12px;
+        min-width: 150px;
+        border: 1px solid #e2e8f0;
+      `;
+      
+      div.innerHTML = `
+        <div style="font-weight: bold; margin-bottom: 8px; color: #2d3748; text-align: center;">Data Sources</div>
+        <div style="display: flex; align-items: center; margin: 4px 0;">
+          <div style="width: 12px; height: 12px; background: ${this.colors.ateneoBlue}; border-radius: 50%; margin-right: 8px; border: 2px solid #ffffff;"></div>
+          <span style="color: #4a5568;">HealthVerity</span>
+        </div>
+        <div style="display: flex; align-items: center; margin: 4px 0;">
+          <div style="width: 12px; height: 12px; background: ${this.colors.bronze}; border-radius: 50%; margin-right: 8px; border: 2px solid #ffffff;"></div>
+          <span style="color: #4a5568;">Komodo</span>
+        </div>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #718096; text-align: center;">
+          Click markers for details
+        </div>
+      `;
+      
+      return div;
+    };
+    
+    legend.addTo(this.geographicMap);
   }
 
   getColorForIntensity(intensity) {

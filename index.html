@@ -337,10 +337,18 @@
                 <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>HCP Fill Rate & Anomaly Check – Referring vs Rendering</h4>
+                            <h4>HCP Fill Rate & Anomaly Check – Rendering</h4>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="hcpFillAnomalyChart"></canvas>
+                            <canvas id="hcpRenderingChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCP Fill Rate & Anomaly Check – Referring</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcpReferringChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -383,10 +391,18 @@
                 <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>HCO Fill Rate & Anomaly Check – Billing vs Facility</h4>
+                            <h4>HCO Fill Rate & Anomaly Check – Billing</h4>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="hcoFillAnomalyChart"></canvas>
+                            <canvas id="hcoBillingChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCO Fill Rate & Anomaly Check – Facility</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoFacilityChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -420,21 +436,20 @@
                 <!-- Top 10 Products by Patient Count – Mx vs Rx (source-wise) -->
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Mx vs Rx (IQVIA)</h4></div>
+                        <div class="chart-header">
+                            <h4 id="mxRxChartTitle">Top 10 Products by Patient Count – Mx vs Rx (IQVIA)</h4>
+                            <div class="chart-toggle">
+                                <div class="toggle-group">
+                                    <button class="toggle-btn active" id="mxRxIqviaBtn">IQVIA</button>
+                                    <button class="toggle-btn" id="mxRxHvBtn">HealthVerity</button>
+                                    <button class="toggle-btn" id="mxRxKomodoBtn">Komodo</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="chart-wrapper" style="position: relative; height: 360px;">
                             <canvas id="topProductsMxRxIqvia"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Mx vs Rx (HealthVerity)</h4></div>
-                        <div class="chart-wrapper" style="position: relative; height: 360px;">
-                            <canvas id="topProductsMxRxHv"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-header"><h4>Top 10 Products by Patient Count – Mx vs Rx (Komodo)</h4></div>
-                        <div class="chart-wrapper" style="position: relative; height: 360px;">
-                            <canvas id="topProductsMxRxKomodo"></canvas>
+                            <canvas id="topProductsMxRxHv" style="display: none;"></canvas>
+                            <canvas id="topProductsMxRxKomodo" style="display: none;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -452,21 +467,20 @@
                 <!-- YoY Comparison with Competitors (source-wise) -->
                 <div class="charts-grid">
                     <div class="chart-container">
-                        <div class="chart-header"><h4>Top Products – YoY Comparison (IQVIA)</h4></div>
+                        <div class="chart-header">
+                            <h4 id="yoyChartTitle">Top Products – YoY Comparison (IQVIA)</h4>
+                            <div class="chart-toggle">
+                                <div class="toggle-group">
+                                    <button class="toggle-btn active" id="yoyIqviaBtn">IQVIA</button>
+                                    <button class="toggle-btn" id="yoyHvBtn">HealthVerity</button>
+                                    <button class="toggle-btn" id="yoyKomodoBtn">Komodo</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="chart-wrapper" style="position: relative; height: 320px;">
                             <canvas id="topProductsYoyIqvia"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-header"><h4>Top Products – YoY Comparison (HealthVerity)</h4></div>
-                        <div class="chart-wrapper" style="position: relative; height: 320px;">
-                            <canvas id="topProductsYoyHv"></canvas>
-                        </div>
-                    </div>
-                    <div class="chart-container">
-                        <div class="chart-header"><h4>Top Products – YoY Comparison (Komodo)</h4></div>
-                        <div class="chart-wrapper" style="position: relative; height: 320px;">
-                            <canvas id="topProductsYoyKomodo"></canvas>
+                            <canvas id="topProductsYoyHv" style="display: none;"></canvas>
+                            <canvas id="topProductsYoyKomodo" style="display: none;"></canvas>
                         </div>
                     </div>
                 </div>
