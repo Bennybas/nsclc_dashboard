@@ -2550,6 +2550,23 @@ class EnhancedChryselsysDashboard {
     const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
     const sourceData = [data.iqvia, data.healthverity, data.komodo];
     
+    // Helper: convert hex or rgb to rgba with given alpha
+    const toRgba = (color, alpha) => {
+      if (!color) return `rgba(99, 102, 241, ${alpha})`;
+      if (color.startsWith('rgb')) {
+        return color.replace(/rgba?\(([^)]+)\)/, (m, inner) => {
+          const parts = inner.split(',').map(s => s.trim());
+          const [r, g, b] = parts;
+          return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        });
+      }
+      const hex = color.replace('#', '');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
     // Create datasets for each drug
     const datasets = data.iqvia.labels.map((drug, index) => {
       const drugData = sources.map((source, sourceIndex) => {
@@ -2557,12 +2574,15 @@ class EnhancedChryselsysDashboard {
         return sourceInfo[dataType][index];
       });
       
+      const baseColor = brandColors[drug.toUpperCase()] || this.getRandomColor();
       return {
         label: drug,
         data: drugData,
-        borderColor: brandColors[drug.toUpperCase()] || this.getRandomColor(),
-        backgroundColor: brandColors[drug.toUpperCase()] || this.getRandomColor(),
+        borderColor: toRgba(baseColor, 0.6),
+        backgroundColor: toRgba(baseColor, 0.15),
         borderWidth: 2,
+        pointBackgroundColor: toRgba(baseColor, 0.35),
+        pointBorderColor: toRgba(baseColor, 0.6),
         fill: false,
         tension: 0.1
       };
