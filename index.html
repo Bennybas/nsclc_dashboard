@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.3.0/dist/chartjs-chart-matrix.min.js"></script>
     <meta name="description" content="Chryselys  NSCLC Healthcare Intelligence Platform - Comprehensive Analytics with Procedure & Diagnosis Code Insights">
 </head>
 <body>
@@ -170,14 +171,7 @@
                             <canvas id="patientVolumeChart"></canvas>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h4>Claims Type Distribution</h4>
-                        </div>
-                        <div class="chart-wrapper" style="position: relative; height: 300px;">
-                            <canvas id="claimsTypeChart"></canvas>
-                        </div>
-                    </div>
+
                     <!-- Gender/Age Distribution Section -->
                     <div class="chart-container">
                         <div class="chart-header">
@@ -195,6 +189,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Claims Type Distribution(IQVIA)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="claimsTypeChartIqvia"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Claims Type Distribution(HealthVerity)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="claimsTypeChartHv"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>Claims Type Distribution(Komodo)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 300px;">
+                            <canvas id="claimsTypeChartKomodo"></canvas>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- New Patients Trends Section -->
                 <div class="insight-section" style="display: flex; gap: 2rem; flex-wrap: wrap;">
@@ -312,11 +333,39 @@
                 <div class="section-header" style="margin-top: 8px;">
                     <h3>HCP Metrics</h3>
                 </div>
-
                 <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>HCP Fill Rate & Anomaly Check – Rendering</h4>
+                            <h4>HCP Fill Rate Comparison-IQVIA(Ref vs Ren)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcpRenderingChartIqvia"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCP Fill Rate Comparison-HealthVerity(Ref vs Ren)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcpRenderingChartHv"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCP Fill Rate Comparison-Komodo(Ref vs Ren)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcpRenderingChartKomodo"></canvas>
+                        </div>
+                    </div>
+                    
+                </div>
+
+
+                <!-- <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCP Fill Rate Comparison(Ref vs Ren)</h4>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 350px;">
                             <canvas id="hcpRenderingChart"></canvas>
@@ -324,13 +373,13 @@
                     </div>
                     <div class="chart-container">
                         <div class="chart-header">
-                            <h4>HCP Fill Rate & Anomaly Check – Referring</h4>
+                            <h4>HCP vs HCO Identification Split(Ref vs Ren)</h4>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 350px;">
                             <canvas id="hcpReferringChart"></canvas>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="charts-grid">
                     <div class="chart-container">
@@ -367,13 +416,17 @@
                     <h3>HCO Metrics</h3>
                 </div>
 
-                <div class="charts-grid">
+                <!-- <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
                             <h4>HCO Fill Rate & Anomaly Check – Billing</h4>
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 350px;">
-                            <canvas id="hcoBillingChart"></canvas>
+                            <canvas id="hcoBillingChartIqvia"></canvas>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoBillingChartHv"></canvas>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoBillingChartKomodo"></canvas>
                         </div>
                     </div>
                     <div class="chart-container">
@@ -384,8 +437,34 @@
                             <canvas id="hcoFacilityChart"></canvas>
                         </div>
                     </div>
+                </div> -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCO Fill Rate Comparison-IQVIA(Ref vs Ren)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoBillingChartIqvia"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCO Fill Rate Comparison-HealthVerity(Ref vs Ren)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoBillingChartHv"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4>HCO FFill Rate Comparison-Komodo(Ref vs Ren)</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; height: 350px;">
+                            <canvas id="hcoBillingChartKomodo"></canvas>
+                        </div>
+                    </div>
+                    
                 </div>
-
                 <div class="charts-grid">
                     <div class="chart-container">
                         <div class="chart-header">
