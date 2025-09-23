@@ -949,16 +949,12 @@ class EnhancedChryselsysDashboard {
       this.createPrevalencePatientsTrendsChart();
       
       // HCP/HCO Metrics Charts
-      this.createHcpRenderingChartIqvia();
-      this.createHcpRenderingChartHv();
-      this.createHcpRenderingChartKomodo();
+      this.createHcpRenderingChartGrouped();
       this.createHcpReferringChart();
       this.createTopRenderingSpecialtiesChart();
       this.createTopReferringSpecialtiesChart();
       this.createTopPrescriberSpecialtiesChart();
-      this.createHcoBillingChartIqvia();
-      this.createHcoBillingChartHv();
-      this.createHcoBillingChartKomodo();
+      this.createHcoFillrateChartGrouped();
       this.createHcoFacilityChart();
       this.createTopBillingNpiChart();
       this.createTopFacilityNpiChart();
@@ -1027,11 +1023,8 @@ class EnhancedChryselsysDashboard {
   }
 
   createClaimsTypeChart() {
-    const containerIds = {
-      iqvia: 'claimsTypeChartIqvia',
-      healthverity: 'claimsTypeChartHv',
-      komodo: 'claimsTypeChartKomodo'
-    };
+    const container = document.getElementById('claimsTypeTableContainer');
+    if (!container) return;
 
     const types = this.dashboardData?.claims_data?.types || {
       dx: { IQVIA: 0, HEALTHVERITY: 0, KOMODO: 0 },
@@ -1039,39 +1032,71 @@ class EnhancedChryselsysDashboard {
       rx: { IQVIA: 0, HEALTHVERITY: 0, KOMODO: 0 }
     };
 
-    const sources = [
-      { key: 'iqvia', label: 'IQVIA', colorSet: [this.colors.pieChart.primary, this.colors.pieChart.secondary, this.colors.pieChart.tertiary] },
-      { key: 'healthverity', label: 'HealthVerity', colorSet: [this.colors.ateneoBlue, this.colors.weldonBlue, this.colors.paleCerulean] },
-      { key: 'komodo', label: 'Komodo', colorSet: [this.colors.bronze, this.colors.forestGreen, this.colors.darkGreen] }
+    const rows = [
+      { label: 'Diagnosis Claims (DX)', key: 'dx', icon: '🧪' },
+      { label: 'Procedure Claims (PX)', key: 'px', icon: '🗂️' },
+      { label: 'Prescription Claims (RX)', key: 'rx', icon: '💊' }
+    ];
+    const cols = [
+      { label: 'IQVIA', key: 'IQVIA', color: this.colors.sources.iqvia },
+      { label: 'HealthVerity', key: 'HEALTHVERITY', color: this.colors.sources.healthverity },
+      { label: 'Komodo', key: 'KOMODO', color: this.colors.sources.komodo }
     ];
 
-    sources.forEach((source) => {
-      const ctx = document.getElementById(containerIds[source.key]);
-      if (!ctx) return;
+    // Clear old
+    container.innerHTML = '';
 
-      const dx = types.dx?.[source.label.toUpperCase()] ?? (source.label === 'HealthVerity' ? types.dx?.HEALTHVERITY : types.dx?.[source.label.toUpperCase()]) ?? 0;
-      const px = types.px?.[source.label.toUpperCase()] ?? (source.label === 'HealthVerity' ? types.px?.HEALTHVERITY : types.px?.[source.label.toUpperCase()]) ?? 0;
-      const rx = types.rx?.[source.label.toUpperCase()] ?? (source.label === 'HealthVerity' ? types.rx?.HEALTHVERITY : types.rx?.[source.label.toUpperCase()]) ?? 0;
+    // Build table element
+    const table = document.createElement('table');
+    table.className = 'claims-table';
 
-      const chartKey = `claimsType_${source.key}`;
-      if (this.charts[chartKey]) {
-        this.charts[chartKey].destroy();
-      }
+    // Header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const thEmpty = document.createElement('th');
+    thEmpty.textContent = 'Claim Type';
+    headerRow.appendChild(thEmpty);
 
-      this.charts[chartKey] = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Diagnosis Claims (DX)', 'Procedure Claims (PX)', 'Prescription Claims (RX)'],
-          datasets: [{
-            data: [dx, px, rx],
-            backgroundColor: source.colorSet,
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
-        },
-        options: this.getDoughnutChartOptions(`Claims Type Distribution – ${source.label}`)
-      });
+    cols.forEach(c => {
+      const th = document.createElement('th');
+      th.textContent = c.label;
+      th.style.textAlign = 'center';
+      headerRow.appendChild(th);
     });
+    thead.appendChild(headerRow);
+
+    // Body
+    const tbody = document.createElement('tbody');
+
+    rows.forEach((r) => {
+      const tr = document.createElement('tr');
+
+      const tdLabel = document.createElement('td');
+      tdLabel.className = 'claims-type-label';
+      tdLabel.textContent = `${r.icon} ${r.label}`;
+      tr.appendChild(tdLabel);
+
+      cols.forEach(c => {
+        const td = document.createElement('td');
+        td.style.textAlign = 'center';
+
+        const value = types[r.key]?.[c.key] ?? 0;
+        const pill = document.createElement('div');
+        pill.className = 'claim-pill source-' + c.label.toLowerCase().replace(/\s+/g,'');
+        pill.innerHTML = `<span class="marker"></span><span>${value.toLocaleString()}</span>`;
+        td.appendChild(pill);
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    const wrap = document.createElement('div');
+    wrap.className = 'claims-table-wrap';
+    wrap.appendChild(table);
+    container.appendChild(wrap);
   }
 
   // Gender Distribution Chart by Data Source
@@ -1577,8 +1602,8 @@ class EnhancedChryselsysDashboard {
   }
 
   // HCP/HCO Metrics Charts (source-wise color coding)
-  createHcpRenderingChart() {
-    const ctx = document.getElementById('hcpRenderingChart');
+  createHcpRenderingChartGrouped() {
+    const ctx = document.getElementById('hcpRenderingChartGrouped');
     if (!ctx) return;
 
     if (this.charts.hcpRendering) this.charts.hcpRendering.destroy();
@@ -1610,7 +1635,7 @@ class EnhancedChryselsysDashboard {
       }
     };
 
-    this.charts.hcpRendering = new Chart(ctx, {
+    this.charts.hcpRenderingGrouped = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1621,7 +1646,7 @@ class EnhancedChryselsysDashboard {
         ]
       },
       options: {
-        ...this.getBarChartOptions('NPI Fill Rate Comparison (DX/PX/RX)', 'Percentage (%)'),
+        ...this.getBarChartOptions('NPI Fill Rate Comparison (DX/PX/RX) – Source-wise', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
           legend: { display: true, position: 'top' },
@@ -1874,93 +1899,55 @@ class EnhancedChryselsysDashboard {
     });
   }
 
-  createHcoBillingChartIqvia() {
-    const ctx = document.getElementById('hcoBillingChartIqvia');
+  createHcoFillrateChartGrouped() {
+    const ctx = document.getElementById('hcoFillrateChartGrouped');
     if (!ctx) return;
 
-    if (this.charts.hcoBillingIqvia) this.charts.hcoBillingIqvia.destroy();
+    if (this.charts.hcoFillrateGrouped) this.charts.hcoFillrateGrouped.destroy();
 
     const labels = ['DX Ref HCO %', 'DX Ren HCO %', 'PX Ref HCO %', 'PX Ren HCO %', 'RX HCO %'];
-    const data = [0.76, 2.98, 0.87, 2.73, 0.42];
-    const counts = { dx_ref: 3750, dx_ren: 19000, px_ref: 891, px_ren: 1464, rx: 78 };
 
-    this.charts.hcoBillingIqvia = new Chart(ctx, {
+    const iqvia = [0.76, 2.98, 0.87, 2.73, 0.42];
+    const hv = [1.17, 6.32, 1.21, 8.13, 3.09];
+    const komodo = [0.08, 0, 0.5, 0, 0];
+
+    const counts = {
+      iqvia: { dx_ref: 3750, dx_ren: 19000, px_ref: 891, px_ren: 1464, rx: 78 },
+      hv: { dx_ref: 5875, dx_ren: 50884, px_ref: 1182, px_ren: 5560, rx: 825 },
+      komodo: { dx_ref: 393, dx_ren: undefined, px_ref: 540, px_ren: undefined, rx: undefined }
+    };
+
+    this.charts.hcoFillrateGrouped = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
         datasets: [
-          { label: 'IQVIA – Identified as HCO', data, backgroundColor: this.colors.sources.iqvia, borderColor: this.colors.sources.iqvia }
+          { label: 'IQVIA – Identified as HCO', data: iqvia, backgroundColor: this.colors.sources.iqvia, borderColor: this.colors.sources.iqvia },
+          { label: 'HealthVerity – Identified as HCO', data: hv, backgroundColor: this.colors.sources.healthverity, borderColor: this.colors.sources.healthverity },
+          { label: 'Komodo – Identified as HCO', data: komodo, backgroundColor: this.colors.sources.komodo, borderColor: this.colors.sources.komodo }
         ]
       },
       options: {
-        ...this.getBarChartOptions('HCO Identification (DX/PX/RX) – IQVIA', 'Percentage (%)'),
+        ...this.getBarChartOptions('HCO Identification (DX/PX/RX) – Source-wise', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
           legend: { display: true, position: 'top' },
           tooltip: {
             callbacks: {
               label: (context) => {
+                const datasetLabel = context.dataset.label || '';
                 const idx = context.dataIndex;
                 const pct = context.parsed.y;
-                const key = ['dx_ref','dx_ren','px_ref','px_ren','rx'][idx];
-                const c = counts[key];
-                const extra = c !== undefined ? ` (npi: ${c.toLocaleString()})` : '';
-                return `${pct}%${extra}`;
+                const keyMap = ['dx_ref', 'dx_ren', 'px_ref', 'px_ren', 'rx'];
+                const key = keyMap[idx];
+                let extra = '';
+                if (datasetLabel.startsWith('IQVIA') && counts.iqvia[key] !== undefined) extra = ` (npi: ${counts.iqvia[key].toLocaleString()})`;
+                if (datasetLabel.startsWith('HealthVerity') && counts.hv[key] !== undefined) extra = ` (npi: ${counts.hv[key].toLocaleString()})`;
+                if (datasetLabel.startsWith('Komodo') && counts.komodo[key] !== undefined) extra = ` (npi: ${counts.komodo[key].toLocaleString()})`;
+                return `${datasetLabel}: ${pct}%${extra}`;
               }
             }
           }
-        },
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  }
-
-  createHcoBillingChartHv() {
-    const ctx = document.getElementById('hcoBillingChartHv');
-    if (!ctx) return;
-
-    if (this.charts.hcoBillingHv) this.charts.hcoBillingHv.destroy();
-
-    const labels = ['DX Ref HCO %', 'DX Ren HCO %', 'PX Ref HCO %', 'PX Ren HCO %', 'RX HCO %'];
-    const data = [1.17, 6.32, 1.21, 8.13, 3.09];
-    const counts = { dx_ref: 5875, dx_ren: 50884, px_ref: 1182, px_ren: 5560, rx: 825 };
-
-    this.charts.hcoBillingHv = new Chart(ctx, {
-      type: 'bar',
-      data: { labels, datasets: [ { label: 'HealthVerity – Identified as HCO', data, backgroundColor: this.colors.sources.healthverity, borderColor: this.colors.sources.healthverity } ] },
-      options: {
-        ...this.getBarChartOptions('HCO Identification (DX/PX/RX) – HealthVerity', 'Percentage (%)'),
-        plugins: {
-          ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
-          tooltip: { callbacks: { label: (context) => { const idx = context.dataIndex; const pct = context.parsed.y; const key = ['dx_ref','dx_ren','px_ref','px_ren','rx'][idx]; const c = counts[key]; const extra = c !== undefined ? ` (npi: ${c.toLocaleString()})` : ''; return `${pct}%${extra}`; } } }
-        },
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  }
-
-  createHcoBillingChartKomodo() {
-    const ctx = document.getElementById('hcoBillingChartKomodo');
-    if (!ctx) return;
-
-    if (this.charts.hcoBillingKomodo) this.charts.hcoBillingKomodo.destroy();
-
-    const labels = ['DX Ref HCO %', 'DX Ren HCO %', 'PX Ref HCO %', 'PX Ren HCO %', 'RX HCO %'];
-    const data = [0.08, 0, 0.5, 0, 0];
-    const counts = { dx_ref: 393, dx_ren: undefined, px_ref: 540, px_ren: undefined, rx: undefined };
-
-    this.charts.hcoBillingKomodo = new Chart(ctx, {
-      type: 'bar',
-      data: { labels, datasets: [ { label: 'Komodo – Identified as HCO', data, backgroundColor: this.colors.sources.komodo, borderColor: this.colors.sources.komodo } ] },
-      options: {
-        ...this.getBarChartOptions('HCO Identification (DX/PX/RX) – Komodo', 'Percentage (%)'),
-        plugins: {
-          ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
-          tooltip: { callbacks: { label: (context) => { const idx = context.dataIndex; const pct = context.parsed.y; const key = ['dx_ref','dx_ren','px_ref','px_ren','rx'][idx]; const c = counts[key]; const extra = c !== undefined ? ` (npi: ${c.toLocaleString()})` : ''; return `${pct}%${extra}`; } } }
         },
         responsive: true,
         maintainAspectRatio: false
@@ -2000,263 +1987,117 @@ class EnhancedChryselsysDashboard {
   }
 
   createTopRenderingSpecialtiesChart() {
-    const ctx = document.getElementById('topRenderingSpecialtiesChart');
-    if (!ctx) return;
-  
-    const rows = this.dashboardData?.hcp_hco_metrics?.top_rendering_specialties || [];
-    if (this.charts.topRenderingSpecialties) this.charts.topRenderingSpecialties.destroy();
-  
-    // Axes categories
-    const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
-    const specialties = rows.map(r => r.name);
-  
-    // Flatten values for min/max scaling
-    const values = [];
-    rows.forEach(r => {
-      values.push(r.iqvia, r.healthverity, r.komodo);
-    });
-    const minV = Math.min(...values);
-    const maxV = Math.max(...values);
-    const range = Math.max(1, maxV - minV); // avoid divide by zero
-  
-    // Build matrix points: {x: source, y: specialty, v: value}
-    const dataPoints = [];
-    rows.forEach(r => {
-      dataPoints.push({ x: 'IQVIA', y: r.name, v: r.iqvia });
-      dataPoints.push({ x: 'HealthVerity', y: r.name, v: r.healthverity });
-      dataPoints.push({ x: 'Komodo', y: r.name, v: r.komodo });
-    });
-  
-    // Helper: source color with intensity by value
-    const sourceColor = (source, v) => {
-      const base =
-        source === 'IQVIA' ? this.colors.sources.iqvia
-        : source === 'HealthVerity' ? this.colors.sources.healthverity
-        : this.colors.sources.komodo;
-  
-      // normalize [0..1]
-      const t = (v - minV) / range;
-      // convert hex to rgb
-      const hex = base.replace('#', '');
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      // alpha from 0.2 to 1.0 for visibility and appeal
-      const a = 0.2 + 0.8 * t;
-      return `rgba(${r}, ${g}, ${b}, ${a})`;
-    };
+    const container = document.getElementById('topRenderingSpecialtiesChart');
+    if (!container) return;
 
-    // Inline value labels plugin (always show values on cells)
-    const valueLabelPlugin = {
-      id: 'matrixValueLabelsRendering',
-      afterDatasetsDraw: (chart) => {
-        const { ctx } = chart;
-        chart.data.datasets.forEach((dataset, datasetIndex) => {
-          const meta = chart.getDatasetMeta(datasetIndex);
-          meta.data.forEach((element, i) => {
-            const raw = dataset.data[i];
-            if (!raw) return;
-    
-            const { x, y, width, height } = element.getProps(['x', 'y', 'width', 'height'], true);
-            const label = (raw.v ?? 0).toLocaleString();
-    
-            ctx.save();
-            ctx.font = '500 10px Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-    
-            // contrast color: white if normalized value > 0.55
-            const t = (raw.v - minV) / range;
-            ctx.fillStyle = t > 0.55 ? '#ffffff' : '#111827';
-    
-            // Centered text
-            ctx.fillText(label, x + width / 2, y + height / 2);
-            ctx.restore();
-          });
-        });
-      }
-    };
-    
-  
-    this.charts.topRenderingSpecialties = new Chart(ctx, {
-      type: 'matrix',
-      data: {
-        datasets: [{
-          label: 'Patients',
-          data: dataPoints,
-          parsing: { xAxisKey: 'x', yAxisKey: 'y', vAxisKey: 'v' },
-          backgroundColor: (ctx) => {
-            const { x, v } = ctx.raw || {};
-            return sourceColor(x, v);
-          },
-          borderWidth: 1,
-          borderColor: '#1f2937', // subtle border for readability
-          borderRadius: 6,
-          width: ({ chart }) => {
-            const chartW = chart.chartArea ? chart.chartArea.width : 300;
-            return Math.max(18, Math.floor(chartW / (sources.length + 3)));
-          },
-          height: ({ chart }) => {
-            const chartH = chart.chartArea ? chart.chartArea.height : 500;
-            return Math.max(16, Math.floor(chartH / (specialties.length + 4)));
-          }
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        scales: {
-          x: {
-            type: 'category',
-            labels: sources,
-            position: 'top',
-            grid: { display: false },
-            title: { display: true, text: 'Data Source' }
-          },
-          y: {
-            type: 'category',
-            labels: specialties,
-            grid: { display: false },
-            reverse: false,
-            title: { display: true, text: 'Specialty' }
-          },
-          // Hide numeric axis for v; we color by v instead
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              title: items => {
-                const it = items[0];
-                return `${it.raw.y} • ${it.raw.x}`;
-              },
-              label: it => `Patients: ${it.raw.v.toLocaleString()}`
-            }
-          },
-          // Keep your existing global plugin options
-          ...this.getBarChartOptions('', '').plugins
-        }
-      },
-      plugins: [valueLabelPlugin]
+    const rows = this.dashboardData?.hcp_hco_metrics?.top_rendering_specialties || [];
+    if (this.charts.topRenderingSpecialties) {
+      this.charts.topRenderingSpecialties.destroy?.();
+      this.charts.topRenderingSpecialties = undefined;
+    }
+
+    const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
+    const tableWrap = document.createElement('div');
+    tableWrap.className = 'claims-table-wrap';
+    const table = document.createElement('table');
+    table.className = 'claims-table';
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const thLabel = document.createElement('th');
+    thLabel.textContent = 'Specialty';
+    headerRow.appendChild(thLabel);
+    sources.forEach(s => {
+      const th = document.createElement('th');
+      th.textContent = s;
+      th.style.textAlign = 'center';
+      headerRow.appendChild(th);
     });
+    thead.appendChild(headerRow);
+
+    const tbody = document.createElement('tbody');
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.className = 'claims-type-label';
+      tdName.textContent = r.name;
+      tr.appendChild(tdName);
+
+      const vals = [r.iqvia, r.healthverity, r.komodo];
+      const sourceKeys = ['iqvia','healthverity','komodo'];
+      vals.forEach((v, idx) => {
+        const td = document.createElement('td');
+        td.style.textAlign = 'center';
+        const pill = document.createElement('div');
+        pill.className = 'claim-pill source-' + (sourceKeys[idx]);
+        pill.innerHTML = `<span class="marker"></span><span>${(v ?? 0).toLocaleString()}</span>`;
+        td.appendChild(pill);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    container.parentElement.replaceChild(tableWrap, container);
   }
 
   createTopReferringSpecialtiesChart() {
-    const ctx = document.getElementById('topReferringSpecialtiesChart');
-    if (!ctx) return;
+    const container = document.getElementById('topReferringSpecialtiesChart');
+    if (!container) return;
 
     const rows = this.dashboardData?.hcp_hco_metrics?.top_referring_specialties || [];
-    if (this.charts.topReferringSpecialties) this.charts.topReferringSpecialties.destroy();
+    if (this.charts.topReferringSpecialties) {
+      this.charts.topReferringSpecialties.destroy?.();
+      this.charts.topReferringSpecialties = undefined;
+    }
 
     const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
-    const specialties = rows.map(r => r.name);
+    const tableWrap = document.createElement('div');
+    tableWrap.className = 'claims-table-wrap';
+    const table = document.createElement('table');
+    table.className = 'claims-table';
 
-    const values = [];
-    rows.forEach(r => values.push(r.iqvia, r.healthverity, r.komodo));
-    const minV = Math.min(...values);
-    const maxV = Math.max(...values);
-    const range = Math.max(1, maxV - minV);
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const thLabel = document.createElement('th');
+    thLabel.textContent = 'Specialty';
+    headerRow.appendChild(thLabel);
+    sources.forEach(s => {
+      const th = document.createElement('th');
+      th.textContent = s;
+      th.style.textAlign = 'center';
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
 
-    const dataPoints = [];
+    const tbody = document.createElement('tbody');
     rows.forEach(r => {
-      dataPoints.push({ x: 'IQVIA', y: r.name, v: r.iqvia });
-      dataPoints.push({ x: 'HealthVerity', y: r.name, v: r.healthverity });
-      dataPoints.push({ x: 'Komodo', y: r.name, v: r.komodo });
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.className = 'claims-type-label';
+      tdName.textContent = r.name;
+      tr.appendChild(tdName);
+
+      const vals = [r.iqvia, r.healthverity, r.komodo];
+      const sourceKeys = ['iqvia','healthverity','komodo'];
+      vals.forEach((v, idx) => {
+        const td = document.createElement('td');
+        td.style.textAlign = 'center';
+        const pill = document.createElement('div');
+        pill.className = 'claim-pill source-' + (sourceKeys[idx]);
+        pill.innerHTML = `<span class=\"marker\"></span><span>${(v ?? 0).toLocaleString()}</span>`;
+        td.appendChild(pill);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
     });
 
-    const sourceColor = (source, v) => {
-      const base = source === 'IQVIA' ? this.colors.sources.iqvia
-        : source === 'HealthVerity' ? this.colors.sources.healthverity
-        : this.colors.sources.komodo;
-      const t = (v - minV) / range;
-      const hex = base.replace('#', '');
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      const a = 0.2 + 0.8 * t;
-      return `rgba(${r}, ${g}, ${b}, ${a})`;
-    };
-
-    const valueLabelPlugin = {
-      id: 'matrixValueLabelsReferring',
-      afterDatasetsDraw: (chart) => {
-        const { ctx } = chart;
-        chart.data.datasets.forEach((dataset, datasetIndex) => {
-          const meta = chart.getDatasetMeta(datasetIndex);
-          meta.data.forEach((element, i) => {
-            const raw = dataset.data[i];
-            if (!raw) return;
-    
-            const { x, y, width, height } = element.getProps(
-              ['x', 'y', 'width', 'height'],
-              true
-            );
-    
-            const label = (raw.v ?? 0).toLocaleString();
-            const t = (raw.v - minV) / range;
-    
-            ctx.save();
-            ctx.font = '500 10px Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = t > 0.55 ? '#ffffff' : '#111827';
-    
-            // ✅ Draw in the center of the matrix cell
-            ctx.fillText(label, x + width / 2, y + height / 2);
-    
-            ctx.restore();
-          });
-        });
-      }
-    };
-
-    this.charts.topReferringSpecialties = new Chart(ctx, {
-      type: 'matrix',
-      data: {
-        datasets: [{
-          label: 'Patients',
-          data: dataPoints,
-          parsing: { xAxisKey: 'x', yAxisKey: 'y', vAxisKey: 'v' },
-          backgroundColor: (ctx) => {
-            const { x, v } = ctx.raw || {};
-            return sourceColor(x, v);
-          },
-          borderWidth: 1,
-          borderColor: '#1f2937',
-          borderRadius: 6,
-          width: ({ chart }) => {
-            const chartW = chart.chartArea ? chart.chartArea.width : 300;
-            return Math.max(18, Math.floor(chartW / (sources.length + 3)));
-          },
-          height: ({ chart }) => {
-            const chartH = chart.chartArea ? chart.chartArea.height : 500;
-            return Math.max(16, Math.floor(chartH / (specialties.length + 4)));
-          }
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        scales: {
-          x: { type: 'category', labels: sources, position: 'top', grid: { display: false }, title: { display: true, text: 'Data Source' } },
-          y: { type: 'category', labels: specialties, grid: { display: false }, reverse: false, title: { display: true, text: 'Specialty' } }
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              title: (items) => {
-                const it = items[0];
-                return `${it.raw.y} • ${it.raw.x}`;
-              },
-              label: (it) => `Patients: ${it.raw.v.toLocaleString()}`
-            }
-          },
-          ...this.getBarChartOptions('', '').plugins
-        }
-      },
-      plugins: [valueLabelPlugin]
-    });
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    container.parentElement.replaceChild(tableWrap, container);
   }
 
   createTopPrescriberSpecialtiesChart() {
@@ -2282,219 +2123,117 @@ class EnhancedChryselsysDashboard {
   }
 
   createTopBillingNpiChart() {
-    const ctx = document.getElementById('topBillingNpiChart');
-    if (!ctx) return;
+    const container = document.getElementById('topBillingNpiChart');
+    if (!container) return;
+
     const rows = this.dashboardData?.hcp_hco_metrics?.top_billing_npis || [];
-    if (this.charts.topBillingNpi) this.charts.topBillingNpi.destroy();
+    if (this.charts.topBillingNpi) {
+      this.charts.topBillingNpi.destroy?.();
+      this.charts.topBillingNpi = undefined;
+    }
 
     const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
-    const npis = rows.map(r => r.npi);
+    const tableWrap = document.createElement('div');
+    tableWrap.className = 'claims-table-wrap';
+    const table = document.createElement('table');
+    table.className = 'claims-table';
 
-    const values = [];
-    rows.forEach(r => values.push(r.iqvia, r.healthverity, r.komodo));
-    const minV = Math.min(...values);
-    const maxV = Math.max(...values);
-    const range = Math.max(1, maxV - minV);
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const thLabel = document.createElement('th');
+    thLabel.textContent = 'Billing NPI';
+    headerRow.appendChild(thLabel);
+    sources.forEach(s => {
+      const th = document.createElement('th');
+      th.textContent = s;
+      th.style.textAlign = 'center';
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
 
-    const dataPoints = [];
+    const tbody = document.createElement('tbody');
     rows.forEach(r => {
-      dataPoints.push({ x: 'IQVIA', y: r.npi, v: r.iqvia });
-      dataPoints.push({ x: 'HealthVerity', y: r.npi, v: r.healthverity });
-      dataPoints.push({ x: 'Komodo', y: r.npi, v: r.komodo });
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.className = 'claims-type-label';
+      tdName.textContent = r.npi;
+      tr.appendChild(tdName);
+
+      const vals = [r.iqvia, r.healthverity, r.komodo];
+      const sourceKeys = ['iqvia','healthverity','komodo'];
+      vals.forEach((v, idx) => {
+        const td = document.createElement('td');
+        td.style.textAlign = 'center';
+        const pill = document.createElement('div');
+        pill.className = 'claim-pill source-' + (sourceKeys[idx]);
+        pill.innerHTML = `<span class=\"marker\"></span><span>${(v ?? 0).toLocaleString()}</span>`;
+        td.appendChild(pill);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
     });
 
-    const sourceColor = (source, v) => {
-      const base = source === 'IQVIA' ? this.colors.sources.iqvia
-        : source === 'HealthVerity' ? this.colors.sources.healthverity
-        : this.colors.sources.komodo;
-      const t = (v - minV) / range;
-      const hex = base.replace('#', '');
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      const a = 0.2 + 0.8 * t;
-      return `rgba(${r}, ${g}, ${b}, ${a})`;
-    };
-
-    const valueLabelPlugin = {
-      id: 'matrixValueLabelsBilling',
-      afterDatasetsDraw: (chart) => {
-        const { ctx } = chart;
-        chart.data.datasets.forEach((dataset, datasetIndex) => {
-          const meta = chart.getDatasetMeta(datasetIndex);
-          meta.data.forEach((element, i) => {
-            const raw = dataset.data[i];
-            if (!raw) return;
-            const { x, y, width, height } = element.getProps(['x','y','width','height'], true);
-            const label = (raw.v ?? 0).toLocaleString();
-            const t = (raw.v - minV) / range;
-            ctx.save();
-            ctx.font = '500 10px Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = t > 0.55 ? '#ffffff' : '#111827';
-            ctx.fillText(label, x + width / 2, y + height / 2);
-            ctx.restore();
-          });
-        });
-      }
-    };
-
-    this.charts.topBillingNpi = new Chart(ctx, {
-      type: 'matrix',
-      data: {
-        datasets: [{
-          label: 'Patients',
-          data: dataPoints,
-          parsing: { xAxisKey: 'x', yAxisKey: 'y', vAxisKey: 'v' },
-          backgroundColor: (ctx) => {
-            const { x, v } = ctx.raw || {};
-            return sourceColor(x, v);
-          },
-          borderWidth: 1,
-          borderColor: '#1f2937',
-          borderRadius: 6,
-          width: ({ chart }) => {
-            const chartW = chart.chartArea ? chart.chartArea.width : 300;
-            return Math.max(18, Math.floor(chartW / (sources.length + 3)));
-          },
-          height: ({ chart }) => {
-            const chartH = chart.chartArea ? chart.chartArea.height : 500;
-            return Math.max(16, Math.floor(chartH / (npis.length + 4)));
-          }
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        scales: {
-          x: { type: 'category', labels: sources, position: 'top', grid: { display: false }, title: { display: true, text: 'Data Source' } },
-          y: { type: 'category', labels: npis, grid: { display: false }, reverse: false, title: { display: true, text: 'Billing NPI' } }
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              title: (items) => {
-                const it = items[0];
-                return `${it.raw.y} • ${it.raw.x}`;
-              },
-              label: (it) => `Patients: ${it.raw.v.toLocaleString()}`
-            }
-          },
-          ...this.getBarChartOptions('', '').plugins
-        }
-      },
-      plugins: [valueLabelPlugin]
-    });
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    container.parentElement.replaceChild(tableWrap, container);
   }
 
   createTopFacilityNpiChart() {
-    const ctx = document.getElementById('topFacilityNpiChart');
-    if (!ctx) return;
+    const container = document.getElementById('topFacilityNpiChart');
+    if (!container) return;
+
     const rows = this.dashboardData?.hcp_hco_metrics?.top_facility_npis || [];
-    if (this.charts.topFacilityNpi) this.charts.topFacilityNpi.destroy();
+    if (this.charts.topFacilityNpi) {
+      this.charts.topFacilityNpi.destroy?.();
+      this.charts.topFacilityNpi = undefined;
+    }
 
     const sources = ['IQVIA', 'HealthVerity', 'Komodo'];
-    const npis = rows.map(r => r.npi);
+    const tableWrap = document.createElement('div');
+    tableWrap.className = 'claims-table-wrap';
+    const table = document.createElement('table');
+    table.className = 'claims-table';
 
-    const values = [];
-    rows.forEach(r => values.push(r.iqvia, r.healthverity, r.komodo));
-    const minV = Math.min(...values);
-    const maxV = Math.max(...values);
-    const range = Math.max(1, maxV - minV);
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const thLabel = document.createElement('th');
+    thLabel.textContent = 'Facility NPI';
+    headerRow.appendChild(thLabel);
+    sources.forEach(s => {
+      const th = document.createElement('th');
+      th.textContent = s;
+      th.style.textAlign = 'center';
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
 
-    const dataPoints = [];
+    const tbody = document.createElement('tbody');
     rows.forEach(r => {
-      dataPoints.push({ x: 'IQVIA', y: r.npi, v: r.iqvia });
-      dataPoints.push({ x: 'HealthVerity', y: r.npi, v: r.healthverity });
-      dataPoints.push({ x: 'Komodo', y: r.npi, v: r.komodo });
+      const tr = document.createElement('tr');
+      const tdName = document.createElement('td');
+      tdName.className = 'claims-type-label';
+      tdName.textContent = r.npi;
+      tr.appendChild(tdName);
+
+      const vals = [r.iqvia, r.healthverity, r.komodo];
+      const sourceKeys = ['iqvia','healthverity','komodo'];
+      vals.forEach((v, idx) => {
+        const td = document.createElement('td');
+        td.style.textAlign = 'center';
+        const pill = document.createElement('div');
+        pill.className = 'claim-pill source-' + (sourceKeys[idx]);
+        pill.innerHTML = `<span class=\"marker\"></span><span>${(v ?? 0).toLocaleString()}</span>`;
+        td.appendChild(pill);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
     });
 
-    const sourceColor = (source, v) => {
-      const base = source === 'IQVIA' ? this.colors.sources.iqvia
-        : source === 'HealthVerity' ? this.colors.sources.healthverity
-        : this.colors.sources.komodo;
-      const t = (v - minV) / range;
-      const hex = base.replace('#', '');
-      const r = parseInt(hex.substring(0, 2), 16);
-      const g = parseInt(hex.substring(2, 4), 16);
-      const b = parseInt(hex.substring(4, 6), 16);
-      const a = 0.2 + 0.8 * t;
-      return `rgba(${r}, ${g}, ${b}, ${a})`;
-    };
-
-    const valueLabelPlugin = {
-      id: 'matrixValueLabelsFacility',
-      afterDatasetsDraw: (chart) => {
-        const { ctx } = chart;
-        chart.data.datasets.forEach((dataset, datasetIndex) => {
-          const meta = chart.getDatasetMeta(datasetIndex);
-          meta.data.forEach((element, i) => {
-            const raw = dataset.data[i];
-            if (!raw) return;
-            const { x, y, width, height } = element.getProps(['x','y','width','height'], true);
-            const label = (raw.v ?? 0).toLocaleString();
-            const t = (raw.v - minV) / range;
-            ctx.save();
-            ctx.font = '500 10px Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = t > 0.55 ? '#ffffff' : '#111827';
-            ctx.fillText(label, x + width / 2, y + height / 2);
-            ctx.restore();
-          });
-        });
-      }
-    };
-
-    this.charts.topFacilityNpi = new Chart(ctx, {
-      type: 'matrix',
-      data: {
-        datasets: [{
-          label: 'Patients',
-          data: dataPoints,
-          parsing: { xAxisKey: 'x', yAxisKey: 'y', vAxisKey: 'v' },
-          backgroundColor: (ctx) => {
-            const { x, v } = ctx.raw || {};
-            return sourceColor(x, v);
-          },
-          borderWidth: 1,
-          borderColor: '#1f2937',
-          borderRadius: 6,
-          width: ({ chart }) => {
-            const chartW = chart.chartArea ? chart.chartArea.width : 300;
-            return Math.max(18, Math.floor(chartW / (sources.length + 3)));
-          },
-          height: ({ chart }) => {
-            const chartH = chart.chartArea ? chart.chartArea.height : 500;
-            return Math.max(16, Math.floor(chartH / (npis.length + 4)));
-          }
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        scales: {
-          x: { type: 'category', labels: sources, position: 'top', grid: { display: false }, title: { display: true, text: 'Data Source' } },
-          y: { type: 'category', labels: npis, grid: { display: false }, reverse: false, title: { display: true, text: 'Facility NPI' } }
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              title: (items) => {
-                const it = items[0];
-                return `${it.raw.y} • ${it.raw.x}`;
-              },
-              label: (it) => `Patients: ${it.raw.v.toLocaleString()}`
-            }
-          },
-          ...this.getBarChartOptions('', '').plugins
-        }
-      },
-      plugins: [valueLabelPlugin]
-    });
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    container.parentElement.replaceChild(tableWrap, container);
   }
 
   // Diagnosis Analysis Charts
@@ -3444,7 +3183,7 @@ class EnhancedChryselsysDashboard {
               html: `<div style="
                 background: transparent;
                 color: ${healthverityCount > maxCount * 0.5 ? '#ffffff' : '#333333'};
-                font-size: ${radius > 20 ? '10px' : radius > 12 ? '8px' : '6px'};
+                font-size: 12px;
                 font-weight: bold;
                 text-align: center;
                 line-height: 1;
@@ -3501,7 +3240,7 @@ class EnhancedChryselsysDashboard {
               html: `<div style="
                 background: transparent;
                 color: ${komodoCount > maxCount * 0.5 ? '#ffffff' : '#333333'};
-                font-size: ${radius > 20 ? '10px' : radius > 12 ? '8px' : '6px'};
+                font-size: 12px;
                 font-weight: bold;
                 text-align: center;
                 line-height: 1;
@@ -3587,18 +3326,18 @@ class EnhancedChryselsysDashboard {
   }
 
   getColorForIntensity(intensity) {
-    // Create a color gradient from light blue to dark blue for HealthVerity
+    // HealthVerity gradient anchored on #004567 (distinct from IQVIA #e2e8f0)
     const colors = [
-      '#e6f3ff', // Light blue
-      '#b3d9ff', 
-      '#80bfff',
-      '#4da6ff',
-      '#1a8cff',
-      '#0066cc', // Medium blue
-      '#004d99',
-      '#003366', // Dark blue
-      '#001a33',
-      '#000d1a'  // Very dark blue
+      '#99b3bf', // light tint (kept distinct from IQVIA gray)
+      '#7a9aa8',
+      '#5c8191',
+      '#3e697a',
+      '#255063',
+      '#1b4a60',
+      '#12455c',
+      '#0a4058',
+      '#053b53',
+      '#004567'  // base brand color
     ];
     
     const index = Math.floor(intensity * (colors.length - 1));
