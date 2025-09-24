@@ -1304,9 +1304,9 @@ class EnhancedChryselsysDashboard {
 
     // Create datasets for each data source
     const datasets = [];
-    const dataSources = ['iqvia', 'healthverity', 'komodo'];
+    const dataSources = ['komodo','healthverity','iqvia'];
     const sourceColors = [this.colors.bronze, this.colors.ateneoBlue, this.colors.paleCerulean];
-    const sourceLabels = ['IQVIA', 'HealthVerity', 'Komodo'];
+    const sourceLabels = ['Komodo', 'HealthVerity', 'IQVIA'];
 
     dataSources.forEach((source, index) => {
       const sourceData = data[source] || {};
