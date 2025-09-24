@@ -127,37 +127,70 @@
                     <div class="stat-card">
                       <div class="stat-value">3</div>
                       <div class="stat-label">Data Sources</div>
-                      <div class="stat-change neutral">IQVIA, HealthVerity, Komodo</div>
+                      <span class="source-badge badge-iqvia">IQVIA</span>
+                      <span class="source-badge badge-hv">HealthVerity</span>
+                      <span class="source-badge badge-komodo">Komodo</span>
+
                     </div>                  
-                    <!-- Dx Patients -->
-                    <div class="stat-card">
-                      <div class="stat-value">Dx</div>
-                      <div class="stat-label">
-                        IQVIA: 585,915<br>
-                        HealthVerity: 904,220<br>
-                        Komodo: 961,381
-                      </div>
-                    </div>
+                <!-- Dx Patients -->
+                <div class="stat-card">
+                  <div class="stat-value">Dx</div>
+                  <div class="stat-label">By Source</div>
+                  <ul class="source-list">
+                    <li class="source-item">
+                      <span class="source-badge badge-iqvia">IQVIA</span>
+                      <span class="source-value">585,915</span>
+                    </li>
+                    <li class="source-item">
+                      <span class="source-badge badge-hv">HealthVerity</span>
+                      <span class="source-value">904,220</span>
+                    </li>
+                    <li class="source-item">
+                      <span class="source-badge badge-komodo">Komodo</span>
+                      <span class="source-value">961,381</span>
+                    </li>
+                  </ul>
+                </div>
                   
-                    <!-- Px Patients -->
-                    <div class="stat-card">
-                      <div class="stat-value">Px</div>
-                      <div class="stat-label">
-                        IQVIA: 532,363<br>
-                        HealthVerity: 844,532<br>
-                        Komodo: 911,865
-                      </div>
-                    </div>
+                <!-- Px Patients -->
+                <div class="stat-card">
+                  <div class="stat-value">Px</div>
+                  <div class="stat-label">By Source</div>
+                  <ul class="source-list">
+                    <li class="source-item">
+                      <span class="source-badge badge-iqvia">IQVIA</span>
+                      <span class="source-value">532,363</span>
+                    </li>
+                    <li class="source-item">
+                      <span class="source-badge badge-hv">HealthVerity</span>
+                      <span class="source-value">844,532</span>
+                    </li>
+                    <li class="source-item">
+                      <span class="source-badge badge-komodo">Komodo</span>
+                      <span class="source-value">911,865</span>
+                    </li>
+                  </ul>
+                </div>
                   
-                    <!-- Rx Patients -->
-                    <div class="stat-card">
-                      <div class="stat-value">Rx</div>
-                      <div class="stat-label">
-                        IQVIA: 91,377<br>
-                        HealthVerity: 140,609<br>
-                        Komodo: 109,721
-                      </div>
-                    </div>
+                <!-- Rx Patients -->
+                <div class="stat-card">
+                  <div class="stat-value">Rx</div>
+                  <div class="stat-label">By Source</div>
+                  <ul class="source-list">
+                    <li class="source-item">
+                      <span class="source-badge badge-iqvia">IQVIA</span>
+                      <span class="source-value">91,377</span>
+                    </li>
+                    <li class="source-item">
+                      <span class="source-badge badge-hv">HealthVerity</span>
+                      <span class="source-value">140,609</span>
+                    </li>
+                    <li class="source-item">
+                      <span class="source-badge badge-komodo">Komodo</span>
+                      <span class="source-value">109,721</span>
+                    </li>
+                  </ul>
+                </div>
                 </div>
                   
                 
@@ -212,15 +245,18 @@
                                     <button class="toggle-btn active" id="newPatientsYoY">YoY</button>
                                     <button class="toggle-btn" id="newPatientsMoM">MoM</button>
                                 </div>
-                                <div class="year-filter" id="newPatientsYearFilter" style="display: none;">
-                                    <label>Year:</label>
-                                    <select id="newPatientsYearSelect">
-                                        <option value="2025">2025</option>
-                                        <option value="2024">2024</option>
-                                        <option value="2023">2023</option>
-                                        <option value="2022">2022</option>
-                                        <option value="2021">2021</option>
-                                    </select>
+                                <div class="year-filter" id="newPatientsYearFilter" style="display: none; position: relative;">
+                                    <label>Years:</label>
+                                    <button type="button" class="toggle-btn" id="newPatientsYearDropdownBtn">Select Years</button>
+                                    <div id="newPatientsYearDropdownMenu" style="position: absolute; top: 100%; left: 0; z-index: 10; background: var(--card-bg, #fff); border: 1px solid #ddd; border-radius: 6px; padding: 8px 12px; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); min-width: 160px;">
+                                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="newPatientsYears" value="2025">2025</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="newPatientsYears" value="2024">2024</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="newPatientsYears" value="2023">2023</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="newPatientsYears" value="2022">2022</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="newPatientsYears" value="2021">2021</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -239,15 +275,18 @@
                                     <button class="toggle-btn active" id="prevalenceYoY">YoY</button>
                                     <button class="toggle-btn" id="prevalenceMoM">MoM</button>
                                 </div>
-                                <div class="year-filter" id="prevalenceYearFilter" style="display: none;">
-                                    <label>Year:</label>
-                                    <select id="prevalenceYearSelect">
-                                        <option value="2025">2025</option>
-                                        <option value="2024">2024</option>
-                                        <option value="2023">2023</option>
-                                        <option value="2022">2022</option>
-                                        <option value="2021">2021</option>
-                                    </select>
+                                <div class="year-filter" id="prevalenceYearFilter" style="display: none; position: relative;">
+                                    <label>Years:</label>
+                                    <button type="button" class="toggle-btn" id="prevalenceYearDropdownBtn">Select Years</button>
+                                    <div id="prevalenceYearDropdownMenu" style="position: absolute; top: 100%; left: 0; z-index: 10; background: var(--card-bg, #fff); border: 1px solid #ddd; border-radius: 6px; padding: 8px 12px; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15); min-width: 160px;">
+                                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="prevalenceYears" value="2025">2025</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="prevalenceYears" value="2024">2024</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="prevalenceYears" value="2023">2023</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="prevalenceYears" value="2022">2022</label>
+                                            <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" class="year-checkbox" name="prevalenceYears" value="2021">2021</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

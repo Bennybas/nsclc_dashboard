@@ -810,35 +810,81 @@ class EnhancedChryselsysDashboard {
     const newPatientsYoY = document.getElementById('newPatientsYoY');
     const newPatientsMoM = document.getElementById('newPatientsMoM');
     const newPatientsYearFilter = document.getElementById('newPatientsYearFilter');
-    const newPatientsYearSelect = document.getElementById('newPatientsYearSelect');
+    const newPatientsYearDropdownBtn = document.getElementById('newPatientsYearDropdownBtn');
+    const newPatientsYearDropdownMenu = document.getElementById('newPatientsYearDropdownMenu');
 
     if (newPatientsYoY && newPatientsMoM) {
       newPatientsYoY.addEventListener('click', () => this.toggleNewPatientsView('yoy'));
       newPatientsMoM.addEventListener('click', () => this.toggleNewPatientsView('mom'));
     }
 
-    if (newPatientsYearSelect) {
-      newPatientsYearSelect.addEventListener('change', () => this.updateNewPatientsChart());
+    if (newPatientsYearDropdownBtn && newPatientsYearDropdownMenu) {
+      newPatientsYearDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const visible = newPatientsYearDropdownMenu.style.display === 'block';
+        newPatientsYearDropdownMenu.style.display = visible ? 'none' : 'block';
+      });
+      document.addEventListener('click', (e) => {
+        if (!newPatientsYearDropdownMenu.contains(e.target) && e.target !== newPatientsYearDropdownBtn) {
+          newPatientsYearDropdownMenu.style.display = 'none';
+        }
+      });
+      newPatientsYearDropdownMenu.querySelectorAll('input.year-checkbox[name="newPatientsYears"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          this.updateNewPatientsChart();
+          this.updateYearDropdownLabel('newPatientsYearDropdownBtn', 'newPatientsYears');
+        });
+      });
+      this.updateYearDropdownLabel('newPatientsYearDropdownBtn', 'newPatientsYears');
     }
 
     // Prevalence Patients Trends Toggle Listeners
     const prevalenceYoY = document.getElementById('prevalenceYoY');
     const prevalenceMoM = document.getElementById('prevalenceMoM');
     const prevalenceYearFilter = document.getElementById('prevalenceYearFilter');
-    const prevalenceYearSelect = document.getElementById('prevalenceYearSelect');
+    const prevalenceYearDropdownBtn = document.getElementById('prevalenceYearDropdownBtn');
+    const prevalenceYearDropdownMenu = document.getElementById('prevalenceYearDropdownMenu');
 
     if (prevalenceYoY && prevalenceMoM) {
       prevalenceYoY.addEventListener('click', () => this.togglePrevalenceView('yoy'));
       prevalenceMoM.addEventListener('click', () => this.togglePrevalenceView('mom'));
     }
 
-    if (prevalenceYearSelect) {
-      prevalenceYearSelect.addEventListener('change', () => this.updatePrevalenceChart());
+    if (prevalenceYearDropdownBtn && prevalenceYearDropdownMenu) {
+      prevalenceYearDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const visible = prevalenceYearDropdownMenu.style.display === 'block';
+        prevalenceYearDropdownMenu.style.display = visible ? 'none' : 'block';
+      });
+      document.addEventListener('click', (e) => {
+        if (!prevalenceYearDropdownMenu.contains(e.target) && e.target !== prevalenceYearDropdownBtn) {
+          prevalenceYearDropdownMenu.style.display = 'none';
+        }
+      });
+      prevalenceYearDropdownMenu.querySelectorAll('input.year-checkbox[name="prevalenceYears"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          this.updatePrevalenceChart();
+          this.updateYearDropdownLabel('prevalenceYearDropdownBtn', 'prevalenceYears');
+        });
+      });
+      this.updateYearDropdownLabel('prevalenceYearDropdownBtn', 'prevalenceYears');
     }
 
     // Gender/Age Distribution toggle functionality removed - now using separate charts
 
     console.log('✅ Enhanced event listeners setup complete');
+  }
+  updateYearDropdownLabel(buttonId, checkboxName) {
+    const btn = document.getElementById(buttonId);
+    if (!btn) return;
+    const checked = Array.from(document.querySelectorAll(`input.year-checkbox[name="${checkboxName}"]:checked`));
+    if (checked.length === 0) {
+      btn.textContent = 'Select Years';
+    } else if (checked.length <= 2) {
+      btn.textContent = checked.map(cb => cb.value).sort().join(', ');
+    } else {
+      btn.textContent = `${checked.length} years`;
+    }
   }
 
   setupThemeToggle() {
@@ -935,6 +981,70 @@ class EnhancedChryselsysDashboard {
     }
   }
 
+  getSingleItemLegendClickHandler(title = '') {
+    return (e, legendItem, legend) => {
+      const ci = legend.chart;
+      const chartType = ci.config.type;
+  
+      if (chartType === 'doughnut' || chartType === 'pie') {
+        // Handle doughnut/pie (slice toggle)
+        const clickedIndex = legendItem.index;
+        const total = ci.data.labels.length;
+        const visibleIndices = [];
+        for (let i = 0; i < total; i++) {
+          if (ci.getDataVisibility(i)) visibleIndices.push(i);
+        }
+  
+        const onlyThisVisible = visibleIndices.length === 1 && visibleIndices[0] === clickedIndex;
+  
+        if (onlyThisVisible) {
+          // Restore all slices
+          for (let i = 0; i < total; i++) {
+            if (!ci.getDataVisibility(i)) ci.toggleDataVisibility(i);
+          }
+        } else {
+          // Show only clicked slice
+          for (let i = 0; i < total; i++) {
+            const shouldBeVisible = i === clickedIndex;
+            const currentlyVisible = ci.getDataVisibility(i);
+            if (shouldBeVisible && !currentlyVisible) ci.toggleDataVisibility(i);
+            if (!shouldBeVisible && currentlyVisible) ci.toggleDataVisibility(i);
+          }
+        }
+      } else {
+        // Handle bar/line (dataset toggle)
+        const clickedDatasetIndex = legendItem.datasetIndex;
+        const total = ci.data.datasets.length;
+        const visibleDatasets = [];
+        for (let i = 0; i < total; i++) {
+          if (ci.isDatasetVisible(i)) visibleDatasets.push(i);
+        }
+  
+        const onlyThisVisible = visibleDatasets.length === 1 && visibleDatasets[0] === clickedDatasetIndex;
+  
+        if (onlyThisVisible) {
+          // Restore all datasets
+          for (let i = 0; i < total; i++) {
+            if (!ci.isDatasetVisible(i)) ci.show(i);
+          }
+        } else {
+          // Show only clicked dataset
+          for (let i = 0; i < total; i++) {
+            if (i === clickedDatasetIndex) {
+              ci.show(i);
+            } else {
+              ci.hide(i);
+            }
+          }
+        }
+      }
+  
+      ci.update();
+    };
+  }
+  
+  
+
   initializeAllCharts() {
     console.log('📊 Initializing all enhanced charts...');
     
@@ -991,6 +1101,7 @@ class EnhancedChryselsysDashboard {
       console.error('❌ Chart initialization error:', error);
     }
   }
+  
 
   // Patient Analysis Charts
   createPatientVolumeChart() {
@@ -1018,9 +1129,17 @@ class EnhancedChryselsysDashboard {
           borderColor: '#ffffff'
         }]
       },
-      options: this.getDoughnutChartOptions('Patient Volume Distribution')
+      options: {
+        ...this.getDoughnutChartOptions('Patient Volume Distribution'),
+        plugins: {
+          legend: {
+            onClick: this.getSingleItemLegendClickHandler('Patient Volume Distribution')
+          }
+        }
+      }
     });
   }
+
 
   createClaimsTypeChart() {
     const container = document.getElementById('claimsTypeTableContainer');
@@ -1144,7 +1263,8 @@ class EnhancedChryselsysDashboard {
         plugins: {
           legend: {
             display: true,
-            position: 'top'
+            position: 'top',
+            onClick: this.getSingleItemLegendClickHandler('Gender Distribution')
           },
           title: {
             display: true,
@@ -1185,7 +1305,7 @@ class EnhancedChryselsysDashboard {
     // Create datasets for each data source
     const datasets = [];
     const dataSources = ['iqvia', 'healthverity', 'komodo'];
-    const sourceColors = [this.colors.ateneoBlue, this.colors.weldonBlue, this.colors.forestGreen];
+    const sourceColors = [this.colors.bronze, this.colors.ateneoBlue, this.colors.paleCerulean];
     const sourceLabels = ['IQVIA', 'HealthVerity', 'Komodo'];
 
     dataSources.forEach((source, index) => {
@@ -1218,7 +1338,8 @@ class EnhancedChryselsysDashboard {
         plugins: {
           legend: {
             display: true,
-            position: 'top'
+            position: 'top',
+            onClick: this.getSingleItemLegendClickHandler('Age Distribution')
           },
           title: {
             display: true,
@@ -1351,17 +1472,44 @@ class EnhancedChryselsysDashboard {
         ]
       };
     } else {
-      const yearSelect = document.getElementById('newPatientsYearSelect');
-      const selectedYear = yearSelect ? yearSelect.value : '2025';
-      const momData = data.mom?.[selectedYear] || {};
-      labels = momData.months || [];
-      title = `New Patients Trends - Month over Month (${selectedYear})`;
+      // Read checked years from checkbox menu
+      const checked = Array.from(document.querySelectorAll('input.year-checkbox[name="newPatientsYears"]:checked'));
+      let selectedYears = checked.map(cb => cb.value);
+      if (!selectedYears || selectedYears.length === 0) {
+        selectedYears = ['2025'];
+      }
+
+      // Sort years ascending for correct chronological order
+      selectedYears.sort();
+
+      const concatenatedMonths = [];
+      const komodoValues = [];
+      const hvValues = [];
+      const iqviaValues = [];
+
+      selectedYears.forEach(year => {
+        const momDataYear = data.mom?.[year] || {};
+        const months = momDataYear.months || [];
+        const komodo = momDataYear.komodo || [];
+        const hv = momDataYear.healthverity || [];
+        const iqvia = momDataYear.iqvia || [];
+
+        months.forEach((m, idx) => {
+          concatenatedMonths.push(`${m}-${year}`);
+          komodoValues.push(komodo[idx] ?? null);
+          hvValues.push(hv[idx] ?? null);
+          iqviaValues.push(iqvia[idx] ?? null);
+        });
+      });
+
+      labels = concatenatedMonths;
+      title = `New Patients Trends - MoM (${selectedYears.join(', ')})`;
       chartData = {
         labels: labels,
         datasets: [
           {
             label: 'Komodo',
-            data: momData.komodo || [],
+            data: komodoValues,
             borderColor: this.colors.bronze,
             backgroundColor: this.colors.bronze + '20',
             borderWidth: 3,
@@ -1370,7 +1518,7 @@ class EnhancedChryselsysDashboard {
           },
           {
             label: 'HealthVerity',
-            data: momData.healthverity || [],
+            data: hvValues,
             borderColor: this.colors.ateneoBlue,
             backgroundColor: this.colors.ateneoBlue + '20',
             borderWidth: 3,
@@ -1379,7 +1527,7 @@ class EnhancedChryselsysDashboard {
           },
           {
             label: 'IQVIA',
-            data: momData.iqvia || [],
+            data: iqviaValues,
             borderColor: this.colors.paleCerulean,
             backgroundColor: this.colors.paleCerulean + '20',
             borderWidth: 3,
@@ -1393,7 +1541,17 @@ class EnhancedChryselsysDashboard {
     this.charts.newPatientsTrends = new Chart(ctx, {
       type: 'line',
       data: chartData,
-      options: this.getLineChartOptions(title, 'Patient Count')
+      options: {
+        ...this.getLineChartOptions(title, 'Patient Count'),
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            onClick: this.getSingleItemLegendClickHandler('New Patients Trends')
+          }
+        }
+      }
+  
     });
   }
 
@@ -1477,17 +1635,43 @@ class EnhancedChryselsysDashboard {
         ]
       };
     } else {
-      const yearSelect = document.getElementById('prevalenceYearSelect');
-      const selectedYear = yearSelect ? yearSelect.value : '2025';
-      const momData = data.mom?.[selectedYear] || {};
-      labels = momData.months || [];
-      title = `Prevalence Patients Trends - Month over Month (${selectedYear})`;
+      // Read checked years from checkbox menu
+      const checked = Array.from(document.querySelectorAll('input.year-checkbox[name="prevalenceYears"]:checked'));
+      let selectedYears = checked.map(cb => cb.value);
+      if (!selectedYears || selectedYears.length === 0) {
+        selectedYears = ['2025'];
+      }
+
+      selectedYears.sort();
+
+      const concatenatedMonths = [];
+      const komodoValues = [];
+      const hvValues = [];
+      const iqviaValues = [];
+
+      selectedYears.forEach(year => {
+        const momDataYear = data.mom?.[year] || {};
+        const months = momDataYear.months || [];
+        const komodo = momDataYear.komodo || [];
+        const hv = momDataYear.healthverity || [];
+        const iqvia = momDataYear.iqvia || [];
+
+        months.forEach((m, idx) => {
+          concatenatedMonths.push(`${m}-${year}`);
+          komodoValues.push(komodo[idx] ?? null);
+          hvValues.push(hv[idx] ?? null);
+          iqviaValues.push(iqvia[idx] ?? null);
+        });
+      });
+
+      labels = concatenatedMonths;
+      title = `Prevalence Patients Trends - MoM (${selectedYears.join(', ')})`;
       chartData = {
         labels: labels,
         datasets: [
           {
             label: 'Komodo',
-            data: momData.komodo || [],
+            data: komodoValues,
             borderColor: this.colors.bronze,
             backgroundColor: this.colors.bronze + '20',
             borderWidth: 3,
@@ -1496,7 +1680,7 @@ class EnhancedChryselsysDashboard {
           },
           {
             label: 'HealthVerity',
-            data: momData.healthverity || [],
+            data: hvValues,
             borderColor: this.colors.ateneoBlue,
             backgroundColor: this.colors.ateneoBlue + '20',
             borderWidth: 3,
@@ -1505,7 +1689,7 @@ class EnhancedChryselsysDashboard {
           },
           {
             label: 'IQVIA',
-            data: momData.iqvia || [],
+            data: iqviaValues,
             borderColor: this.colors.paleCerulean,
             backgroundColor: this.colors.paleCerulean + '20',
             borderWidth: 3,
@@ -1519,7 +1703,17 @@ class EnhancedChryselsysDashboard {
     this.charts.prevalencePatientsTrends = new Chart(ctx, {
       type: 'line',
       data: chartData,
-      options: this.getLineChartOptions(title, 'Patient Count')
+      options: {
+      ...this.getLineChartOptions(title, 'Patient Count'),
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          onClick: this.getSingleItemLegendClickHandler('Prevalence Patients Trends')
+        }
+      }
+    }
+  
     });
   }
 
@@ -1649,7 +1843,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('NPI Fill Rate Comparison (DX/PX/RX) – Source-wise', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('NPI Fill Rate Comparison (DX/PX/RX) – Source-wise') },
           tooltip: {
             callbacks: {
               label: (context) => {
@@ -1697,7 +1891,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('NPI Fill Rate Comparison (DX/PX/RX) – IQVIA', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('NPI Fill Rate Comparison (DX/PX/RX) – HealthVerity') },
           tooltip: {
             callbacks: {
               label: (context) => {
@@ -1741,7 +1935,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('NPI Fill Rate Comparison (DX/PX/RX) – HealthVerity', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('NPI Fill Rate Comparison (DX/PX/RX) – Komodo') },
           tooltip: {
             callbacks: {
               label: (context) => {
@@ -1785,7 +1979,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('NPI Fill Rate Comparison (DX/PX/RX) – Komodo', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('NPI Fill Rate Comparison (DX/PX/RX) – IQVIA') },
           tooltip: {
             callbacks: {
               label: (context) => {
@@ -1869,7 +2063,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('HCP vs HCO Identification Split (DX/PX/RX)', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('HCP vs HCO Identification Split (DX/PX/RX)') },
           tooltip: {
             callbacks: {
               label: (context) => {
@@ -1931,7 +2125,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('HCO Identification (DX/PX/RX) – Source-wise', 'Percentage (%)'),
         plugins: {
           ...this.getBarChartOptions('', '').plugins,
-          legend: { display: true, position: 'top' },
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('HCO Identification (DX/PX/RX) – Source-wise') },
           tooltip: {
             callbacks: {
               label: (context) => {
@@ -1981,7 +2175,7 @@ class EnhancedChryselsysDashboard {
       },
       options: {
         ...this.getBarChartOptions('HCO Facility Metrics', 'Percentage (%)'),
-        plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } }
+        plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('HCO Facility Metrics') } }
       }
     });
   }
@@ -2118,7 +2312,7 @@ class EnhancedChryselsysDashboard {
         { label: 'HealthVerity', data: hv, backgroundColor: this.colors.sources.healthverity },
         { label: 'Komodo', data: komodo, backgroundColor: this.colors.sources.komodo }
       ] },
-      options: { ...this.getBarChartOptions('Top Prescriber Specialties by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      options: { ...this.getBarChartOptions('Top Prescriber Specialties by Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('Top Prescriber Specialties by Patient Count') } } }
     });
   }
 
@@ -2498,7 +2692,7 @@ class EnhancedChryselsysDashboard {
           { label: 'Komodo', data: data.komodo, backgroundColor: this.colors.sources.komodo }
         ]
       },
-      options: { ...this.getBarChartOptions('Top 10 Products – Combined (Mx + Rx)', 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      options: { ...this.getBarChartOptions('Top 10 Products – Combined (Mx + Rx)', 'Patients'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('Top 10 Products – Combined (Mx + Rx)') } } }
     });
   }
 
@@ -2577,6 +2771,7 @@ class EnhancedChryselsysDashboard {
               display: true,
               position: 'top',
               align: 'start',
+              onClick: this.getSingleItemLegendClickHandler(`YoY Trend – Top 5 Products (${sourceName})`),
               labels: {
                 usePointStyle: false,
                 padding: 15,
@@ -2660,7 +2855,7 @@ class EnhancedChryselsysDashboard {
         ...this.getBarChartOptions('Claims Status Split – Paid vs Rejected vs Reversed', 'Patient Count'), 
         plugins: { 
           ...this.getBarChartOptions('', '').plugins, 
-          legend: { display: true, position: 'top' } 
+          legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('Claims Status Split – Paid vs Rejected vs Reversed') } 
         }, 
         scales: { y: { beginAtZero: true } } 
       }
@@ -2673,7 +2868,7 @@ class EnhancedChryselsysDashboard {
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.labels,
+        labels: data.labels,  
         datasets: [
           { label: 'Provided (IQVIA)', data: data.provided.iqvia, backgroundColor: this.shadeColor(this.colors.sources.iqvia, -10) },
           { label: 'Visible (IQVIA)', data: data.visible.iqvia, backgroundColor: this.colors.sources.iqvia },
@@ -2683,7 +2878,7 @@ class EnhancedChryselsysDashboard {
           { label: 'Visible (Komodo)', data: data.visible.komodo, backgroundColor: this.colors.sources.komodo }
         ]
       },
-      options: { ...this.getBarChartOptions('MB Codes Provided vs Visible in Data', 'Count'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      options: { ...this.getBarChartOptions('MB Codes Provided vs Visible in Data', 'Count'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('MB Codes Provided vs Visible in Data') } } }
     });
   }
 
@@ -2700,7 +2895,7 @@ class EnhancedChryselsysDashboard {
           { label: 'Komodo', data: data.komodo, backgroundColor: this.colors.sources.komodo }
         ]
       },
-      options: { ...this.getBarChartOptions('Top Diagnosis Codes – Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      options: { ...this.getBarChartOptions('Top Diagnosis Codes – Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('Top Diagnosis Codes – Patient Count') } } }
     });
   }
 
@@ -2717,7 +2912,7 @@ class EnhancedChryselsysDashboard {
           { label: 'Komodo', data: data.komodo, backgroundColor: this.colors.sources.komodo }
         ]
       },
-      options: { ...this.getBarChartOptions('Top Procedure Codes – Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top' } } }
+      options: { ...this.getBarChartOptions('Top Procedure Codes – Patient Count', 'Patients'), indexAxis: 'y', plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('Top Procedure Codes – Patient Count') } } }
     });
   }
 
@@ -2809,7 +3004,8 @@ class EnhancedChryselsysDashboard {
               usePointStyle: true,
               padding: 20,
               boxWidth: 12,
-              boxHeight: 12
+              boxHeight: 12,
+              onClick: this.getSingleItemLegendClickHandler(`Patient Split by Payer Type – ${dataType.toUpperCase()}`)
             },
             onClick: (e, legendItem, legend) => {
               const chart = legend.chart;
