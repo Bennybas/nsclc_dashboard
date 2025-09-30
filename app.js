@@ -77,68 +77,68 @@ class EnhancedChryselsysDashboard {
         },
         // Top Rendering Specialties by patient count – combined list across sources
         top_rendering_specialties: [
-          { name: 'INTERNAL MEDICINE', iqvia: 556229, healthverity: 784255, komodo: 890182 },
-          { name: 'RADIOLOGY', iqvia: 440994, healthverity: 657961, komodo: 739941 },
-          { name: 'NURSE PRACTITIONER', iqvia: 286344, healthverity: 387988, komodo: 474340 },
-          { name: 'PATHOLOGY', iqvia: 238719, healthverity: 360088, komodo: 475247 },
-          { name: 'FAMILY MEDICINE', iqvia: 206223, healthverity: 317221, komodo: 355428 },
-          { name: 'PHYSICIAN ASSISTANT', iqvia: 137489, healthverity: 206215, komodo: 275588 },
-          { name: 'HOSPITALIST', iqvia: 108407, healthverity: 179594, komodo: 222078 },
-          { name: 'SURGERY', iqvia: 95387, healthverity: 150132, komodo: 182390 },
-          { name: 'ANESTHESIOLOGY', iqvia: 94889, healthverity: 115148, komodo: 213572 },
-          { name: 'THORACIC SURGERY', iqvia: 91643, healthverity: 230367, komodo: 265510 }
+          { name: 'INTERNAL MEDICINE', iqvia: '55.6k', healthverity: '78.4k', komodo: '89.0k' },
+          { name: 'RADIOLOGY', iqvia: '44.1k', healthverity: '65.8k', komodo: '74.0k' },
+          { name: 'NURSE PRACTITIONER', iqvia: '28.6k', healthverity: '38.8k', komodo: '47.4k' },
+          { name: 'PATHOLOGY', iqvia: '23.9k', healthverity: '36.0k', komodo: '47.5k' },
+          { name: 'FAMILY MEDICINE', iqvia: '20.6k', healthverity: '31.7k', komodo: '35.5k' },
+          { name: 'PHYSICIAN ASSISTANT', iqvia: '13.7k', healthverity: '20.6k', komodo: '27.6k' },
+          { name: 'HOSPITALIST', iqvia: '10.8k', healthverity: '18.0k', komodo: '22.2k' },
+          { name: 'SURGERY', iqvia: '9.5k', healthverity: '15.0k', komodo: '18.2k' },
+          { name: 'ANESTHESIOLOGY', iqvia: '9.5k', healthverity: '11.5k', komodo: '21.4k' },
+          { name: 'THORACIC SURGERY', iqvia: '9.2k', healthverity: '23.0k', komodo: '26.6k' }
         ],
         // Top Referring Specialties by patient count
         top_referring_specialties: [
-          { name: 'INTERNAL MEDICINE', iqvia: 526393, healthverity: 651754, komodo: 687968 },
-          { name: 'FAMILY MEDICINE', iqvia: 208377, healthverity: 245619, komodo: 229521 },
-          { name: 'NURSE PRACTITIONER', iqvia: 188992, healthverity: 205843, komodo: 202362 },
-          { name: 'RADIOLOGY', iqvia: 196108, healthverity: 182950, komodo: 178030 },
-          { name: 'THORACIC SURGERY', iqvia: 87510, healthverity: 148833, komodo: 166993 },
-          { name: 'EMERGENCY MEDICINE', iqvia: 114413, healthverity: 120914, komodo: 113885 },
-          { name: 'PHYSICIAN ASSISTANT', iqvia: 94953, healthverity: 105811, komodo: 113116 },
-          { name: 'HOSPITALIST', iqvia: 83118, healthverity: 80897, komodo: 81642 },
-          { name: 'SURGERY', iqvia: 79160, healthverity: 74850, komodo: 89677 },
-          { name: 'PATHOLOGY', iqvia: 47111, healthverity: 51110, komodo: 53602 }
+          { name: 'INTERNAL MEDICINE', iqvia: '52.6k', healthverity: '65.2k', komodo: '68.8k' },
+          { name: 'FAMILY MEDICINE', iqvia: '20.8k', healthverity: '24.6k', komodo: '23.0k' },
+          { name: 'NURSE PRACTITIONER', iqvia: '18.9k', healthverity: '20.6k', komodo: '20.2k' },
+          { name: 'RADIOLOGY', iqvia: '19.6k', healthverity: '18.3k', komodo: '17.8k' },
+          { name: 'THORACIC SURGERY', iqvia: '8.8k', healthverity: '14.9k', komodo: '16.7k' },
+          { name: 'EMERGENCY MEDICINE', iqvia: '11.4k', healthverity: '12.1k', komodo: '11.4k' },
+          { name: 'PHYSICIAN ASSISTANT', iqvia: '9.5k', healthverity: '10.6k', komodo: '11.3k' },
+          { name: 'HOSPITALIST', iqvia: '8.3k', healthverity: '8.1k', komodo: '8.2k' },
+          { name: 'SURGERY', iqvia: '7.9k', healthverity: '7.5k', komodo: '9.0k' },
+          { name: 'PATHOLOGY', iqvia: '4.7k', healthverity: '5.1k', komodo: '5.4k' }
         ],
         // Top Prescriber Specialties (paid only) by patient count
         top_prescriber_specialties: [
-          { name: 'INTERNAL MEDICINE', iqvia: 83036, healthverity: 102956, komodo: 97688 },
-          { name: 'NURSE PRACTITIONER', iqvia: 15301, healthverity: 19225, komodo: 19912 },
-          { name: 'PHYSICIAN ASSISTANT', iqvia: 5605, healthverity: 7332, komodo: 7488 },
-          { name: 'SPECIALIST', iqvia: 2076, healthverity: 2291, komodo: 1928 },
-          { name: 'STUDENT IN TRAINING', iqvia: 553, healthverity: 728, komodo: 820 },
-          { name: 'CLINICAL NURSE SPECIALIST', iqvia: 356, healthverity: 647, komodo: 426 },
-          { name: 'FAMILY MEDICINE', iqvia: 347, healthverity: 1501, komodo: 0 },
-          { name: 'OPHTHALMOLOGY', iqvia: 272, healthverity: 926, komodo: 423 },
-          { name: 'PSYCHIATRY & NEUROLOGY', iqvia: 187, healthverity: 501, komodo: 311 },
-          { name: 'GENERAL PRACTICE', iqvia: 52, healthverity: 174, komodo: 611 }
+          { name: 'INTERNAL MEDICINE', iqvia: '8.3k', healthverity: '10.3k', komodo: '9.8k' },
+          { name: 'NURSE PRACTITIONER', iqvia: '1.5k', healthverity: '1.9k', komodo: '2.0k' },
+          { name: 'PHYSICIAN ASSISTANT', iqvia: '560', healthverity: '730', komodo: '750' },
+          { name: 'SPECIALIST', iqvia: '210', healthverity: '230', komodo: '190' },
+          { name: 'STUDENT IN TRAINING', iqvia: '55', healthverity: '73', komodo: '82' },
+          { name: 'CLINICAL NURSE SPECIALIST', iqvia: '36', healthverity: '65', komodo: '43' },
+          { name: 'FAMILY MEDICINE', iqvia: '35', healthverity: '150', komodo: 0 },
+          { name: 'OPHTHALMOLOGY', iqvia: '27', healthverity: '93', komodo: '42' },
+          { name: 'PSYCHIATRY & NEUROLOGY', iqvia: '19', healthverity: '50', komodo: '31' },
+          { name: 'GENERAL PRACTICE', iqvia: '5', healthverity: '17', komodo: '61' }
         ],
         // Top Billing NPIs by patient count (union across sources)
         top_billing_npis: [
-          { npi: '1013973866', iqvia: 47272, healthverity: 61668, komodo: 65433 }, // CARIS MPI INC
-          { npi: '1447437355', iqvia: 50814, healthverity: 50814, komodo: 65308 }, // NEOGENOMICS
-          { npi: '1811944101', iqvia: 17549, healthverity: 18960, komodo: 18362 }, // TEXAS ONCOLOGY PA
-          { npi: '1780653618', iqvia: 12382, healthverity: 12778, komodo: 15306 }, // H LEE MOFFITT
-          { npi: '1720688054', iqvia: 11698, healthverity: 9283, komodo: 12311 }, // FOUNDATION MEDICINE INC
-          { npi: '1679525919', iqvia: 11549, healthverity: 15365, komodo: 18440 }, // CLEVELAND CLINIC FOUNDATION
-          { npi: '1760590962', iqvia: 10266, healthverity: 11876, komodo: 40372 }, // FL CANCER SPEC RI
-          { npi: '1184045619', iqvia: 0, healthverity: 18699, komodo: 26451 }, // GUARDANT HEALTH
-          { npi: '1932145778', iqvia: 4857, healthverity: 8219, komodo: 10236 }, // QUEST INCORPORATED
-          { npi: '1891731626', iqvia: 6358, healthverity: 4270, komodo: 9929 } // QUEST CLINICAL LABS
+          { npi: '1013973866', iqvia: '4.7k', healthverity: '6.2k', komodo: '6.5k' }, // CARIS MPI INC
+          { npi: '1447437355', iqvia: '5.1k', healthverity: '5.1k', komodo: '6.5k' }, // NEOGENOMICS
+          { npi: '1811944101', iqvia: '1.8k', healthverity: '1.9k', komodo: '1.8k' }, // TEXAS ONCOLOGY PA
+          { npi: '1780653618', iqvia: '1.2k', healthverity: '1.3k', komodo: '1.5k' }, // H LEE MOFFITT
+          { npi: '1720688054', iqvia: '1.2k', healthverity: '930', komodo: '1.2k' }, // FOUNDATION MEDICINE INC
+          { npi: '1679525919', iqvia: '1.2k', healthverity: '1.5k', komodo: '1.8k' }, // CLEVELAND CLINIC FOUNDATION
+          { npi: '1760590962', iqvia: '1.0k', healthverity: '1.2k', komodo: '4.0k' }, // FL CANCER SPEC RI
+          { npi: '1184045619', iqvia: 0, healthverity: '1.9k', komodo: '2.6k' }, // GUARDANT HEALTH
+          { npi: '1932145778', iqvia: '490', healthverity: '820', komodo: '1.0k' }, // QUEST INCORPORATED
+          { npi: '1891731626', iqvia: '640', healthverity: '430', komodo: '990' } // QUEST CLINICAL LABS
         ],
         // Top Facility NPIs by patient count (union across sources)
         top_facility_npis: [
-          { npi: '1447437355', iqvia: 26820, healthverity: 47610, komodo: 0 }, // NEOGENOMICS
-          { npi: '1811944101', iqvia: 11586, healthverity: 9899, komodo: 3407 }, // TEXAS ONCOLOGY PA
-          { npi: '1780653618', iqvia: 7942, healthverity: 11880, komodo: 0 }, // MOFFITT HOSPITAL INC
-          { npi: '1679525919', iqvia: 4612, healthverity: 7993, komodo: 0 }, // CLEVELAND CLINIC
-          { npi: '1720688054', iqvia: 4740, healthverity: 5609, komodo: 0 }, // TEMPUS/FOUNDATION entries
-          { npi: '1740733708', iqvia: 3913, healthverity: 5609, komodo: 0 },
-          { npi: '1003878539', iqvia: 3737, healthverity: 7855, komodo: 0 },
-          { npi: '1841251394', iqvia: 3434, healthverity: 0, komodo: 2302 },
-          { npi: '1740269299', iqvia: 3188, healthverity: 0, komodo: 2151 },
-          { npi: '1508147810', iqvia: 4033, healthverity: 0, komodo: 2301 }
+          { npi: '1447437355', iqvia: '2.7k', healthverity: '4.8k', komodo: 0 }, // NEOGENOMICS
+          { npi: '1811944101', iqvia: '1.2k', healthverity: '990', komodo: '340' }, // TEXAS ONCOLOGY PA
+          { npi: '1780653618', iqvia: '790', healthverity: '1.2k', komodo: 0 }, // MOFFITT HOSPITAL INC
+          { npi: '1679525919', iqvia: '460', healthverity: '800', komodo: 0 }, // CLEVELAND CLINIC
+          { npi: '1720688054', iqvia: '470', healthverity: '560', komodo: 0 }, // TEMPUS/FOUNDATION entries
+          { npi: '1740733708', iqvia: '390', healthverity: '560', komodo: 0 },
+          { npi: '1003878539', iqvia: '370', healthverity: '790', komodo: 0 },
+          { npi: '1841251394', iqvia: '340', healthverity: 0, komodo: '230' },
+          { npi: '1740269299', iqvia: '320', healthverity: 0, komodo: '220' },
+          { npi: '1508147810', iqvia: '400', healthverity: 0, komodo: '230' }
         ]
       },
       patient_volumes: {
@@ -1119,15 +1119,32 @@ class EnhancedChryselsysDashboard {
     }
 
     this.charts.patientVolume = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'bar',
       data: {
-        labels: ['Komodo', 'HealthVerity', 'IQVIA'],
-        datasets: [{
-          data: [data.komodo, data.healthverity, data.iqvia],
-          backgroundColor: [this.colors.bronze, this.colors.ateneoBlue, this.colors.paleCerulean],
-          borderWidth: 2,
-          borderColor: '#ffffff'
-        }]
+        labels: ['Patient Volume'],
+        datasets: [
+          {
+            label: 'Komodo',
+            data: [data.komodo],
+            backgroundColor: this.colors.bronze,
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          },
+          {
+            label: 'HealthVerity',
+            data: [data.healthverity],
+            backgroundColor: this.colors.ateneoBlue,
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          },
+          {
+            label: 'IQVIA',
+            data: [data.iqvia],
+            backgroundColor: this.colors.paleCerulean,
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }
+        ]
       },
       options: {
         ...this.getDoughnutChartOptions('Patient Volume Distribution'),
