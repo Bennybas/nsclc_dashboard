@@ -1,5 +1,8 @@
 // Enhanced Chryselys NSCLC Healthcare Intelligence Platform JavaScript
+
 class EnhancedChryselsysDashboard {
+
+    
   constructor() {
     this.currentTheme = 'light';
     this.currentSection = 'patient-analysis';
@@ -28,9 +31,13 @@ class EnhancedChryselsysDashboard {
 
     this.init();
   }
+  
 
   async init() {
     try {
+      // Register Chart.js plugins after all scripts are loaded
+      this.registerChartPlugins();
+      
       await this.loadEnhancedData();
       this.setupEventListeners();
       this.setupThemeToggle();
@@ -43,6 +50,43 @@ class EnhancedChryselsysDashboard {
       console.error('❌ Dashboard initialization error:', error);
       this.initializeFallbackData();
       this.showLandingPage();
+    }
+  }
+
+  registerChartPlugins() {
+    // Register Chart.js Sankey plugin with retry mechanism
+    const registerSankey = () => {
+      if (window.Chart && window['chartjs-chart-sankey']) {
+        try {
+          // For version 0.8.1, the exports might be different
+          const sankeyPlugin = window['chartjs-chart-sankey'];
+          if (sankeyPlugin.SankeyController && sankeyPlugin.Flow) {
+            Chart.register(sankeyPlugin.SankeyController, sankeyPlugin.Flow);
+          } else if (sankeyPlugin.default) {
+            // Try default export
+            Chart.register(sankeyPlugin.default);
+          } else {
+            // Try to register the entire plugin object
+            Chart.register(sankeyPlugin);
+          }
+          console.log('✅ Chart.js Sankey plugin registered successfully');
+          return true;
+        } catch (error) {
+          console.error('❌ Failed to register Sankey plugin:', error);
+          return false;
+        }
+      }
+      return false;
+    };
+
+    // Try to register immediately
+    if (!registerSankey()) {
+      // If not available, wait a bit and try again
+      setTimeout(() => {
+        if (!registerSankey()) {
+          console.warn('⚠️ Chart.js Sankey plugin not available after retry');
+        }
+      }, 100);
     }
   }
 
@@ -2880,22 +2924,520 @@ class EnhancedChryselsysDashboard {
   }
 
   createMbCodesProvidedVsVisible() {
-    const ctx = document.getElementById('mbCodesProvidedVsVisible'); if (!ctx) return;
-    const data = this.dashboardData?.other_metrics?.mb_codes_provided_vs_visible; if (!data) return;
-    new Chart(ctx, {
+    const data = this.dashboardData?.other_metrics?.mb_codes_provided_vs_visible;
+    if (!data) return;
+
+    // Create three separate Sankey charts for each data source
+    this.createIqviaSankey(data);
+    this.createHealthVeritySankey(data);
+    this.createKomodoSankey(data);
+  }
+
+  createIqviaSankey(data) {
+    const ctx = document.getElementById('mbCodesIqviaSankey');
+    if (!ctx) return;
+
+    // Destroy previous chart instance if it exists
+    if (this.charts && this.charts.mbCodesIqviaSankey) {
+      this.charts.mbCodesIqviaSankey.destroy();
+    }
+
+    try {
+      // Build Sankey link data for IQVIA only
+      const links = [];
+      const source = 'iqvia';
+      
+      data.labels.forEach((label, i) => {
+        const providedValue = data.provided[source][i];
+        const visibleValue = data.visible[source][i];
+        const missingValue = providedValue - visibleValue;
+        
+        // Create links from provided to visible
+        links.push({
+          from: `${label} Provided`,
+          to: `${label} Visible`,
+          flow: visibleValue
+        });
+        
+        // Create links from visible to missing (if there are missing codes)
+        if (missingValue > 0) {
+          links.push({
+            from: `${label} Visible`,
+            to: `${label} Missing`,
+            flow: missingValue
+          });
+        }
+      });
+    
+      // Create IQVIA Sankey chart
+      this.charts.mbCodesIqviaSankey = new Chart(ctx, {
+        type: 'sankey',
+        data: {
+          datasets: [{
+            data: links,
+            colorFrom: (ctx) => this.colors.sources.iqvia,
+            colorTo: (ctx) => {
+              return ctx.dataset.data[ctx.dataIndex].to.includes('Missing') 
+                ? this.shadeColor(this.colors.sources.iqvia, -40) 
+                : this.shadeColor(this.colors.sources.iqvia, -20);
+            },
+            colorMode: 'gradient',
+            borderWidth: 0,
+            curvature: 0.8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const { from, to, flow } = context.raw;
+                  return `${from} → ${to}: ${flow} codes`;
+                }
+              }
+            },
+            legend: { 
+              display: false 
+            }
+          },
+          layout: {
+            padding: 10
+          }
+        }
+      });
+      
+      console.log('✅ IQVIA Sankey chart created successfully');
+      
+    } catch (error) {
+      console.warn('⚠️ Failed to create IQVIA Sankey chart, using fallback:', error.message);
+      this.createIqviaFallbackChart(ctx, data);
+    }
+  }
+
+  createHealthVeritySankey(data) {
+    const ctx = document.getElementById('mbCodesHvSankey');
+    if (!ctx) return;
+
+    // Destroy previous chart instance if it exists
+    if (this.charts && this.charts.mbCodesHvSankey) {
+      this.charts.mbCodesHvSankey.destroy();
+    }
+
+    try {
+      // Build Sankey link data for HealthVerity only
+      const links = [];
+      const source = 'healthverity';
+      
+      data.labels.forEach((label, i) => {
+        const providedValue = data.provided[source][i];
+        const visibleValue = data.visible[source][i];
+        const missingValue = providedValue - visibleValue;
+        
+        // Create links from provided to visible
+        links.push({
+          from: `${label} Provided`,
+          to: `${label} Visible`,
+          flow: visibleValue
+        });
+        
+        // Create links from visible to missing (if there are missing codes)
+        if (missingValue > 0) {
+          links.push({
+            from: `${label} Visible`,
+            to: `${label} Missing`,
+            flow: missingValue
+          });
+        }
+      });
+    
+      // Create HealthVerity Sankey chart
+      this.charts.mbCodesHvSankey = new Chart(ctx, {
+        type: 'sankey',
+        data: {
+          datasets: [{
+            data: links,
+            colorFrom: (ctx) => this.colors.sources.healthverity,
+            colorTo: (ctx) => {
+              return ctx.dataset.data[ctx.dataIndex].to.includes('Missing') 
+                ? this.shadeColor(this.colors.sources.healthverity, -40) 
+                : this.shadeColor(this.colors.sources.healthverity, -20);
+            },
+            colorMode: 'gradient',
+            borderWidth: 0,
+            curvature: 0.8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const { from, to, flow } = context.raw;
+                  return `${from} → ${to}: ${flow} codes`;
+                }
+              }
+            },
+            legend: { 
+              display: false 
+            }
+          },
+          layout: {
+            padding: 10
+          }
+        }
+      });
+      
+      console.log('✅ HealthVerity Sankey chart created successfully');
+      
+    } catch (error) {
+      console.warn('⚠️ Failed to create HealthVerity Sankey chart, using fallback:', error.message);
+      this.createHealthVerityFallbackChart(ctx, data);
+    }
+  }
+
+  createKomodoSankey(data) {
+    const ctx = document.getElementById('mbCodesKomodoSankey');
+    if (!ctx) return;
+
+    // Destroy previous chart instance if it exists
+    if (this.charts && this.charts.mbCodesKomodoSankey) {
+      this.charts.mbCodesKomodoSankey.destroy();
+    }
+
+    try {
+      // Build Sankey link data for Komodo only
+      const links = [];
+      const source = 'komodo';
+      
+      data.labels.forEach((label, i) => {
+        const providedValue = data.provided[source][i];
+        const visibleValue = data.visible[source][i];
+        const missingValue = providedValue - visibleValue;
+        
+        // Create links from provided to visible
+        links.push({
+          from: `${label} Provided`,
+          to: `${label} Visible`,
+          flow: visibleValue
+        });
+        
+        // Create links from visible to missing (if there are missing codes)
+        if (missingValue > 0) {
+          links.push({
+            from: `${label} Visible`,
+            to: `${label} Missing`,
+            flow: missingValue
+          });
+        }
+      });
+    
+      // Create Komodo Sankey chart
+      this.charts.mbCodesKomodoSankey = new Chart(ctx, {
+        type: 'sankey',
+        data: {
+          datasets: [{
+            data: links,
+            colorFrom: (ctx) => this.colors.sources.komodo,
+            colorTo: (ctx) => {
+              return ctx.dataset.data[ctx.dataIndex].to.includes('Missing') 
+                ? this.shadeColor(this.colors.sources.komodo, -40) 
+                : this.shadeColor(this.colors.sources.komodo, -20);
+            },
+            colorMode: 'gradient',
+            borderWidth: 0,
+            curvature: 0.8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const { from, to, flow } = context.raw;
+                  return `${from} → ${to}: ${flow} codes`;
+                }
+              }
+            },
+            legend: { 
+              display: false 
+            }
+          },
+          layout: {
+            padding: 10
+          }
+        }
+      });
+      
+      console.log('✅ Komodo Sankey chart created successfully');
+      
+    } catch (error) {
+      console.warn('⚠️ Failed to create Komodo Sankey chart, using fallback:', error.message);
+      this.createKomodoFallbackChart(ctx, data);
+    }
+  }
+
+  createIqviaFallbackChart(ctx, data) {
+    this.createSingleSourceFallbackChart(ctx, data, 'iqvia', 'IQVIA');
+  }
+
+  createHealthVerityFallbackChart(ctx, data) {
+    this.createSingleSourceFallbackChart(ctx, data, 'healthverity', 'HealthVerity');
+  }
+
+  createKomodoFallbackChart(ctx, data) {
+    this.createSingleSourceFallbackChart(ctx, data, 'komodo', 'Komodo');
+  }
+
+  createSingleSourceFallbackChart(ctx, data, sourceKey, sourceName) {
+    const codeLabels = data.labels; // ['Rx', 'Dx', 'Px']
+    const providedData = data.provided[sourceKey];
+    const visibleData = data.visible[sourceKey];
+    const missingData = providedData.map((provided, i) => provided - visibleData[i]);
+
+    this.charts[`mbCodes${sourceName.replace(' ', '')}Sankey`] = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: data.labels,  
+        labels: codeLabels,
         datasets: [
-          { label: 'Provided (IQVIA)', data: data.provided.iqvia, backgroundColor: this.shadeColor(this.colors.sources.iqvia, -10) },
-          { label: 'Visible (IQVIA)', data: data.visible.iqvia, backgroundColor: this.colors.sources.iqvia },
-          { label: 'Provided (HV)', data: data.provided.healthverity, backgroundColor: this.shadeColor(this.colors.sources.healthverity, -10) },
-          { label: 'Visible (HV)', data: data.visible.healthverity, backgroundColor: this.colors.sources.healthverity },
-          { label: 'Provided (Komodo)', data: data.provided.komodo, backgroundColor: this.shadeColor(this.colors.sources.komodo, -10) },
-          { label: 'Visible (Komodo)', data: data.visible.komodo, backgroundColor: this.colors.sources.komodo }
+          {
+            label: 'Provided',
+            data: providedData,
+            backgroundColor: this.colors.sources[sourceKey],
+            stack: 'stack1'
+          },
+          {
+            label: 'Visible',
+            data: visibleData,
+            backgroundColor: this.shadeColor(this.colors.sources[sourceKey], -20),
+            stack: 'stack1'
+          },
+          {
+            label: 'Missing',
+            data: missingData,
+            backgroundColor: this.shadeColor(this.colors.sources[sourceKey], -40),
+            stack: 'stack1'
+          }
         ]
       },
-      options: { ...this.getBarChartOptions('MB Codes Provided vs Visible in Data', 'Count'), plugins: { ...this.getBarChartOptions('', '').plugins, legend: { display: true, position: 'top', onClick: this.getSingleItemLegendClickHandler('MB Codes Provided vs Visible in Data') } } }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: false
+          },
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 15
+            }
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.parsed.y + ' codes';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Code Types',
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Codes',
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  createMbCodesFallbackChart(ctx, data) {
+    // Create a grouped bar chart with three distinct sections by data source
+    const sources = ['iqvia', 'healthverity', 'komodo'];
+    const sourceNames = { iqvia: 'IQVIA', healthverity: 'HealthVerity', komodo: 'Komodo' };
+    
+    const codeLabels = data.labels; // ['Rx', 'Dx', 'Px']
+    
+    // Create grouped labels for better organization
+    const groupedLabels = [];
+    const datasets = [];
+
+    // Create labels and data for each source section
+    sources.forEach((source, sourceIndex) => {
+      const providedData = data.provided[source];
+      const visibleData = data.visible[source];
+      const missingData = providedData.map((provided, i) => provided - visibleData[i]);
+
+      // Add source section labels
+      codeLabels.forEach((codeLabel, codeIndex) => {
+        groupedLabels.push(`${sourceNames[source]} ${codeLabel}`);
+      });
+
+      // Provided codes dataset
+      const providedDataset = {
+        label: 'Provided',
+        data: new Array(codeLabels.length * 3).fill(null), // Initialize with nulls for all positions
+        backgroundColor: this.colors.sources[source],
+        stack: `provided`,
+        borderColor: this.colors.sources[source],
+        borderWidth: 1
+      };
+
+      // Visible codes dataset
+      const visibleDataset = {
+        label: 'Visible',
+        data: new Array(codeLabels.length * 3).fill(null),
+        backgroundColor: this.shadeColor(this.colors.sources[source], -20),
+        stack: `provided`,
+        borderColor: this.shadeColor(this.colors.sources[source], -20),
+        borderWidth: 1
+      };
+
+      // Missing codes dataset
+      const missingDataset = {
+        label: 'Missing',
+        data: new Array(codeLabels.length * 3).fill(null),
+        backgroundColor: this.shadeColor(this.colors.sources[source], -40),
+        stack: `provided`,
+        borderColor: this.shadeColor(this.colors.sources[source], -40),
+        borderWidth: 1
+      };
+
+      // Fill data for this source section
+      const startIndex = sourceIndex * codeLabels.length;
+      codeLabels.forEach((codeLabel, codeIndex) => {
+        const dataIndex = startIndex + codeIndex;
+        providedDataset.data[dataIndex] = providedData[codeIndex];
+        visibleDataset.data[dataIndex] = visibleData[codeIndex];
+        missingDataset.data[dataIndex] = missingData[codeIndex];
+      });
+
+      datasets.push(providedDataset, visibleDataset, missingDataset);
+    });
+
+    this.charts.mbCodesProvidedVsVisible = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: groupedLabels,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'MB Codes Provided vs Visible in Data (Grouped by Source)',
+            font: {
+              size: 16,
+              weight: 'bold'
+            }
+          },
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20
+            }
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function(context) {
+                if (context.parsed.y === null) return null;
+                return context.dataset.label + ': ' + context.parsed.y + ' codes';
+              },
+              title: function(context) {
+                return context[0].label;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Data Sources & Code Types',
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            },
+            ticks: {
+              maxRotation: 45,
+              font: {
+                size: 10
+              }
+            },
+            grid: {
+              display: true,
+              color: function(context) {
+                // Add vertical separators between source groups
+                const index = context.index;
+                return (index + 1) % 3 === 0 ? '#e0e0e0' : 'transparent';
+              },
+              lineWidth: 2
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Codes',
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            },
+            grid: {
+              color: '#f0f0f0'
+            }
+          }
+        },
+        layout: {
+          padding: {
+            top: 20,
+            bottom: 10
+          }
+        }
+      }
     });
   }
 
@@ -4149,4 +4691,5 @@ document.addEventListener('mousedown', () => {
 console.log('🎯 Enhanced Chryselys NSCLC Healthcare Intelligence Platform loaded');
 console.log('🎨 Brand colors: Chinese Bronze, Ateneo Blue, Pale Cerulean, Weldon Blue');
 console.log('📊 Features: Landing page, Enhanced analytics, Procedure/Diagnosis insights, Provider analysis');
+console.log('🔧 Enhanced capabilities: Temporal trends, Market basket analysis, Strategic intelligence');
 console.log('🔧 Enhanced capabilities: Temporal trends, Market basket analysis, Strategic intelligence');
