@@ -355,6 +355,21 @@
                         </div>
                     </div>
                 </div> -->
+            
+                <!-- GenAI Analyzer Summary: Patient Analysis -->
+                <div class="charts-grid">
+                    <div class="chart-container" style="grid-column: 1 / -1;">
+                        <div class="chart-header">
+                            <h4>GenAI Analyzer Summary</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; min-height: 140px;">
+                            <div id="genaiSummaryPatient" class="genai-summary" style="padding: 12px 16px; line-height: 1.5;">
+                                <p><strong>Insight:</strong> Patient volumes are highest in Komodo, followed by HealthVerity and IQVIA. Gender and age distributions are broadly consistent across sources with older cohorts dominating. New and prevalence trends show gradual declines YoY across all sources with seasonal MoM variation. Geographic concentration is elevated in large-population states (e.g., CA, FL, NY, TX).</p>
+                                <p><strong>Insight:</strong> Diagnosis claims (DX) far exceed PX and RX across sources, and into 2025 the MoM trend shows the steepest new-patient deceleration for Komodo relative to prior years.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!--  HCP/HCO Analysis Section -->
@@ -480,6 +495,21 @@
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 380px;">
                             <canvas id="topFacilityNpiChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GenAI Analyzer Summary: HCP/HCO Analysis -->
+                <div class="charts-grid">
+                    <div class="chart-container" style="grid-column: 1 / -1;">
+                        <div class="chart-header">
+                            <h4>GenAI Analyzer Summary</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; min-height: 140px;">
+                            <div id="genaiSummaryProcedure" class="genai-summary" style="padding: 12px 16px; line-height: 1.5;">
+                                <p><strong>Insight:</strong> Rendering NPI fill rates exceed Referring across sources, with IQVIA showing the highest overall completeness. HCO identification remains low relative to HCP for DX/PX/RX, suggesting provider-centric attribution. Top specialties skew toward Internal Medicine and Radiology; leading NPIs indicate significant lab/oncology system presence.</p>
+                                <p><strong>Insight:</strong> HCO anomaly rates (HCO classified as HCP) are notably higher in HealthVerity billing and facility roles, while facility fill is extremely low in Komodo, signaling potential site-of-service undercapture.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -614,6 +644,21 @@
                         </div>
                         <div class="chart-wrapper" style="position: relative; height: 450px;">
                             <canvas id="payerSplitLineChart" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GenAI Analyzer Summary: Other Metrics -->
+                <div class="charts-grid">
+                    <div class="chart-container" style="grid-column: 1 / -1;">
+                        <div class="chart-header">
+                            <h4>GenAI Analyzer Summary</h4>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative; min-height: 140px;">
+                            <div id="genaiSummaryDiagnosis" class="genai-summary" style="padding: 12px 16px; line-height: 1.5;">
+                                <p><strong>Insight:</strong> PARAPLATIN and KEYTRUDA dominate across sources; combined Mx+Rx rankings are stable. Claims status is majority paid; reversals and rejections are more visible in Komodo. MB provided vs visible indicates notable gaps in Px relative to Rx/Dx. Payer split skews Medicare, reflecting the older population profile.</p>
+                                <p><strong>Insight:</strong> Leading codes are consistent across sources (e.g., J9045 and C3490). IQVIA lacks 32663 and HealthVerity lacks J9022, while TECENTRIQ shows no Rx values across sources, highlighting dataset-specific visibility gaps.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -830,37 +875,7 @@
         </main>
     </div>
 
-    <!-- Floating Chat Button -->
-    <div id="chatbot-toggle" class="chatbot-toggle">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-        </svg>
-    </div>
-
-    <!-- Chatbot Modal -->
-    <div id="chatbot-modal" class="chatbot-modal hidden">
-        <div class="chatbot-header">
-            <h3>NSCLC Assistant</h3>
-            <button id="chatbot-close" class="chatbot-close">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <div id="chatbot-messages" class="chatbot-messages"></div>
-        <div class="chatbot-input-container">
-            <input type="text" id="chatbot-input" placeholder="Ask me about NSCLC data..." />
-            <button id="chatbot-send">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22,2 15,22 11,13 2,9"></polygon>
-                </svg>
-            </button>
-        </div>
-    </div>
-
     <script src="app.js"></script>
-    <script src="chatbot.js"></script>
 </body>
+</html>
 </html>
